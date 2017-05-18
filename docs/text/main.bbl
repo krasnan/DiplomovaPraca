@@ -1,0 +1,67 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{KAW{\etalchar{+}}14}
+
+\bibitem[CS16]{7550838}
+W.~Chansuwath and T.~Senivongse.
+\newblock A model-driven development of web applications using angularjs
+  framework.
+\newblock In {\em 2016 IEEE/ACIS 15th International Conference on Computer and
+  Information Science (ICIS)}, pages 1--6, June 2016.
+
+\bibitem[Fou17]{NodejsApiDoc}
+Node.js Foundation.
+\newblock Docs | node.js [online], Máj 2017.
+\newblock \\\url{https://nodejs.org/en/docs/}.
+
+\bibitem[Goo17]{AngularApiDoc}
+Inc. Google.
+\newblock Angularjs api docs [online], Máj 2017.
+\newblock \\\url{https://docs.angularjs.org/api}.
+
+\bibitem[KAW{\etalchar{+}}14]{7011937}
+M.~Kuhara, N.~Amano, K.~Watanabe, Y.~Nogami, and M.~Fukushi.
+\newblock A peer-to-peer communication function among web browsers for
+  web-based volunteer computing.
+\newblock In {\em 2014 14th International Symposium on Communications and
+  Information Technologies (ISCIT)}, pages 383--387, Sept 2014.
+
+\bibitem[KNGR13]{6751094}
+S.~Kode, K.~Nagaraju, L.~Gollapudi, and S.~K. Reddy.
+\newblock Using mediawiki to increase teaching expertise in engineering
+  colleges.
+\newblock In {\em 2013 IEEE Fifth International Conference on Technology for
+  Education (t4e 2013)}, pages 204--205, Dec 2013.
+
+\bibitem[Med17a]{MediaWikiExtension}
+MediaWiki.org.
+\newblock Manual:developing extensions [online], Máj 2017.
+\newblock \\\url{https://www.mediawiki.org/wiki/Manual:Developing_extensions}.
+
+\bibitem[Med17b]{MediaWikiDoc}
+MediaWiki.org.
+\newblock Mediawiki docs [online], Máj 2017.
+\newblock \\\url{https://doc.wikimedia.org/mediawiki-core/master/php/}.
+
+\bibitem[Pee17]{PeerjsApiDoc}
+Peerjs.com.
+\newblock Peerjs documentation [online], Máj 2017.
+\newblock \\\url{http://peerjs.com/docs/#api}.
+
+\bibitem[tea17]{FabricApiDoc}
+Fabric.js team.
+\newblock Fabricjs doc [online], Máj 2017.
+\newblock \\\url{http://fabricjs.com/docs}.
+
+\bibitem[VSB16]{7474178}
+S.~Vashishth, Y.~Sinha, and K.~H. Babu.
+\newblock Addressing challenges in browser based p2p content sharing framework
+  using webrtc.
+\newblock In {\em 2016 IEEE 30th International Conference on Advanced
+  Information Networking and Applications (AINA)}, pages 850--857, March 2016.
+
+\bibitem[W3S17]{AngularTutorial}
+W3Schools.com.
+\newblock Angularjs tutorial [online], Máj 2017.
+\newblock \\\url{https://www.w3schools.com/angular/}.
+
+\end{thebibliography}
