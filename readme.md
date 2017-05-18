@@ -17,8 +17,8 @@ Vytvorený editor integrovať s [wiki.matfyz.sk](http://wiki.matfyz.sk).
 
 Aktuálnu verziu diplomovej práce budem udržiavať výhradne v tomto repozitári.
 
-* Aktuálnu verziu __obsahu práce__ je možné nájsť [tu](/blob/master/docs/text/main.pdf)
-* Aktuálna verzia __zdrojových súborov__ sa nachádza v priečinku [sources/](/tree/master/sources)
-* Dostupná literatúra v elektronickej forme je v priečinku [docs/e-references/](/tree/master/docs/e-references)
-* Prezentácie sa nachádzajú v priečinku [docs/presentations/](/tree/master/docs/presentations)
-* Postup práce je možné vidieť na [commitoch](/commits/master)
+* __obsah práce__ je možné nájsť [tu](/blob/master/docs/text/main.pdf) + [LaTeX zdrojové súbory](/blob/master/docs/text/)
+* __zdrojové súbory__ sa nachádzajú v priečinku [sources/](/tree/master/sources)
+* Dostupná __literatúra v elektronickej forme__ je v priečinku [docs/e-references/](/tree/master/docs/e-references)
+* __Prezentácie__ sa nachádzajú v priečinku [docs/presentations/](/tree/master/docs/presentations)
+* __Postup práce__ je možné vidieť na [commitoch](/commits/master)
