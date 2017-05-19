@@ -21,4 +21,4 @@ Aktuálnu verziu diplomovej práce budem udržiavať výhradne v tomto repozitá
 * __zdrojové súbory__ sa nachádzajú v priečinku [sources/](/tree/master/sources)
 * Dostupná __literatúra v elektronickej forme__ je v priečinku [docs/e-references/](/tree/master/docs/e-references)
 * __Prezentácie__ sa nachádzajú v priečinku [docs/presentations/](/tree/master/docs/presentations)
-* __Postup práce__ je možné vidieť na [commitoch](/commits/master)
+* __Postup práce__ je možné vidieť na [commitoch](commits/master)
