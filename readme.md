@@ -1,19 +1,19 @@
-# Diplomová práca
 
-## Kolaboratívny grafický editor pre MediaWiki
+
+# Kolaboratívny grafický editor pre MediaWiki
 
 __autor: 		Bc. Martin Krasňan ([martin.krasnan@gmail.com](mailto:martin.krasnan@gmail.com))__
 
 __školiteľ: 	doc. RNDr. Zuzana Kubincová, PhD.__
 
 
-### Cieľ práce
+## Cieľ práce
 
 Navrhnúť a implementovať grafický editor pre MediaWiki 
 určený pre žiakov umožňujúci kolaboratívne kreslenie a úpravu obrázkov. 
 Vytvorený editor integrovať s [wiki.matfyz.sk](http://wiki.matfyz.sk).
 
-### Aktuálna verzia
+## Aktuálna verzia
 
 Aktuálnu verziu diplomovej práce budem udržiavať výhradne v tomto repozitári.
 
