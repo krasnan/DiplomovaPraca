@@ -1,0 +1,69 @@
+{
+	"name": "ImageEditor",
+	"version": "0.0.0",
+	"author": [
+		"Your Name"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:ImageEditor",
+	"descriptionmsg": "boilerplate-desc",
+	"license-name": "MIT",
+	"type": "other",
+	"AutoloadClasses": {
+		"ImageEditorHooks": "ImageEditor.hooks.php",
+		"SpecialImageEditor": "specials/SpecialImageEditor.php",
+
+		"ImageEditorTemplate": "templates/ImageEditorTemplate.php"
+	},
+	"SpecialPages": {
+		"ImageEditor": "SpecialImageEditor"
+	},
+	"config": {
+		"ImageEditorEnableFoo": true
+	},
+	"ExtensionMessagesFiles": {
+		"ImageEditorAlias": "ImageEditor.i18n.alias.php"
+	},
+	"Hooks": {
+		"NameOfHook": [
+			"ImageEditorHooks::onNameOfHook"
+		]
+	},
+	"MessagesDirs": {
+		"ImageEditor": [
+			"i18n"
+		]
+	},
+	"ResourceModules": {
+		"angular":{
+			"scripts": [
+				"scripts/angular.min.js"
+			]
+		},
+		"fabric":{
+			"scripts": [
+				"scripts/fabric.js"
+			]
+		},
+		"font-awesome":{
+			"styles": [
+				"styles/fontawesome-all.min.css"
+			]
+		},
+		"ext.imageEditor": {
+			"scripts": [
+				"scripts/ext.ImageEditor.init.js"
+			],
+			"styles": [
+				"styles/ext.imageEditor.less"
+			],
+			"messages": [],
+			"dependencies": []
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "ImageEditor/modules"
+	},
+
+	"manifest_version": 1
+}

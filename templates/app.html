@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Editor</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+	<!-- <link rel="stylesheet" type="text/css" href="assets/node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" type="text/css" href="assets/node_modules/font-awesome/css/font-awesome.min.css">
+	<script type="text/javascript" src="assets/node_modules/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/node_modules/angular/angular.min.js"></script>
+
+
+
+
+
+
+
+</head>
+<body ng-app="colabedit">
+	<div class="">
+		<div class="ce" ng-controller="CanvasControls">
+			<div class="ce-info ce-panel">
+				<div class="ce-toolbar-panel">
+					<div class="ce-input-group">
+						<label>Názov:</label>
+						<input class="ce-input" type="text" name="file-name" placeholder="Zadajte názov súboru">
+					</div>
+					<button class="ce-button ce-toolbar-button"><i class="fa fa-crop" aria-hidden="true"></i></button>
+					<button class="ce-button ce-toolbar-button"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+					<button class="ce-button"><i class="fa fa-picture-o" aria-hidden="true"></i> S textom</button>
+					<button class="ce-dropdown ce-button">
+						text dropdownu <i class="fa fa-caret-down" aria-hidden="true"></i>
+						<ul>
+							<li>item</li>
+							<li>item</li>
+							<li>item</li>
+						</ul>
+					</button>
+				</div>
+				<div class="ce-toolbar-panel ce-right">				 
+				</div>
+			</div>
+			<div class="ce-window">
+				<div class="ce-toolbar-container ce-panel">
+					<button class="ce-button ce-toolbar-button"><i class="fa fa-crop" aria-hidden="true"></i></button>
+					<button class="ce-button ce-toolbar-button" ng-class="{'ce-button-inverse': getFreeDrawingMode()}" ng-click="setFreeDrawingMode(!getFreeDrawingMode())"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+					<button class="ce-button ce-toolbar-button"><i class="fa fa-picture-o" aria-hidden="true"></i></button>
+					<hr class="ce-separator-horizontal">
+					<button class="ce-button ce-toolbar-button" ng-click="addRect()">▯</button>
+					<button class="ce-button ce-toolbar-button" ng-click="addTriangle()">⛛</button>
+					<button class="ce-button ce-toolbar-button" ng-click="addCircle()">◯</button>
+					<button class="ce-button ce-toolbar-button" ng-click="addLine()">|</button>
+				</div>
+				<div class="ce-canvas-container">
+					<canvas id="ce-canvas" width="500" height="800"></canvas>
+				</div>
+				<div class="ce-properties-container ce-column ce-panel" object-buttons-enabled="getSelected()">
+					<div class="ce-input-group-vertical">
+						<label for="fill-color">Fill:</label>
+						<input id="fill-color" type="color" style="width:25px" bind-value-to="fill" class="btn-object-action ce-button" disabled="">
+					</div>
+
+					<div class="ce-input-group-vertical">
+						<label for="stroke-color">Stroke:</label>
+						<input type="color" style="width:25px" bind-value-to="stroke" class="btn-object-action ce-button" disabled="">
+					</div>
+
+					<div class="ce-input-group-vertical">
+						<label for="bg-color">Bg:</label>
+						<input type="color" style="width:25px" bind-value-to="bgColor" class="btn-object-action ce-button" disabled="">
+					</div>
+
+					<div class="ce-input-group-vertical">
+						<label for="opacity">Opacity:</label>
+	        			<input value="100" type="range" bind-value-to="opacity" class="btn-object-action">
+					</div>					
+					<div class="ce-input-group-vertical">
+						<label for="opacity">Stroke width:</label>
+        				<input value="1" min="0" max="30" type="range" bind-value-to="strokeWidth" class="btn-object-action">
+        			</div>
+					<!-- <div class="ce-input-group">
+						<label>Názov:</label>
+						<input class="ce-input" type="text" name="file-name" placeholder="Zadajte názov súboru">
+					</div>
+					<!-- <div class="ce-input-group">
+						<label>Názov:</label>
+						<input class="ce-input" type="text" name="file-name" placeholder="Zadajte názov súboru">
+					</div>
+					<div class="ce-input-group ce-input-group-vertical">
+						<label>Názov:</label>
+						<input class="ce-input ce-input-xs" type="text" name="file-name" placeholder="Zadajte názov súboru">
+					</div> -->
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+
+	<script type="text/javascript" src="assets/js/fabric.js"></script>
+	<script>
+	  var colabedit = { };
+	  var canvas = new fabric.Canvas('ce-canvas');
+	</script>
+	<script type="text/javascript" src="assets/js/utils.js"></script>
+	<script type="text/javascript" src="assets/js/config.js"></script>
+	<script type="text/javascript" src="assets/js/controller.js"></script>
+
+</html>
