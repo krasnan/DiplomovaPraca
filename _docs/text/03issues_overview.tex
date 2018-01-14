@@ -1,71 +1,63 @@
-\chapter{Prehľad problematiky}\label{chap:issues_overview}
+\chapter{Prehľad problematiky}\label{chap:issues_overview} 
 
-\begin{enumerate}
-	\item Veobecné technológie
-	\item Špecifické technológie
-	\item Problémy pri implementácií
-	\item Kolaborácia
-	
-\end{enumerate}
+\section{MediaWiki}
+MediaWiki je publikačný systém určený na jednoduchú a efektívnu tvorbu obsahu webových stránok založený v roku 1995 Howardom G. Cunninghamom. Tento systém je voľne šíriteľný Open Source softvér, licencovaný pod GNU (General Public Licence), pričom jeho zdrojové kódy sú napísane v jazyku PHP. Na uchovávanie dát využíva relačnú databázu MySQL. Obsah stránky je vytváraný dynamicky, pomocou wikitextu. 
 
-\section{Všeobecné technológie}
+Wikitext je vlastný značkovací jazyk, ktorý zabezpečuje jednoduchú editáciu obsahu webových stránok bez nutnosti ovládať HTML značkovací jazyk a CSS kaskádové štýly. Wikitext je možné písať priamo pomocou spomínanej wikitext syntaxe, kde je možné nadpis sekcie zapísať ako \inlinecode{PHP}{=Nadpis sekcie=}, podnadpis sekcie \inlinecode{PHP}{==Podnadpis sekcie==}. Odkazy na iné stránky sa zapisujú pomocou hranatých zátvoriek \inlinecode{PHP}{[[Názov článku]]}. Podobný zápis sa využíva aj na vkladanie súborových príloh ako napríklad obrázok, kde je syntax zápisu nasledovná: \inlinecode{PHP}{[[File:NazovSuboru.jpg]]}. Ďaľšie informácie ohľadom spôsobu zápisu wikitextu je možné nájsť v dokumentácií MediaWiki systému \citep{MediaWikiHelpFormating}. Obsah stránky je možné zapisovať priamo pomocou tohoto značkovacieho jazyka, alebo pomocou editora formátovaného textu (rich-text editora).
+
+Zmeny vykonané používateľom na obsahu stránky, sú pri ukladaní zapísané do databázy ako samostatná verzia. Históriu zmien (verzií) je možné zobraziť a v prípade potreby taktiež obnoviť. Pri každej verzií je uchovávaný autor danej zmeny, s dátumom kedy zmenu vykonal. 
+
+
+
+\newpage
+\section{Prehľad technológií}
+
+\subsection{PHP}
+PHP (PHP: Hypertext Preprocessor) je populárny open source skriptovací jazyk, ktorý sa používa najmä na programovanie klient-server aplikácií (na strane servera) a pre vývoj dynamických webových stránok.
+
+PHP bolo inšpirované jazykmi podporujúcimi procedurálne programovanie. Najviac vlastností prebralo od jazyka C a jazyka Perl. V neskorších verziách bolo rozšírené o možnosť používať objekty.
+
+Jedna zo zaujímavých vlastností PHP je, že umožňuje oveľa viac ako bežný skriptovací jazyk. Vďaka modulárnemu návrhu možno PHP používať aj na vývoj aplikácii s užívateľským rozhraním (GUI).
+
+PHP dokáže spolupracovať s relačnými databázami, ako napríklad MySQL, Oracle, IBM DB2, Microsoft SQL Server, PostgreSQL alebo SQLite, pričom si stále zachováva jednoduchú a priamočiaru syntax. PHP beží na takmer všetkých najrozšírenejších operačných systémoch, vrátane UNIXu, Linuxu, Windows či Mac OS X. Spolupracuje s najrozšírenejšími webovými servermi.
+
 \subsection{HTML}
-
 Hypertextový značkový jazyk (HyperText Markup Language; HTML) je značkový jazyk určený na vytváranie webových stránok a iných informácií zobraziteľných vo webovom prehliadači. HTML kladie dôraz skôr na prezentáciu informácií (odseky, fonty, váha písma, tabuľky atď.) ako na sémantiku (význam slov).
-Pôvodne bol určený ako veľmi zjednodušená podmnožina jazyka SGML, ktorý sa používa v organizáciách s komplexnými publikačnými požiadavkami, ale neskôr sa stal samostatným štandardom (ISO/IEC 15445:2000).\\
+Pôvodne bol určený ako veľmi zjednodušená podmnožina jazyka SGML, ktorý sa používa v organizáciách s komplexnými publikačnými požiadavkami, ale neskôr sa stal samostatným štandardom (ISO/IEC 15445:2000).
 Špecifikáciu jazyka HTML udržiava World Wide Web Consortium (W3C).
 Do príchodu HTML5 W3C plánovalo nahradiť HTML jazykom XHTML, implementáciou jazyka XML, ktorá mala zjednodušiť prácu prehliadačov aj tvorcov web stránok.
 V mediawiki sa HTML používa na vykreslenie vizuálnych prvkov.
 
-\subsection{CSS}
-Kaskádové štýly alebo CSS (skratka z angl. Cascading Style Sheets) je všeobecné rozšírenie (X)HTML. Konzorcium W3C[1] označuje CSS ako jednoduchý mechanizmus na vizuálne formátovanie internetových dokumentov.\\
-\\
+\subsection{Kaskádové štýly (CSS)}
+Kaskádové štýly alebo CSS (skratka z angl. Cascading Style Sheets) je všeobecné rozšírenie (X)HTML. Konzorcium W3C[1] označuje CSS ako jednoduchý mechanizmus na vizuálne formátovanie internetových dokumentov.
+
 Štýly umožnili oddeliť štruktúru HTML alebo XHTML od vzhľadu.Prvá verzia CSS (CSS level 1) vznikla už v roku 1996 a umožňovala prácu s písmami, okrajmi a farbami. V roku 1998 bola doplnená o nové možnosti a vznikol CSS level 2. V súčasnosti je podporovaná vo všetkých novších verziách prehliadačov (Internet Explorer, Opera, Mozilla, Netscape, Safari). Aktuálna verzia je CSS level 3.
-\subsection{XML}
-XML znamená eXtensible Markup Language, v preklade rozšíriteľný značkovací jazyk, ktorý bol vyvinutý a štandardizovaný konzorciom W3C (World Wide Web Consortium) ako pokračovanie jazyka SGML a zovšeobecnenie jazyka HTML. Umožňuje jednoduché vytváranie konkrétnych značkovacích jazykov na rôzne účely a široké spektrum rôznych typov údajov.\\
-\\
-Jazyk je určený predovšetkým na výmenu údajov medzi aplikáciami a na zverejňovanie dokumentov. Jazyk umožňuje opísať štruktúru dokumentu z hľadiska vecného obsahu jednotlivých častí a nezaoberá sa sám osebe vzhľadom dokumentu alebo jeho časti. Vzhľad dokumentu sa potom definuje pripojeným štýlom. Ďalšou možnosťou je pomocou rôznych štýlov vykonať transformáciu do iného typu dokumentu alebo do inej štruktúry XML.
-Jazyk XML nemá žiadne preddefinované značky (tagy, názvy jednotlivých elementov) a tiež jeho syntax je podstatne prísnejšia (a jednoduchšia) ako syntax HTML
-\\
-V mediawiki sa XML prevažne používa na definovanie kostry statických stránok.
+
 \subsection{JavaScript}
 JavaScript, je skriptovací programovací jazyk. Jazyk je používaný najmä pri tvorbe webových stránok. Pôvodne ho vyvíjal Brendan Eich zo spoločnosti Netscape Communications pod názvom Mocha, neskôr pod menom LiveScript. Pred uvedením na verejnosť bol premenovaný na „JavaScript“, najmä pre vtedajšiu popularitu jazyka Java. Aj na základe jeho názvu je rozšírený názor, že syntax Javascriptu sa podobá Jave, v skutočnosti bol jeho tvorca najviac inšpirovaný jazykom Self.
 
-\subsection{PHP}
-PHP (PHP: Hypertext Preprocessor) je populárny open source skriptovací jazyk, ktorý sa používa najmä na programovanie klient-server aplikácií (na strane servera) a pre vývoj dynamických webových stránok.
-\\
-\\
-Medzi známe aplikácie založené na PHP patrí napríklad phpBB a MediaWiki, software, na ktorom beží Wikipédia. PHP je alternatívou k:\\
-\begin{itemize}
-	\item Microsoft ASP/VBScript/JScrip
-	\item Macromedia ColdFusion
-	\item Sun Microsystems JSP/Java
-	\item CGI/Perl
-	
-\end{itemize}
-PHP bolo inšpirované jazykmi podporujúcimi procedurálne programovanie. Najviac vlastností prebralo od jazyka C a jazyka Perl. V neskorších verziách bolo rozšírené o možnosť používať objekty.\\
-Jedna zo zaujímavých vlastností PHP je, že umožňuje oveľa viac ako bežný skriptovací jazyk. Vďaka modulárnemu návrhu možno PHP používať aj na vývoj aplikácii s užívateľským rozhraním (GUI).\\
-\\
-PHP dokáže spolupracovať s relačnými databázami, ako napríklad MySQL, Oracle, IBM DB2, Microsoft SQL Server, PostgreSQL alebo SQLite, pričom si stále zachováva jednoduchú a priamočiaru syntax. PHP beží na takmer všetkých najrozšírenejších operačných systémoch, vrátane UNIXu, Linuxu, Windows či Mac OS X. Spolupracuje s najrozšírenejšími webovými servermi.
+\subsection{JavaScriptová knižnica Node.js}
+Node.js je open-source medziplatformové run-time prostredie pre vykonávanie JavaScript kódu na strane serveru. Historicky bol Javascript určený hlavne pre programovanie na klientskej strane, kde sú skripty písané v Javascripte priamo volané v HTML súbore webovej stránky. Kód bol spúštaný enginom webového prehliadača. Node.js umožňuje použitie JavaScriptu na strane servera a kód sa spúšťa predtým ako je dynamický obsah stránky poslaný do webového prehliadača používateľa. Vďaka tejto výhode sa z Node.js stal jeden zo základných elementov paradigmy "Javacript everywhere" ktorý pri vývoji webových aplikácii umožňuje zjednotenie programovacích jazykov namiesto spoliehania sa na iné programovacie jazyky nutne pre serverovú časť aplikácie.
 
+\subsection{JavaScriptová knižnica Less.js}
+Less je CSS pre=procesor, čo znamená, že rozširuje jazyk CSS, pridáva funkcionalitu ktorá umožňuje definovanie premenných, funkcií a množstvo ďalších techník. Vďaka tomu je možné vytvoriť kaskádové štýly, ktoré sú prehľadné, rozšíriteľné s možnosťou jednoduchej zmeny veľkého množstva faktorov ovplyvňujúcich vzhľad aplikácie. Zdrojové súbory v jazyku Less sú kompilované pomocou viacerých možných spôsobov. Napríklad priamo v prehliadači používateľa, v prostredí Node, PHP, .Net a ďalších. Výsledkom kompilácie je vytvorenie súboru s kaskádovými štýlmi vo formáte css.
+ 
+\subsection{JavaScriptová knižnica Fabric.js}
+Fabric.js je výkonná a jednoduchá JavaScriptová knižnica na prácu s grafickou plochou canvas. Poskytuje interaktívny model objektov na prácu s canvas elementami. Obsahuje taktiež parser na prácu s SVG grafickými súbormi, vďaka čomu je možné renderovať obsah SVG súboru do grafickej plochy canvas. Canvas síce umožňuje vytváranie objektov jednoduchých tvarov pomocou svojich natívnych funkcií, avšak následná manipulácia s týmito objektami je veľmi ťažkopádna. Fabric.js preto vytvoril sadu príkazov na jednoduchú manipuláciu s grafickými objektami. Stará sa o renderovanie a udržiavanie aktuálneho stavu plochy. 
 
-\section{Špecifické technológie}
-\subsection{Node.js}
+\subsection{JavaScriptový framework Angular.js}
+AngularJS je JavaScriptová voľne šíriteľná knižnica (framework), ktorá je zastrešovaná, vyvíjaná a udržiavaná prevažne zamestnancami spoločnosti Google. 
 
-Node.js je open-source medziplatformové run-time prostredie pre vykonávanie JAVASCRIPT kódu na strane serveru. Historicky bol Javascript hlavne určený pre programovanie na klientskej strane, kde su skripty písané v Javascripte priamo volané v HTML súbore webovej stránky. Kód bol spúštaný enginom webového prehliadača. Node.js umožnuje použitie Javascriptu na strane servera a kód sa spúšta predtým ako je dynamický obsah stránky poslaný do webového prehliadača používateľa. Vdaka tejto výhode sa z Node.js stal jeden zo základných elementov paradigmy "Javacript everywhere" ktorý pri vývoji webových aplikácii umožnuje zjednotenie programovacích jazykov namiesto spoliehania sa na iné programovacie jazyky nutne pre serverovú časť aplikácie.
+Princíp fungovania knižnice spočíva v tom, že po načítaní HTML stránky, do ktorej sú vložené vlastné značky atribútov, ktoré angular interpretuje ako smerníky naviazané na model. Ten je reprezentovaný štandardnými premennými jazyka JavaScript. Hodnoty týchto premenných je možné nastaviť manuálne v rámci kódu aplikácie, alebo získať zo statických alebo dynamických JSON súborov. Framework prispôsobuje a rozširuje tradičné HTML tak, aby prezentoval dynamický obsah prostredníctvom obojsmernej väzby dát, ktorá umožňuje automatickú synchronizáciu modelov a šablón.
 
-\subsection{Socket.io}
+\subsection{JavaScriptová knižnica Socket.io}
+Socket.IO je JavaScriptová knižnica vytvorená pre realtime webové aplikácie. Socket.IO umožňuje realtime obojstrannú komunikáciu medzi webovým klientom a servermi. Socket.IO má dve časti:
+- klientská strana ktorá beží vo webovom prehliadači a serverovú časť pre node.js.Obe časti majú takmer identické API. Podobne ako node.js je socket.io "event-driven", teda funcionalita je vyvolávaná pomocou volaní definovaných funckií ktoré sa volajú pri určitých akciach používateľa alebo systému.
 
-
-Socket.IO je Javascriptová knižnica vytvorená pre realtime webové aplikácie. Socket.IO umožňuje realtime obojstrannú komunikáciu medzi webovým klientom a servermi. Socket.IO má dve časti:
-- klientská strana ktorá beží vo webovom prehliadači a serverovú časť pre node.js.Obe časti majú takmer identické API. Podobne ako node.js je socket.io "event-driven", teda funcionalita je vyvolávaná pomocou volaní definovaných funckií ktoré sa volajú pri určitých akciach používateľa alebo systému.\\
-\\
 Socket.io primárne používa WebSocket protokol. Aj ked by to mohol byť použítý len ako wrapper pre WebSocket, socket.io ponúka veľa dodatočných funckií vrátanie vysielania na viacero socketov, ukladanie dát pre každého kilenta a asynchrónne vstupno/výstupné operácie.
 Socket.io v mojej implementácií mediawiki je inštalovaný pomocou balíčkového manažéra npm.
 
 \subsection{WebSocket}
-
-
 WebSocket je počítačový komunikačný protokol poskutujúci plny duplexný (obojsmerný)  komunkačný kanál cez jedno TCP pripojenie.
 Protokol WebSocket bol štandarizovaný komisiou IEFT ako RFC 6455 v roku 2011 a WebSocket API pre webové IDL bolo štandarizované konsorciom W3C.
 
@@ -73,128 +65,41 @@ WebSocket bol navrhnutý tak, aby mohol byť spúštaný vo webových prehliada�
 
 Protokol WebSocket je v súčastnosti podporovaný vo väčšine webových prehliadačov. WebSocket ale taktiež vyžaduje podporu na strane serverom a webových aplikácií.
 
+\section{Rozšírenia MediaWiki}
 
-\subsection{NPM}
+Systém MediaWiki ja navrhnutý spôsobom, ktorý umožňuje pridávať funkcionalitu pomocou rozšírení (angl. Extensions). Rozšírenia sú časti zdrojového kódu, ktorý môže ovplyvniť vizuálne prvky stránky alebo funkčné vlastnosti systému. Vzhľadom na kategóriu rozšírenia sa dajú využiť napríklad na:
 
-NPM je balíčkový manažér pre programovací jazyk Javascript. Je to základný balíčkový manažér pre Javascriptové runtime prostredie  node.js. Npm pozostáva z klientského príkazového riadku, tiež zvaného npm a online databýzy verejných a platených balíčkov zvanými npm register. Register je dostupný cez klienta a dostupné balíčky môžu byť prezerané resp. vyhľadávané na webovej stránke npm.
-Balíčkový manažér a webový register sú spravované spoločnosťou npm, Inc.\\
-\\
-NPM je pribalený ako doporučená súčasť Node.js inštalačného balíčka. Baličky v registry sú v CommonJs formáte ad obsahujú súbor s metadátami vo formáte JSON. Momentálne je k dispozícií viac ako 477 000 balíčkov.
-
-
-\subsection{Balíčkový manažér}
-Balíčkový manažér resp. balíčkový manažmentový systém je zbierka softvérových nástrojov ktoré automatizujú inštaláciu, aktualizáciu, konfiguráciu a odstraňovanie počítačových programov .
-Balíčkový manažér pracuje s balíčkmi, distribuovaním softvéru a dátami v archivovanom formáte. Balíčky obsahujú metadáta ako meno softvéru, popis použitia, čislo verzie, autora a zoznam závislostí potrebných pre softvér aby pracoval korektne.\\
-\\\
-Po inštalácií su metadáta uložené v lokálnej databázy balíčku. Balíčkové manažéry väčsinou udržujú databázu softvérových závislostí and informácie o verzií aby zabránilo v nainštalovaní nesprávnej verzie závislosti alebo na jej zabudnutie. 
-
-\subsection{MediaWiki}
-MediaWiki je Wiki softvér, ktorý je licencovaný pod GNU General Public License. Je napísaný v PHP a na ukladanie dát používa MySQL relačnú databázu. Jeho logo symbolizuje dvojité hranaté zátvorky ("[[","]]"), ktorými sa v MediaWiki vytvárajú linky na ďalšie články. Najvýznamnejším projektom využívajúcim MediaWiki je Wikipédia.\\
-\\
-MediaWiki je zadarmo open-source wiki softvér. MediaWiki bola pôvodne vyvynutá Magnusom Manske a bola vylepšená Lee Daniel Crockerom. MediaWiki beží na veľa webových stránok vrátane Wikipedie, Wiktionary alebo Wikimedia Commons. Aplikácia je napísaná v PHP programovacom jazyku a ukladá svoje dáta do databázy. Podobe ako Wordpress ktorý je postavený na podobnom licencovaniu a architektúre, sa MediaWiki stala dominantným softvérom vo svojej kategórií. Prvá verzia aplikácie bola nasadená kvoli potrebám Wikipedia encyklopédie v roku 2002.\\
-\\
-Softvér je optimalizovaný na efektiívne spracovávanie veľých projektov ktoré môžu mať terabajty obsahu. Aplikácia má viac ako 900 konfiguračných nastavení a viac ako 2000 rozšíreni dostupných pre editovanie funckií.
-
-\subsection{VisualEditor}
-VisualEditor (VE) je projekt poskytujúci bohatý online rich-text editor ako rozšírenie do wikipédie. Bol vyvinutý Wikimedie Foundation v spolupráci s Wikia. V júli 2013 bola beta prednastavená ako základný editor pre Mediawiki.org.
-Wikimedia foundation považuje VisualEdito za najzložitejší projekt na ktorom pracovali.
---- screen shoty sem dat nejake ..linky na APi atd. ...
-
-
-
-\section{Rozširovanie mediawiki}
-
-Funkcionalita Mediawiki systému sa dá rozširovať resp. upravovať 4 hlavnými spôsobmi. Pri rozširovaní MediaWiki nám veľmi pomáha systém ResourceLoader pre optimalizáciu načítavania a manažovania modulov.
-
-\subsection{Rozšírenie/extension}
-Každé rozšírenie musí obsahovať minimálne tieto \textbf{3 súbory}:\\
-
-\begin{enumerate}
-	\item "meno vášho rozšírenia"/extension.json
-	\begin{itemize}
-		\item Sú v ňom uložené konfiguračné a inštalačné inštrukcie. Názov súboru musí byt presne extension.json. 
-		\item Súbor obsahuje napríklad základné informácie o rozšírení ako napríklad autora alebo verziu, závislosti na iné rozšírenia, zoznam všekých súborov a iné.
-	\end{itemize}
-	\item "meno vášho rozšírenia"body.php
-	\begin{itemize}
-		\item Je v ňom uložený špúštací kód rozšírenia. Meno súboru vo formáte "meno vášho rozšírenia"body.php je dobrou konvenciou nie je to však povinné z hľadiska funkcnosti.
-		 
-		\item Pokiaľ je vaše rozšírenie komplexné a obsahuju viacero PHP súborov je taktiež dobrou konvenciou uložiť ich do podadresára "meno vášho rozšírenia"/includes. 
-	\end{itemize}
-	\item "meno vášho rozšírenia"/i18n/*.json
-	\begin{itemize}
-		\item V súbore sú uložené lokalizačné nastavenia rozšírenia.
-	\end{itemize}
-\end{enumerate}
-\textbf{Inštalácia}:
-Vašim cieľom by malo byť písať vaše rozšírenie tak aby jediné čo musí užívateľ pri inštaláci zavolať vaše rozšírenie pridaním kódu:
-\begin{verbatim}
-wfLoadExtension( 'meno vášho rozšírenia"' ); 
-\end{verbatim} 
-do súboru LocalSettings.php nachádzajúcom sa v koreňovom adresári mediawiki inštalácie.\\
-\\
-Ak chcete môžte pri inštalácií sprístupniť používateľovi konfiguráciu vášho rozšírenia, spravíte to tak, že definujete niektoré konfiguračné parametre, pre spristupnenie konfigurácie. Takýto kód by vyzeral nasledovne:\\
-\begin{verbatim}
-wfLoadExtension( 'meno vášho rozšírenia' ); 
-$wg"meno vášho rozšírenia"ConfigThis = 1; 
-$wg"meno vášho rozšírenia"ConfigThat = false;
-\end{verbatim}
-Na dosiahnutie danej jednoduchosti z pohľadu používateľa, musí váš inštalačný súbor dosiahnuť \textbf{niekoľko úloh}:
 \begin{itemize}
+	\item rozšírenie wikitext syntaxe o vlastné prvky (Parser Extensions Category)
+	\item pridanie schopnosti reportovania informácií (Special page Extensions Category)
+	\item zmena vzhľadu MediaWiki (User interface Extensions)
+	\item zvýšenie zabezpečenia pomocou vlastných autentifikačných mechanizmov (Authentication and Authorization Extensions Category)
+\end{list}
 
-\item Zaregistrovať akýkoľvek media handler, parsovaciu funckiu, špeciálne stránky, vlastné XML tagy a premenné použité vašim rozšírením.
+Zoznam kategorizovaných rozšírení je možné nájsť na stránkach tvorcov MediaWiki systému. Množstvo rozšírení je vytvorených a udržiavaných samotnými autormi systému, avšak vzhľadom na to, že zdrojové kódy sú voľne dostupné, veľa ich pochádza od vývojárov tretej strany. 
 
-\item Definovať a zvalidovať každú konfiguračnú premennú ktorá je zadefinovaná vo vašom rozšírení.
+Rozšírenia môžu byť do systému inštalované iba s administrátorským prístupom do súborového systému na serveri. Inštalácia pozostáva zo skopírovania zdrojových súborov do adresára \inlinecode{PHP}{\$IP\/extensions\/nazov_rozsirenia\/}. Následne ho je možné inicializovať v koreňovom adresári MediaWiki inštalácie, v súbore \inlinecode{PHP}{LocalSettings.php}, pomocou globálnej funkcie\\
+ \inlinecode{PHP}{wfLoadExtension(\'nazov_rozsirenia\')}.
 
-\item Pripraviť triedy použité vo vašom rozšíreni pre autonačítanie.
-
-\item Rozhodnúť ktoré časti vášho inštalačného nastavenia majú byť vykonané okamžite a ktorá majú čakať pokial sa inicializuje jadro MediaWiki.
-
-\item Definovať dodatočné hooky potrebné pre tvoje rozšírenie.
-
-\item Vytvorí resp. skontroluje všetky nové databázové tabuľky nutné pre rozšírenie.
-
-\item Nastaví lokalizáciu vášho rozšírenia.
+Pre správne fungovanie rozšírenia je potrebné zabezpečiť niekoľko kľúčových vlastností, pozostávajúcich z týchto krokov:
+\begin{itemize}
+	\item Zaregistrovať akýkoľvek media handler, parsovaciu funckiu, špeciálne stránky, vlastné XML značky a premenné použité vašim rozšírením.
+	\item Definovať a zvalidovať každú konfiguračnú premennú ktorá je zadefinovaná vo vašom rozšírení.
+	\item Pripraviť triedy použité vo vašom rozšírení pre autonačítanie.
+	\item Rozhodnúť ktoré časti inštalačného nastavenia majú byť vykonané okamžite a ktorá majú čakať pokiaľ sa inicializuje jadro MediaWiki.
+	\item Definovať dodatočné hooky potrebné pre rozšírenie.
+	\item Vytvoriť / skontroluje všetky nové databázové tabuľky nutné pre rozšírenie.
+	\item Nastaví lokalizáciu vášho rozšírenia.
 \end{itemize}
 
-\subsection{Special Common.js stránka}
 
-Stránka Common.js obsahuje Javascript kódy ktoré sa načítavajú pre všektých používateľov.
-Stránka je dostupná na adrese "mediawiki adresa"/MediaWiki:Common.js. Pokial vložíte do vyhladávača vo vašej mediawiki frázu "MediaWiki:Common.js" ukáže vam stránku a ak neexistuje tak v prípade, že máte dostatočné práva môžte stránku vytvoriť.
-Tento prístup rozširovania nie moc vhodný nakoľko v ňom nie je možné definovať napríklad závislostí, lepší spôsob je použtie MediaWiki Gadgets.
-
-\subsection{Gadgety / Gadgets}
-Gadgets je rozšírenie do mediawiki systmému ktoré poskytuje používateľom si umožnuje vyberať a vytvárať napojenia na funkcionalitu mediawiki, tzv. "gadgets".
-Inštalácia rozšírenia spočíva v nakopírovanie suborov rozšírenia do zložky extensions a pridaním nasledujúceho kódu do LocalSettings.php
-\begin{verbatim}
-wfLoadExtension( 'Gadgets' );
-\end{verbatim}
-\subsubsection{Použitie}
-Zoznam dosutpných gadgetov je definovaný na špeciálnej stránke " MediaWiki:Gadgets-definition". V momente ked je vytvorený aspoň jeden validný gadget sa v nastaveniach vytvorí záložka "Gadgets". Nastavenia sú dostupné na adrese "mediawiki adresa/Special:Preferences". V záložke Gadgets si môže používateľ vybrat ktoré gadgety chce používať. Prehľad gadgetov definovaných v MediaWiki:Gadgets-definition sa dá zobraziť na stránke "Special:Gadgets".
-\subsubsection{Formát}
-Každý riadok v MediaWiki:Gadgets-definition ktorý začína s jednou alebo viacerými hviezdičkami "*" definuje gadget, musí mať nasledujúci formát:\\
-\begin{verbatim}
-* gadget_názov [nastavenia (môžu byť vynechané)] | mená stránok
-\end{verbatim}
-Príklady:
-\begin{verbatim}
-* mygadget|mygadget.js|mygadget.css
-* mygadget[ResourceLoader]|mygadget.js|mygadget.css
-* mygadget[ ResourceLoader | rights=foo, bar ] | mygadget.js | mygadget.css
-\end{verbatim}
-
-
-\subsection{Zásah priamo do kódu}
-Priama editácia už existujúcich súborov neni doporučovaná. Najväčší problém pri taktomto spôsobe úpravy funckionality je ked daný modul bude potrebovať aktualizáciu. Ak sa v danej situácií nedá použiť iná možnosť je dobré si aspon poriadne zakomentovať zmenené riadky kódu.
- 
 \subsection{ResourceLoader}
 
-ResoureLoader je tzv."delivery system" pre optimizáciu načítavania a manažovania modulov. Moduly pozostávaju zo Javacript, CSS a zo správ pre rozhranie.\\
-Jeho účel je zlepšiť Fron-end výkon a uzívateľskú spokojnosť.
+ResoureLoader je tzv."delivery system" pre optimalizáciu načítavania a manažovania modulov.
 
-Každá stránka na wiki obsahuje stovky kilobajtov Javascriptu. Vo veĺa prípadoch sa niektoré časti tohto kódu nevyužijú z dôsledku používania nepodporovaného prehliadača alebo sa kód na danej stranke nepoužíva. V týchto prípadoch je čas načítania zbytočne dlhší ako je potrebné.\\
+Každá stránka postavená na MediaWiki obsahuje stovky kilobajtov Javascriptu. Vo veľa prípadoch sa niektoré časti tohto kódu nevyužijú z dôsledku používania nepodporovaného prehliadača alebo sa kód na danej stránke nepoužíva. V týchto prípadoch je čas načítania zbytočne dlhší ako je potrebné.
 
-ResourceLoader tento problém rieši načítavaním si zdrojových kódov "resources" na vyžiadanie a len na prehliadačoch ktoré ho podporujú. Proces je komplikovanejší ale dá sa sumarizovať v týchto 3 bodoch:
+ResourceLoader tento problém rieši načítavaním zdrojových kódov "resources" na vyžiadanie a len na prehliadačoch ktoré ho podporujú. Tento proces pozostáva z nasledujúcich bodov:
 
 \begin{enumerate}
 	\item Minifikácia a zjednotenie
@@ -205,7 +110,7 @@ ResourceLoader tento problém rieši načítavaním si zdrojových kódov "resou
 	\item Načítavanie v dávkách
 	\begin{itemize}
 		\item Redukuje počet serverových volaní.
-		\item Serverová odpoveď pre načítanie podporuje nacítanie viacerých modulov na jedno volanie, ktoré už obsahuju minifikované a spojené súbory.
+		\item Serverová odpoveď pre načítanie podporuje načítanie viacerých modulov na jedno volanie, ktoré už obsahuje minifikované a spojené súbory.
 	\end{itemize}
 	\item Data URI vkladanie
 	\begin{itemize}
@@ -215,5 +120,14 @@ ResourceLoader tento problém rieši načítavaním si zdrojových kódov "resou
 \end{enumerate}
 
 
+\section{Cieľ práce}
+\begin{itemize}
+	\item Navrhnúť prostredie grafického editora
+	\item Implementovať grafický editor do prostredia MediaWiki pomocou rozšírenia
+	\item Navrhnúť a implementovať spôsob ukladania verzií výstupných súborov grafického editora
+	\item Navrhnúť a implementovat komunikačný protokol na synchronizáciu grafického editora pre viacero nezávislých používateľov
+	\item Integrovať rozšírenie s webovou stránkou fakulty http://wiki.matfyz.sk
+\end{itemize}
 
-\section{Kolaborácia}
+
+
