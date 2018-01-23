@@ -1,6 +1,5 @@
-var colabedit = { };
 var canvas = new fabric.Canvas('ie__canvas');
-var colabedit = angular.module('colabedit', []);
+var colabedit = angular.module('colabedit', ['colorpicker.module']);
 
 colabedit.config(function($interpolateProvider) {
   $interpolateProvider

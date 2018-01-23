@@ -10,7 +10,22 @@ function watchCanvas($scope) {
         .on('object:modified', updateScope)
         .on('group:selected', updateScope)
         .on('path:created', updateScope)
-        .on('selection:cleared', updateScope);
+        .on('selection:cleared', updateScope)
+        .on('selection:cleared', function () {
+            console.log('deselected');
+        })
+        .on('before:selection:cleared', function () {
+            console.log('before deselected');
+        })
+        .on('selection:created', function () {
+            console.log('selected group');
+        })
+        .on('object:modified', function () {
+            console.log('modified');
+        })
+        .on('object:selected', function () {
+            console.log('selected obj');
+        });
 
 }
 

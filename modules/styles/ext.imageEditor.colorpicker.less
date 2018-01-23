@@ -1,3 +1,5 @@
+@import "ext.imageEditor.vars";
+
 .colorpicker-visible,
 .colorpicker-visible .dropdown-menu {
   display: block !important;
@@ -69,20 +71,24 @@ colorpicker-alpha,
 }
 
 .colorpicker {
+  &:extend(.shadow-box);
+  background-color: @white;
+  border-radius: @radius;
   top: 0;
   left: 0;
   z-index: 99999;
   display: none;
+  padding: 10px 10px 5px 10px;
+
   colorpicker-hue,
   colorpicker-alpha,
   colorpicker-saturation {
     position: relative;
   }
   input {
-    width: 100px;
+    &:extend(.input all);
     font-size: 11px;
-    color: #000;
-    background-color: #fff;
+    width: 100px;
   }
   &.alpha {
     min-width: 140px;
@@ -122,6 +128,15 @@ colorpicker-alpha,
     min-width: 129px;
     padding: 4px;
     margin-top: 0;
+  }
+  .close{
+    &:extend(.btn all);
+    border: none;
+    background:none;
+    float: right;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
   }
 }
 
@@ -193,8 +208,5 @@ colorpicker-alpha,
 
 colorpicker-preview {
   display: block;
-  height: 10px;
-  margin: 5px 0 3px 0;
   clear: both;
-  background-position: 0 100%;
 }

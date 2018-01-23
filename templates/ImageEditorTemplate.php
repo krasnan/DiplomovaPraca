@@ -25,7 +25,8 @@ class ImageEditorTemplate extends QuickTemplate {
         $context = $this->data['context']; // get
         global $wgScriptPath;
         ?>
-        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/angular.js'></script>
+        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/angular/angular.min.js'></script>
+        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/angular-bootstrap-colorpicker/bootstrap-colorpicker-module.min.js'></script>
 
 
         <div class="ie"  ng-app="colabedit" ng-controller="CanvasControls">
@@ -38,13 +39,39 @@ class ImageEditorTemplate extends QuickTemplate {
 
             <div class="ie__info">
                 <div class="ie__panel__horizontal">
-                    <input class="input" type="text" placeholder="Image Name...">
-                    <a title="" class="btn"><i class="far fa-save"></i></a>
-                    <a title="" class="btn" ng-click="rasterize($event,'export.png')"><i class="fa fa-arrow-alt-circle-down"></i><small>png</small></a>
-                    <a title="" class="btn" ng-click="rasterizeSVG($event,'export.svg')"><i class="far fa-arrow-alt-circle-down"></i><small>svg</small></a>
-                    <a title="" class="btn" ><i class="far fa-save"></i></a>
-<!--                    <a class="btn"><i class="fa fa-undo"></i></a>-->
-<!--                    <a class="btn"><i class="fa fa-redo"></i></a>-->
+<!--                    <input class="input" type="text" placeholder="Image Name...">-->
+                    <div class="ie__dropdown">
+                        <a title="" class="btn ie__dropdown__btn" ng-click="">File</a>
+                        <div class="ie__dropdown__list">
+                            <a title="" class="btn" ng-click="rasterize($event,'export.png')">Export as PNG</a>
+                            <a title="" class="btn" ng-click="rasterizeSVG($event,'export.svg')">Export as SVG</a>
+
+                            <a title="" class="btn">Save</a>
+                            <a title="" class="btn" ng-click="">Close</a>
+                        </div>
+                    </div>
+                    <div class="ie__dropdown">
+                        <a title="" class="btn ie__dropdown__btn" ng-click="">Edit</a>
+                        <div class="ie__dropdown__list">
+                            <a title="" class="btn" ng-click="cut()">Cut<span>ctrl + x</span></a>
+                            <a title="" class="btn" ng-click="copy()">Copy<span>ctrl + c</span></a>
+                            <a title="" class="btn" ng-click="paste()">Paste<span>ctrl + v</span></a>
+                            <a title="" class="btn" ng-click="duplicate()">Duplicate</a>
+                            <a title="" class="btn" ng-click="deleteSelection()">Delete<span>del</span></a>
+                        </div>
+                    </div>
+                    <div class="ie__dropdown">
+                        <a title="" class="btn ie__dropdown__btn" ng-click="">Object</a>
+                        <div class="ie__dropdown__list">
+                            <a title="" class="btn" ng-click="bringToFront()">Bring to Front <span>ctrl + shift + ↑</span></a>
+                            <a title="" class="btn" ng-click="bringForward()">Bring Forward <span>ctrl + ↑</span></a>
+                            <a title="" class="btn" ng-click="sendBackwards()">Send Backward <span>ctrl + ↓</span></a>
+                            <a title="" class="btn" ng-click="sendToBack()">Send to Back <span>ctrl + shift + ↓</span></a>
+
+                        </div>
+                    </div>
+
+
                     <div class="ie__collaborators">
                         <a title="Pan Jan" style="color: #00a5ff;" class="btn"><i class="fa fa-user-circle"></i></a>
                         <a title="Jojo Celko" style="color: #00A000;" class="btn"><i class="fa fa-user-circle"></i></a>
@@ -62,17 +89,17 @@ class ImageEditorTemplate extends QuickTemplate {
             <div class="ie__tools">
                 <div class="ie__panel__vertical">
                     <a title="" ng-class="activeTool == tools.select ? 'active' : '' " ng-click="setActiveTool(tools.select)" class="btn"><i class="fa fa-mouse-pointer"></i></a>
-                    <a title="" ng-class="activeTool == tools.pencil ? 'active' : '' " ng-click="setActiveTool(tools.pencil)" class="btn"><i class="fa fa-pencil-alt"></i></a>
+                    <a title="" ng-class="activeTool == tools.brush ? 'active' : '' " ng-click="setActiveTool(tools.brush)" class="btn"><i class="fa fa-pencil-alt"></i></a>
                     <a title="" ng-class="activeTool == tools.line ? 'active' : '' " ng-click="setActiveTool(tools.line)" class="btn"><big><b>\</b></big></a>
                     <a title="" ng-class="activeTool == tools.rectangle ? 'active' : '' " ng-click="setActiveTool(tools.rectangle)" class="btn"><i class="far fa-square" ng-click="addRect()"></i></a>
                     <a title="" ng-class="activeTool == tools.circle ? 'active' : '' " ng-click="setActiveTool(tools.circle)" class="btn"><i class="far fa-circle"></i></a>
                     <a title="" ng-class="activeTool == tools.polygon ? 'active' : '' " ng-click="setActiveTool(tools.polygon)" class="btn"><i class="far fa-star"></i></a>
                     <a title="" ng-class="activeTool == tools.text ? 'active' : '' " ng-click="setActiveTool(tools.text)" class="btn"><i class="fa fa-font"></i></a>
                     <div class="ie__container__picker btn">
-                        <input id="fill" type="color"  bind-value-to="fill" ng-model="fillColor" style="display: none;">
-                        <input id="stroke" type="color" bind-value-to="stroke" ng-model="strokeColor" style="display: none;">
-                        <a title="" ng-click="openColorPicker('stroke')" class="ie__container__picker__stroke" style="color:{[getStrokeColor();]}"><i class="far fa-square"></i></a>
-                        <a title="" ng-click="openColorPicker('fill')" class="ie__container__picker__background" style="color:{[getFillColor()]}"><i class="fa fa-square"></i></a>
+                        <div title="" colorpicker="rgba" colorpicker-position="right" colorpicker-with-input="true" ng-model="fillColor" ng-change="setFillColor(fillColor)" class="ie__container__picker__background" style="background:{[getFillColor()]}"></div>
+                        <div title="" colorpicker="rgba" colorpicker-position="right" colorpicker-with-input="true" ng-model="strokeColor" ng-change="setStrokeColor(strokeColor)" class="ie__container__picker__stroke" style="background:{[getStrokeColor();]}">
+                            <div class="ie__container__picker__stroke__inner"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,20 +111,24 @@ class ImageEditorTemplate extends QuickTemplate {
                         <div class="ie__options__title">Canvas</div>
                         <div class="ie__tile__22">
                             <label>Width</label>
-                            <input type="number" bind-value-to="canvasWidth">
+                            <input title="" type="number" bind-value-to="canvasWidth">
                         </div>
                         <div class="ie__tile__22">
                             <label>Height</label>
-                            <input type="number" bind-value-to="canvasHeight">
+                            <input title="" type="number" bind-value-to="canvasHeight">
                         </div>
+
                         <div class="ie__tile__22">
                             <label>Background</label>
-                            <input type="color" bind-value-to="canvasBgColor">
+                            <div title="" colorpicker="rgba" colorpicker-position="left" colorpicker-with-input="true" ng-model="canvasBgColor" ng-change="setCanvasBgColor(canvasBgColor)" class="ie__colorpicker" style="background:{[getCanvasBgColor()]}"></div>
+
+                            <!--                            <input type="color" bind-value-to="canvasBgColor">-->
                         </div>
                     </div>
 
                     <!-- object default properties-->
                     <div class="ie__options__object" ng-show="canvas.getActiveObject() != undefined">
+
                         <div class="ie__options__title">{[canvas.getActiveObject().get('type')]}</div>
                         <div class="ie__tile__22">
                             <label>X coord</label>
@@ -152,7 +183,7 @@ class ImageEditorTemplate extends QuickTemplate {
                         <div class="ie__options__title">Font</div>
                         <div class="ie__tile__24">
                             <label>Font</label>
-                            <select bind-value-to="fontFamily">
+                            <select title="" bind-value-to="fontFamily">
                                 <option value="arial">Arial</option>
                                 <option value="helvetica" selected="">Helvetica</option>
                                 <option value="myriad pro">Myriad Pro</option>
@@ -171,41 +202,48 @@ class ImageEditorTemplate extends QuickTemplate {
 
                         </div>
                         <div class="ie__tile__11">
-                            <a ng-click="toggleBold()" ng-class="isBold() == true ? 'active' : ''" ><i class="fa fa-bold"></i></a>
+                            <a title="" ng-click="toggleBold()" ng-class="isBold() == true ? 'active' : ''" ><i class="fa fa-bold"></i></a>
                         </div>
                         <div class="ie__tile__11">
-                            <a ng-click="toggleItalic()" ng-class="isItalic() == true ? 'active' : ''" ><i class="fa fa-italic"></i></a>
+                            <a title="" ng-click="toggleItalic()" ng-class="isItalic() == true ? 'active' : ''" ><i class="fa fa-italic"></i></a>
                         </div>
                         <div class="ie__tile__11">
-                            <a ng-click="toggleUnderline()" ng-class="isUnderline() == true ? 'active' : ''" ><i class="fa fa-underline"></i></a>
+                            <a title="" ng-click="toggleUnderline()" ng-class="isUnderline() == true ? 'active' : ''" ><i class="fa fa-underline"></i></a>
                         </div>
                         <div class="ie__tile__11">
-                            <a ng-click="toggleLinethrough()" ng-class="isLinethrough() == true ? 'active' : ''" ><i class="fa fa-strikethrough"></i></a>
+                            <a title="" ng-click="toggleLinethrough()" ng-class="isLinethrough() == true ? 'active' : ''" ><i class="fa fa-strikethrough"></i></a>
                         </div>
                         <div class="ie__tile__22">
                             <label>Line h</label>
-                            <input type="number" bind-value-to="lineHeight" min="0" step="0.1">
+                            <input title="" type="number" bind-value-to="lineHeight" min="0" step="0.1">
                         </div>
                         <div class="ie__tile__22">
                             <label>Font size</label>
-                            <input type="number" bind-value-to="fontSize" min="0">
+                            <input title="" type="number" bind-value-to="fontSize" min="0">
+                        </div>
+
+                    </div>
+                    <div class="ie__options__freedraw" ng-show="activeTool == tools.brush">
+
+                        <div class="ie__options__title">{[canvas.getActiveObject().get('type')]}</div>
+                        <div class="ie__tile__22">
+                            <label>Brush</label>
+                            <input type="number" bind-value-to="left">
                         </div>
                     </div>
-
                     <!-- stroke properties-->
                     <div class="ie__options__stroke" ng-show="canvas.getActiveObject() != undefined">
                         <div class="ie__options__title">Stroke</div>
                         <div class="ie__tile__22">
                             <label>Width</label>
-                            <input type="number" bind-value-to="strokeWidth" min="0">
+                            <input title="" type="number" bind-value-to="strokeWidth" min="0">
                         </div>
                     </div>
 
                 </div>
             </div>
-
         </div>
-        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/fabric.js'></script>
+        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/fabricjs/fabric.min.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/ext.imageEditor.utils.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/ext.imageEditor.config.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/ext.imageEditor.init.accessors.js'></script>

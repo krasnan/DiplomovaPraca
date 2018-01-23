@@ -22,6 +22,7 @@ function setActiveStyle(styleName, value, object) {
     }
 
     object.setCoords();
+    canvas.trigger('object:modified');
     canvas.renderAll();
 };
 
@@ -36,7 +37,14 @@ function setActiveProp(name, value) {
     var object = canvas.getActiveObject();
     if (!object) return;
     object.set(name, value).setCoords();
+    canvas.trigger('object:modified');
     canvas.renderAll();
+}
+
+function getObjectById(id){
+    return canvas.forEachObject(function(obj){
+        if( obj.id === id ) return obj;
+    });
 }
 
 function initAccessors($scope, canvas) {
@@ -323,5 +331,34 @@ function initAccessors($scope, canvas) {
 
     $scope.setHasControls = function (value) {
         return setActiveProp('hasControls', value);
+    };
+
+    // ----- layer management -----
+    $scope.sendBackwards = function() {
+        var activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            canvas.sendBackwards(activeObject);
+        }
+    };
+
+    $scope.sendToBack = function() {
+        var activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            canvas.sendToBack(activeObject);
+        }
+    };
+
+    $scope.bringForward = function() {
+        var activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            canvas.bringForward(activeObject);
+        }
+    };
+
+    $scope.bringToFront = function() {
+        var activeObject = canvas.getActiveObject();
+        if (activeObject) {
+            canvas.bringToFront(activeObject);
+        }
     };
 }

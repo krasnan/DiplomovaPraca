@@ -2,7 +2,7 @@
 	"name": "ImageEditor",
 	"version": "0.0.0",
 	"author": [
-		"Your Name"
+		"Martin Krasňan"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:ImageEditor",
 	"descriptionmsg": "boilerplate-desc",

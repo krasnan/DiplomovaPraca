@@ -1,8 +1,12 @@
+function uniqueId(){
+    return Math.random().toString(36).substr(2, 16);
+}
+
 function initTools($scope, canvas){
 
     $scope.tools={
         select : 'select',
-        pencil : 'pencil',
+        brush : 'brush',
         line : 'line',
         rectangle : 'rectangle',
         circle : 'circle',
@@ -13,34 +17,42 @@ function initTools($scope, canvas){
 
     $scope.activeTool = $scope.tools.select;
     $scope.backgroundColor = 'rgba(0,0,0,0)';
-    $scope.fillColor = '#000000';
-    $scope.strokeColor = '#000000';
+    $scope.fillColor = 'rgba(0,0,0,1)';
+    $scope.strokeColor = 'rgba(255,255,255,0)';
 
     $scope.setActiveTool = function(tool){
         $scope.activeTool = tool;
-        canvas.isDrawingMode = ($scope.activeTool == $scope.tools.pencil);
+        canvas.isDrawingMode = ($scope.activeTool == $scope.tools.brush);
     };
-    $scope.openColorPicker = function(element_id){
-        document.getElementById(element_id).click();
-    };
+
     $scope.getStrokeColor = function(){
         if(canvas.getActiveObject())
-            return canvas.getActiveObject().stroke;
+            return $scope.getStroke();
         else return $scope.strokeColor;
 
-    }
-    $scope.getFillColor = function(){
+    };
+    $scope.setStrokeColor = function(value){
         if(canvas.getActiveObject())
-            return canvas.getActiveObject().fill;
+            $scope.setStroke(value);
+        else $scope.strokeColor = value;
+
+    };
+    $scope.getFillColor = function(value){
+        if(canvas.getActiveObject())
+            return $scope.getFill(value);
         else return $scope.fillColor;
 
-    }
+    };
+    $scope.setFillColor = function(value){
+        if(canvas.getActiveObject())
+            $scope.setFill(value);
+        else $scope.fillColor = value;
+
+    };
     $scope.deleteSelection = function(){
         var activeObject = canvas.getActiveObject(), activeGroup = canvas.getActiveGroup();
         if (activeObject) {
-            if (confirm('Are you sure?')) {
-                canvas.remove(activeObject);
-            }
+            canvas.remove(activeObject);
         }
         else if (activeGroup) {
             if (confirm('Are you sure?')) {
@@ -68,6 +80,50 @@ function initTools($scope, canvas){
         var elem = angular.element(e.currentTarget )[0];
         elem.href = 'data:image/svg+xml;utf8,' + encodeURIComponent(canvas.toSVG());
         elem.download = filename;
+    };
+
+    $scope.copy = function(){
+        canvas.getActiveObject().clone(function(cloned){
+            $scope._clipboard = cloned;
+        })
+    };
+
+    $scope.paste = function () {
+        if($scope._clipboard === undefined) return;
+        $scope._clipboard.clone(function(clonedObj) {
+            canvas.discardActiveObject();
+            clonedObj.set({
+                id: uniqueId(),
+                left: clonedObj.left + 10,
+                top: clonedObj.top + 10,
+                evented: true,
+            });
+            if (clonedObj.type === 'activeSelection') {
+                // active selection needs a reference to the canvas.
+                clonedObj.canvas = canvas;
+                clonedObj.forEachObject(function(obj) {
+                    canvas.add(obj);
+                });
+                // this should solve the unselectability
+                clonedObj.setCoords();
+            } else {
+                canvas.add(clonedObj);
+            }
+            $scope._clipboard.top += 10;
+            $scope._clipboard.left += 10;
+            canvas.setActiveObject(clonedObj);
+            canvas.renderAll();
+        });
+    };
+
+    $scope.duplicate = function () {
+        $scope.copy();
+        $scope.paste();
+    };
+
+    $scope.cut = function () {
+        $scope.copy();
+        $scope.deleteSelection();
     };
 
 
@@ -150,6 +206,7 @@ function initTools($scope, canvas){
 
     function createRectangle(pointer) {
         return new fabric.Rect({
+            id: uniqueId(),
             left: origX,
             top: origY,
             originX: 'left',
@@ -160,8 +217,10 @@ function initTools($scope, canvas){
             fill: $scope.fillColor
         });
     }
+
     function createCircle(pointer) {
         return new fabric.Circle({
+            id: uniqueId(),
             left: origX,
             top: origY,
             radius: 50,
@@ -169,16 +228,20 @@ function initTools($scope, canvas){
             originX: 'center', originY: 'center'
         })
     }
+
     function createLine(pointer) {
         return new fabric.Line([pointer.x, pointer.y,pointer.x, pointer.y], {
+            id: uniqueId(),
             strokeWidth: 5,
             fill: $scope.fillColor,
             stroke: $scope.strokeColor,
             originX: 'center', originY: 'center'
         });
     }
+
     function createText(pointer) {
         return  new fabric.Textbox('Insert your text...', {
+            id: uniqueId(),
             left: origX,
             top: origY,
             fill: $scope.fillColor,
@@ -186,6 +249,7 @@ function initTools($scope, canvas){
             originX: 'left'
         });
     }
+
     $scope.toggleFullScreen = function() {
         if ((document.fullScreenElement && document.fullScreenElement !== null) ||
             (!document.mozFullScreen && !document.webkitIsFullScreen)) {
@@ -212,4 +276,7 @@ function initTools($scope, canvas){
             }
         }
     }
+
+
+
 }
