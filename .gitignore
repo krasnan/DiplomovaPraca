@@ -4,6 +4,7 @@
 /composer.lock
 /vendor
 /node_modules
+/package-lock.json
 /_docs/text/*
 !/_docs/text/*.tex
 !/_docs/text/*.bib

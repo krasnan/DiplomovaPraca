@@ -1007,10 +1007,10 @@ function watchCanvas($scope) {
 
 }
 
-colabedit.controller('CanvasControls', function($scope) {
+ImageEditor.controller('CanvasControls', function($scope) {
 
     $scope.canvas = canvas;
-    $scope.canvas.backgroundColor = '#ffffff';
+    // $scope.canvas.backgroundColor = '#ffffff';
     $scope.getActiveStyle = getActiveStyle;
 
     addAccessors($scope);

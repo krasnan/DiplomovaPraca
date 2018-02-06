@@ -27,9 +27,24 @@ class ImageEditorTemplate extends QuickTemplate {
         ?>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/angular/angular.min.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/angular-bootstrap-colorpicker/bootstrap-colorpicker-module.min.js'></script>
+        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/socket.io-client/socket.io.js'></script>
+
+        <script !src="">
+            function getFileName(){
+                return location.href.search();
+            }
+
+            // var socket = io.connect('http://wiki.localhost:3000', {query:'name=krasnan&room=roomName'});
 
 
-        <div class="ie"  ng-app="colabedit" ng-controller="CanvasControls">
+            // socket.on('connect', function(){
+            //     socket.emit('joinRoom', 'room_name', 'user_name');
+            // });
+            // socket.on('addUser', function(data){console.log(data)});
+            // socket.on('disconnect', function(){});
+        </script>
+
+        <div class="ie"  ng-app="ImageEditor" ng-controller="ImageEditor">
 
             <div class="ie__playground">
                 <div class="ie__playground__container">

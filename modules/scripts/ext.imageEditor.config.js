@@ -1,13 +1,13 @@
 var canvas = new fabric.Canvas('ie__canvas');
-var colabedit = angular.module('colabedit', ['colorpicker.module']);
+var app = angular.module('ImageEditor', ['colorpicker.module']);
 
-colabedit.config(function($interpolateProvider) {
+app.config(function($interpolateProvider) {
   $interpolateProvider
     .startSymbol('{[')
     .endSymbol(']}');
 });
 
-colabedit.directive('bindValueTo', function() {
+app.directive('bindValueTo', function() {
   return {
     restrict: 'A',
 
@@ -52,16 +52,26 @@ colabedit.directive('bindValueTo', function() {
   };
 });
 
-colabedit.directive('objectButtonsEnabled', function() {
-  return {
-    restrict: 'A',
-
-    link: function ($scope, $element, $attrs) {
-      $scope.$watch($attrs.objectButtonsEnabled, function(newVal) {
-
-        $($element).find('.btn-object-action')
-          .prop('disabled', !newVal);
-      });
-    }
-  };
+app.factory('socket', function ($rootScope) {
+    var socket = io.connect('http://wiki.localhost:3000', {query:'name=krasnan&room=roomName'});
+    return {
+        on: function (eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        },
+        emit: function (eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            })
+        }
+    };
 });

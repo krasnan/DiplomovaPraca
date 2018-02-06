@@ -11,28 +11,32 @@ function watchCanvas($scope) {
         .on('group:selected', updateScope)
         .on('path:created', updateScope)
         .on('selection:cleared', updateScope)
+
+        .on('path:created', function(){
+            console.log('path:created');
+        })
         .on('selection:cleared', function () {
-            console.log('deselected');
+            console.log('selection:cleared');
         })
         .on('before:selection:cleared', function () {
-            console.log('before deselected');
+            console.log('before:selection:cleared');
         })
         .on('selection:created', function () {
-            console.log('selected group');
+            console.log('selection:created');
         })
         .on('object:modified', function () {
-            console.log('modified');
+            console.log('object:modified');
         })
-        .on('object:selected', function () {
-            console.log('selected obj');
+        .on('object:modified', function () {
+            console.log('object:modified');
         });
 
 }
 
-colabedit.controller('CanvasControls', function($scope, $element) {
+app.controller('ImageEditor', function($scope, socket, $element) {
 
   $scope.canvas = canvas;
-  $scope.canvas.backgroundColor = '#ffffff';
+  //$scope.canvas.backgroundColor = '#ffffff';
   $scope.getActiveStyle = getActiveStyle;
 
     initAccessors($scope,canvas);
