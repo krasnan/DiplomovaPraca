@@ -1,4 +1,4 @@
-function initKeyBindings($scope, canvas) {
+function initKeyBindings($scope, socket, canvas) {
     document.onkeyup = function (e) {
 
         var e = window.event ? event : e;

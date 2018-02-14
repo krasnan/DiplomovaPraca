@@ -6,18 +6,36 @@ var rm = new RoomManager();
 
 io.on('connection', function (socket) {
     query = socket.handshake.query;
-    room = rm.addRoom(query['room']);
-    user = new User(query['name'], socket);
+    var room = rm.addRoom(query['room']);
+    var user = new User(query['name'], socket);
     
     room.addUser(user);
     socket.join(room.name);
 
-    // socket.on('', function (data) {
-    //
-    // });
-    //
+    console.log(room.users);
+    console.log(' log: users in room: ' + JSON.stringify(room.users));
+    socket.emit('init',JSON.stringify(room));
+
+
+    socket.broadcast.to(room.name).emit('user-created', user);
+
+    socket.on('object-modified',function(object){
+        room.objects[object.id] = object.properties;
+        socket.broadcast.to(room.name).emit('object-modified', object);
+    });
+    socket.on('object-created',function(object){
+        room.objects[object.id] = object.properties;
+        console.log(room.objects);
+        socket.broadcast.to(room.name).emit('object-created', object);
+    });
+    socket.on('object-removed',function(object){
+        delete room.objects[object.id];
+        socket.broadcast.to(room.name).emit('object-removed', object);
+    });
 
     socket.on('disconnect', function () {
+        socket.broadcast.to(room.name).emit('user-removed', user);
+
         socket.leave(room.name);
         room.removeUser(socket.id);
     });
@@ -30,7 +48,7 @@ server.listen(3000);
 
 function User(name, socket){
     this.name = name;
-    this.socket = socket;
+    this.id = socket.id;
 }
 
 function Message(from, to, text) {

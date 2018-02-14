@@ -30,9 +30,6 @@ class ImageEditorTemplate extends QuickTemplate {
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/socket.io-client/socket.io.js'></script>
 
         <script !src="">
-            function getFileName(){
-                return location.href.search();
-            }
 
             // var socket = io.connect('http://wiki.localhost:3000', {query:'name=krasnan&room=roomName'});
 
@@ -88,14 +85,7 @@ class ImageEditorTemplate extends QuickTemplate {
 
 
                     <div class="ie__collaborators">
-                        <a title="Pan Jan" style="color: #00a5ff;" class="btn"><i class="fa fa-user-circle"></i></a>
-                        <a title="Jojo Celko" style="color: #00A000;" class="btn"><i class="fa fa-user-circle"></i></a>
-                        <a title="Martin Danek" class="btn" style="color: #7a43b6;"><i class="fa fa-user-circle"></i></a>
-                        <a title="Pan Jan" style="color: #ff7e72;" class="btn"><i class="fa fa-user-circle"></i></a>
-                        <a title="Jojo Celko" style="color: #efed3f;" class="btn"><i class="fa fa-user-circle"></i></a>
-                        <a title="Martin Danek" class="btn" style="color: #3b9c25;"><i class="fa fa-user-circle"></i></a>
-                        <a title="Pan Jan" style="color: #1fedff;" class="btn"><i class="fa fa-user-circle"></i></a>
-                        <a title="Jojo Celko" style="color: #00A000;" class="btn"><i class="fa fa-user-circle"></i></a>
+                        <a ng-repeat="user in room.users" title="user.name" style="color: {{user.color}};" class="btn"><i class="fa fa-user-circle"></i></a>
                     </div>
                     <a title="Toggle fullscreen" ng-click="toggleFullScreen()" class="btn " ng-class="isFullscreen ? 'active' : ''"><i class="fa fa-expand-arrows-alt"></i></a>
                 </div>

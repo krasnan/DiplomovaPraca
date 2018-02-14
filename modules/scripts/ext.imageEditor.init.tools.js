@@ -2,7 +2,7 @@ function uniqueId(){
     return Math.random().toString(36).substr(2, 16);
 }
 
-function initTools($scope, canvas){
+function initTools($scope, socket, canvas){
 
     $scope.tools={
         select : 'select',
@@ -60,6 +60,8 @@ function initTools($scope, canvas){
                 canvas.discardActiveGroup();
                 objectsInGroup.forEach(function(object) {
                     canvas.remove(object);
+                    canvas.trigger('object:removed',{target:object});
+
                 });
             }
         }
@@ -83,35 +85,51 @@ function initTools($scope, canvas){
     };
 
     $scope.copy = function(){
-        canvas.getActiveObject().clone(function(cloned){
-            $scope._clipboard = cloned;
-        })
+        var object = canvas.getActiveObject();
+        var group = canvas.getActiveGroup();
+
+
+        if(object !== null){
+            object.clone(function(cloned){
+                $scope._clipboard = cloned;
+            })
+        }
+        else if(group !==null){
+            group.clone(function(cloned){
+                $scope._clipboard = cloned;
+            })
+        }
     };
 
     $scope.paste = function () {
         if($scope._clipboard === undefined) return;
         $scope._clipboard.clone(function(clonedObj) {
-            canvas.discardActiveObject();
             clonedObj.set({
-                id: uniqueId(),
                 left: clonedObj.left + 10,
                 top: clonedObj.top + 10,
-                evented: true,
             });
-            if (clonedObj.type === 'activeSelection') {
-                // active selection needs a reference to the canvas.
-                clonedObj.canvas = canvas;
-                clonedObj.forEachObject(function(obj) {
-                    canvas.add(obj);
-                });
-                // this should solve the unselectability
-                clonedObj.setCoords();
-            } else {
+
+            if (clonedObj.type === "group") {
+                //TODO: implement paste operation for objects group
+                return
+                // canvas.discardActiveGroup();
+                // clonedObj.forEachObject(function (obj) {
+                //     obj.id = uniqueId();
+                //     obj.set('active', true);
+                //     canvas.add(obj);
+                //     console.log(obj);
+                // });
+                //canvas.setActiveGroup(clonedObj);
+            }
+
+            else {
+                canvas.discardActiveObject();
+                clonedObj.id = uniqueId();
                 canvas.add(clonedObj);
+                canvas.trigger('object:created',{target:clonedObj})
             }
             $scope._clipboard.top += 10;
             $scope._clipboard.left += 10;
-            canvas.setActiveObject(clonedObj);
             canvas.renderAll();
         });
     };
@@ -199,6 +217,7 @@ function initTools($scope, canvas){
         if( obj != null ){
             obj.setCoords();
             $scope.activeTool = $scope.tools.select;
+            canvas.trigger('object:created',{target:obj})
         }
         isDown = false;
         obj = null;
@@ -275,8 +294,133 @@ function initTools($scope, canvas){
                 $scope.isFullscreen=false;
             }
         }
+    };
+
+    function addObject(id, properties) {
+        var object = new fabric[fabric.util.string.camelize(fabric.util.string.capitalize(properties.type))].fromObject(properties);
+        object.id = id;
+        canvas.add(object);
+        return object;
     }
 
+    // ------------ Socket event listeners - END ------------
 
+    socket.on('init', function (room) {
+        console.log('SOCKET: init');
+
+        $scope.room = JSON.parse(room);
+        console.log($scope.room);
+        // $scope.server_room = data.room;
+        // for(var key in data.room.objects){
+        //     console.log(key);
+        // }
+    });
+
+    socket.on('user-created', function (user) {
+        console.log('SOCKET: user-created');
+
+        console.log(user);
+        $scope.room.users[user.id] = user;
+    });
+    socket.on('user-removed', function (user) {
+        console.log('SOCKET: user-removed');
+
+        console.log(user);
+        delete $scope.room.users[user.id];
+    });
+
+    socket.on('message-created', function (message) {
+        console.log('SOCKET: user-created');
+
+        console.log(message);
+        $scope.room.messages.push(message);
+    });
+
+
+    socket.on('object-modified', function(obj){
+        console.log('SOCKET: object-modified');
+
+        var object = canvas.getObjectById(obj.id);
+        if(object !== null){
+            object.animate(
+                {
+                    left: obj.properties.left,
+                    top: obj.properties.top,
+                    scaleX: obj.properties.scaleX,
+                    scaleY: obj.properties.scaleY,
+                    angle: obj.properties.angle
+                },{
+                    duration:500,
+                    onChange: function () {
+                        object.setCoords();
+                        canvas.renderAll();
+                    }
+                }
+            );
+            object.set(obj.properties);
+        }
+        else{
+            object = addObject(obj.id, obj.properties);
+        }
+    });
+
+    socket.on('object-created', function (obj) {
+        console.log('SOCKET: object-created');
+
+        object = addObject(obj.id, obj.properties);
+        object.setCoords();
+        canvas.renderAll();
+    });
+    
+    socket.on('object-removed', function (obj) {
+        console.log('SOCKET: object-removed');
+
+        var object = canvas.getObjectById(obj.id);
+        object.remove();
+        canvas.renderAll();
+    });
+
+
+    // ------------ Socket event listeners - END ------------
+
+
+
+    // ------------ Canvas event listeners - START ------------
+    canvas.on('object:modified', function (event) {
+        console.log('CANVAS: object:modified');
+
+        object = event.target;
+        // console.log(object);
+
+        if(object.type === "group"){
+            var group = object;
+            for(var i = group._objects.length-1; i>=0; i--){
+                obj = group._objects[i];
+                group.removeWithUpdate(obj);
+                socket.emit('object-modified',{id:obj.id, properties:obj.toJSON()});
+                group.addWithUpdate(obj);
+            }
+        }
+        else{
+            socket.emit('object-modified',{id:object.id, properties:object.toJSON()});
+        }
+    });
+
+    canvas.on('object:created', function (event) {
+        console.log('CANVAS: object:created');
+
+        var obj = event.target;
+        socket.emit('object-created',{id:obj.id, properties:obj.toJSON()});
+    });
+
+    canvas.on('object:removed',function (event) {
+        console.log('CANVAS: object:removed');
+
+        var obj = event.target;
+        socket.emit('object-removed',{id:obj.id});
+    });
+    // ------------ Canvas event listeners - END ------------
 
 }
+
+

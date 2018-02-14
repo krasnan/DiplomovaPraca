@@ -5,7 +5,7 @@ function getActiveStyle(styleName, object) {
     return (object.getSelectionStyles && object.isEditing)
         ? (object.getSelectionStyles()[styleName] || '')
         : (object[styleName] || '');
-};
+}
 
 function setActiveStyle(styleName, value, object) {
     object = object || canvas.getActiveObject();
@@ -22,9 +22,9 @@ function setActiveStyle(styleName, value, object) {
     }
 
     object.setCoords();
-    canvas.trigger('object:modified');
+    canvas.trigger('object:modified',{target:object});
     canvas.renderAll();
-};
+}
 
 function getActiveProp(name) {
     var object = canvas.getActiveObject();
@@ -37,7 +37,7 @@ function setActiveProp(name, value) {
     var object = canvas.getActiveObject();
     if (!object) return;
     object.set(name, value).setCoords();
-    canvas.trigger('object:modified');
+    canvas.trigger('object:modified',{target:object});
     canvas.renderAll();
 }
 
@@ -46,9 +46,9 @@ function getObjectById(id){
         if( obj.id === id ) return obj;
     });
 }
+function initAccessors($scope, socket, canvas) {
 
-function initAccessors($scope, canvas) {
-    //canvas
+    // -------------------- canvas ---------------------
     $scope.getCanvasHeight = function () {
         return canvas.height;
     };
@@ -81,8 +81,7 @@ function initAccessors($scope, canvas) {
         return (getActiveStyle('angle') == 0 ) ? "0" : getActiveStyle('angle');
     };
     $scope.setAngle = function (value) {
-        canvas.getActiveObject().setAngle(parseInt(value, 10));
-        canvas.renderAll();
+        setActiveProp('angle',parseInt(value, 10))
     };
 
     $scope.getWidth = function () {
@@ -259,7 +258,7 @@ function initAccessors($scope, canvas) {
 
     $scope.getScaleLockX = function () {
         return getActiveProp('lockScalingX');
-    },
+    };
         $scope.setScaleLockX = function (value) {
             setActiveProp('lockScalingX', value);
         };
