@@ -1,13 +1,19 @@
-app.controller('ImageEditor', function($scope, socket) {
+app.controller('ImageEditor', function($scope, $timeout, socket) {
 
     $scope.canvas = canvas;
-    //$scope.canvas.backgroundColor = '#ffffff';
     $scope.getActiveStyle = getActiveStyle;
 
-    initAccessors($scope, socket, canvas);
-    initTools($scope, socket, canvas);
-    initKeyBindings($scope, socket, canvas);
-    watchCanvas($scope, socket);
+    $scope.socketInit=function(serverUrl, serverPort, userName, roomName){
+        var server = serverUrl+':'+serverPort;
+        var query = {query:'name='+userName+'&room='+roomName};
+
+        socket.connect(server, query);
+        initAccessors($scope, socket, canvas);
+        initTools($scope, socket, canvas, $timeout);
+        initKeyBindings($scope, socket, canvas);
+        watchCanvas($scope, socket);
+        $scope.loaded = true;
+    };
 });
 
 
@@ -23,26 +29,6 @@ function watchCanvas($scope, socket) {
         .on('object:modified', updateScope)
         .on('group:selected', updateScope)
         .on('path:created', updateScope)
-        .on('selection:cleared', updateScope)
-
-        // .on('path:created', function(){
-        //     console.log('path:created');
-        // })
-        // .on('selection:cleared', function () {
-        //     console.log('selection:cleared');
-        // })
-        // .on('before:selection:cleared', function () {
-        //     console.log('before:selection:cleared');
-        // })
-        // .on('selection:created', function () {
-        //     console.log('selection:created');
-        // })
-        // .on('object:modified', function () {
-        //     console.log('object:modified');
-        // })
-        // .on('object:modified', function () {
-        //     console.log('object:modified');
-        // });
-
+        .on('selection:cleared', updateScope);
 }
 

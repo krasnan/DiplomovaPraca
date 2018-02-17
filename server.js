@@ -1,23 +1,26 @@
 // Setup basic express server
 var server = require('http').createServer();
 var io = require('socket.io')(server);
+server.listen(3000);
 
 var rm = new RoomManager();
 
 io.on('connection', function (socket) {
     query = socket.handshake.query;
-    var room = rm.addRoom(query['room']);
-    var user = new User(query['name'], socket);
-    
-    room.addUser(user);
+    room = rm.addRoom(query['room']);
+    user = new User(query['name'], socket);
+
     socket.join(room.name);
 
-    console.log(room.users);
-    console.log(' log: users in room: ' + JSON.stringify(room.users));
-    socket.emit('init',JSON.stringify(room));
+    socket.emit('init',room);
+    room.addUser(user);
 
-
-    socket.broadcast.to(room.name).emit('user-created', user);
+    // socket.broadcast.to(room.name).emit('user-created', user);
+    socket.on('message-created',function(message){
+        console.log(message);
+        room.addMessage(message.text, user.name, '*');
+        socket.broadcast.to(room.name).emit('message-created', message);
+    });
 
     socket.on('object-modified',function(object){
         room.objects[object.id] = object.properties;
@@ -41,7 +44,6 @@ io.on('connection', function (socket) {
     });
 });
 
-server.listen(3000);
 
 
 
@@ -49,34 +51,42 @@ server.listen(3000);
 function User(name, socket){
     this.name = name;
     this.id = socket.id;
+    this.color = getRandomColor();
 }
 
-function Message(from, to, text) {
+function Message(text, from, to, type) {
     this.from = from;
     this.to = to;
     this.text = text;
+    this.type = type;
     dt = new Date();
     this.time = dt.toLocaleTimeString();
 }
 
 function Room(name) {
     this.name = name;
-    this.users = [];
+    this.users = {};
     this.messages = [];
     this.objects = [];
     this.canvas = {};
 
     this.isEmpty = function () {
-        return this.users.length <= 0;
+        return Object.keys(this.users).length <= 0;
     };
 
     this.addUser = function(user){
         this.users[user.id] = user;
         console.log("+ user "+user.name+"("+user.id+") added");
+        this.addMessage('User '+user.name+' connected', 'SYSTEM', '*', 'system');
+
+        io.in(this.name).emit('user-created', this.users[user.id]);
     };
 
     this.removeUser = function(id){
         if(this.users[id] === undefined) return;
+
+        this.addMessage('User '+this.users[id].name+' disconnected', 'SYSTEM', '*', 'system');
+        io.in(this.name).emit('user-removed', id);
 
         delete this.users[id];
         console.log("- user "+id+" deleted");
@@ -85,22 +95,38 @@ function Room(name) {
             rm.removeRoom(this.name);
     };
 
+    this.addMessage = function(text, from, to, type)
+    {
+        message = new Message(text, from, to, type);
+        this.messages.push(message);
+        io.in(this.name).emit('message-created', message);
+        // socket.broadcast.to(this.name).emit('message-created', message);
+    };
 
 
     this.addObject = function(obj){
-        this.objects[obj.id] = obj;
+        this.objects.push(obj);
     };
     this.removeObject = function (obj) {
-        delete this.objects[obj.id];
+        var index = this.objects.findIndex(o => o.id === obj.id);
+        delete this.objects[index];
     };
     this.modifyObject = function (obj) {
-        this.objects[obj.id] = obj;
+        var index = this.objects.findIndex(o => o.id === obj.id);
+        this.objects[index] = obj;
     };
     this.isSelectable = function (id) {
-        return this.object[id].selectable;
+        var index = this.objects.findIndex(o => o.id === id);
+        return this.object[index].selectable;
     };
     this.setSelectable = function (id, selectable) {
-        this.objects[id].selectable = selectable;
+        var index = this.objects.findIndex(o => o.id === obj.id);
+        this.objects[index].selectable = selectable;
+    };
+    this.findObjectById = function(id){
+        return this.objects.filter(function (obj) {
+            return obj.id === id;
+        })
     }
 
 
@@ -110,7 +136,7 @@ function RoomManager() {
     this.rooms = [];
 
     this.isEmpty = function () {
-        return this.rooms.length <= 0;
+        return Object.keys(this.rooms).length <= 0;
     };
 
     this.getRoom = function (name) {
@@ -133,3 +159,16 @@ function RoomManager() {
         console.log("- room "+name+" deleted");
     }
 }
+
+function getRandomColor() {
+    var letters = '0123456789ABCD'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.round(Math.random() * 10)];
+    }
+    return color;
+}
+
+Array.prototype.move = function (from, to) {
+    this.splice(to, 0, this.splice(from, 1)[0]);
+};

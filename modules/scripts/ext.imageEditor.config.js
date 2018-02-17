@@ -65,10 +65,11 @@ app.directive('bindValueTo', function () {
 });
 
 app.factory('socket', function ($rootScope) {
-
-    var socket = io.connect('http://wiki.localhost:3000', {query:'name=krasnan&room=roomName'});
-
+    var socket;
     return {
+        connect: function (url, query) {
+            socket = io.connect(url, query);
+        },
         on: function (eventName, callback) {
             socket.on(eventName, function () {
                 var args = arguments;

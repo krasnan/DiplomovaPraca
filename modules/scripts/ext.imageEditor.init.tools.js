@@ -2,7 +2,10 @@ function uniqueId(){
     return Math.random().toString(36).substr(2, 16);
 }
 
-function initTools($scope, socket, canvas){
+function initTools($scope, socket, canvas, $timeout){
+    console.log($scope.serverUrl);
+
+
 
     $scope.tools={
         select : 'select',
@@ -19,10 +22,12 @@ function initTools($scope, socket, canvas){
     $scope.backgroundColor = 'rgba(0,0,0,0)';
     $scope.fillColor = 'rgba(0,0,0,1)';
     $scope.strokeColor = 'rgba(255,255,255,0)';
+    $scope.message = "";
 
     $scope.setActiveTool = function(tool){
         $scope.activeTool = tool;
         canvas.isDrawingMode = ($scope.activeTool == $scope.tools.brush);
+        console.log($scope.serverUrl);
     };
 
     $scope.getStrokeColor = function(){
@@ -302,36 +307,40 @@ function initTools($scope, socket, canvas){
         canvas.add(object);
         return object;
     }
+    $scope.scrollDown = function(elementClass){
+        $timeout(function() {
+            var scroller = document.getElementsByClassName(elementClass);
+            scroller[0].scrollTop = scroller[0].scrollHeight;
+        }, 100, false);
+    };
+
+    $scope.sendMessage = function(){
+        if($scope.message === "") return;
+        socket.emit('message-created', {text:$scope.message});
+        $scope.message = "";
+        $scope.scrollDown('ie__messenger__messages');
+    };
 
     // ------------ Socket event listeners - END ------------
 
     socket.on('init', function (room) {
         console.log('SOCKET: init');
 
-        $scope.room = JSON.parse(room);
+        $scope.room = room;
         console.log($scope.room);
-        // $scope.server_room = data.room;
-        // for(var key in data.room.objects){
-        //     console.log(key);
-        // }
     });
 
     socket.on('user-created', function (user) {
         console.log('SOCKET: user-created');
-
-        console.log(user);
         $scope.room.users[user.id] = user;
     });
-    socket.on('user-removed', function (user) {
+    socket.on('user-removed', function (id) {
         console.log('SOCKET: user-removed');
-
-        console.log(user);
-        delete $scope.room.users[user.id];
+        delete $scope.room.users[id];
     });
 
     socket.on('message-created', function (message) {
-        console.log('SOCKET: user-created');
-
+        console.log('SOCKET: message-created');
         console.log(message);
         $scope.room.messages.push(message);
     });
@@ -379,6 +388,8 @@ function initTools($scope, socket, canvas){
         object.remove();
         canvas.renderAll();
     });
+
+
 
 
     // ------------ Socket event listeners - END ------------
