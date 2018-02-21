@@ -17,6 +17,7 @@ function initTools($scope, socket, canvas, $timeout){
         text : 'text',
         image : 'image'
     };
+    $scope.panels = {};
 
     $scope.activeTool = $scope.tools.select;
     $scope.backgroundColor = 'rgba(0,0,0,0)';
@@ -56,20 +57,51 @@ function initTools($scope, socket, canvas, $timeout){
     };
     $scope.deleteSelection = function(){
         var activeObject = canvas.getActiveObject(), activeGroup = canvas.getActiveGroup();
-        if (activeObject) {
-            canvas.remove(activeObject);
-        }
-        else if (activeGroup) {
-            if (confirm('Are you sure?')) {
-                var objectsInGroup = activeGroup.getObjects();
-                canvas.discardActiveGroup();
-                objectsInGroup.forEach(function(object) {
-                    canvas.remove(object);
-                    canvas.trigger('object:removed',{target:object});
+        if(activeObject || activeGroup){
+            $scope.panels.modal = {
+                opened:true,
+                header: "Delete items?",
+                text: "Do you want to delete selected items?",
+                successText: "Delete",
+                cancelText: "Cancel",
+                success: function () {
+                    if (activeObject) {
+                        canvas.remove(activeObject);
+                    }
+                    else if (activeGroup) {
+                        var objectsInGroup = activeGroup.getObjects();
+                        canvas.discardActiveGroup();
+                        objectsInGroup.forEach(function(object) {
+                            canvas.remove(object);
+                            canvas.trigger('object:removed',{target:object});
 
-                });
+                        });
+                    }
+
+                },
+                cancel: function () {
+                }
+            };
+        }
+    };
+    $scope.deleteObject = function (object) {
+        $scope.panels.modal = {
+            opened: true,
+            header: "Delete " + object.type + "?",
+            text: "Do you want to delete " + object.type + "(" + object.id + ") object?",
+            successText: "Delete",
+            cancelText: "Cancel",
+            success: function () {
+                canvas.remove(object);
+                canvas.trigger('object:removed', {target: object});
+            },
+            cancel: function () {
             }
         }
+    };
+
+    $scope.selectObject = function (object) {
+        canvas.setActiveObject(object);
     };
 
     $scope.rasterize = function(e, filename) {
@@ -180,8 +212,10 @@ function initTools($scope, socket, canvas, $timeout){
             default:
                 return false;
         }
-        if( obj!= null )
+        if( obj!= null ){
             canvas.add(obj);
+            canvas.trigger('object:created',{target:obj});
+        }
         isDown = true;
     });
 
@@ -220,9 +254,10 @@ function initTools($scope, socket, canvas, $timeout){
     canvas.on('mouse:up', function(o){
         if( !isDown ) return;
         if( obj != null ){
+            canvas.trigger('object:modified',{target:obj});
+            // canvas.trigger('object:created',{target:obj});
             obj.setCoords();
             $scope.activeTool = $scope.tools.select;
-            canvas.trigger('object:created',{target:obj})
         }
         isDown = false;
         obj = null;
@@ -301,11 +336,11 @@ function initTools($scope, socket, canvas, $timeout){
         }
     };
 
-    function addObject(id, properties) {
-        var object = new fabric[fabric.util.string.camelize(fabric.util.string.capitalize(properties.type))].fromObject(properties);
-        object.id = id;
-        canvas.add(object);
-        return object;
+    function addObject(object) {
+        var obj = new fabric[fabric.util.string.camelize(fabric.util.string.capitalize(object.type))].fromObject(object);
+        obj.id = object.id;
+        canvas.add(obj);
+        return obj;
     }
     $scope.scrollDown = function(elementClass){
         $timeout(function() {
@@ -321,13 +356,45 @@ function initTools($scope, socket, canvas, $timeout){
         $scope.scrollDown('ie__messenger__messages');
     };
 
+    $scope.getLayers = function () {
+        return canvas._objects;
+    };
+
+
     // ------------ Socket event listeners - END ------------
+
 
     socket.on('init', function (room) {
         console.log('SOCKET: init');
 
         $scope.room = room;
         console.log($scope.room);
+
+        if(!$scope.room.loaded){
+            console.log(fabric);
+            
+            // fabric.loadSVGFromURL($scope.room.url, function (objects, options) {
+            //     console.log(objects);
+            // });
+            // var str = '';
+            //
+            // fabric.loadSVGFromString("", function (objects, options) {
+            //     console.log(objects);
+            // })
+        }
+
+        for (let key in $scope.room.objects) {
+            if ($scope.room.objects.hasOwnProperty(key)){
+                let obj = addObject($scope.room.objects[key]);
+                $scope.room.objects[key] = obj;
+            }
+        }
+        for (let key in $scope.room.objects) {
+            if ($scope.room.objects.hasOwnProperty(key)) {
+                let obj = $scope.room.objects[key];
+                obj.moveTo(obj.index);
+            }
+        }
     });
 
     socket.on('user-created', function (user) {
@@ -343,8 +410,18 @@ function initTools($scope, socket, canvas, $timeout){
         console.log('SOCKET: message-created');
         console.log(message);
         $scope.room.messages.push(message);
+        $scope.room.newMessage = true
     });
 
+    socket.on('selection-changed',function(data){
+        console.log('SOCKET: selection-changed');
+        canvas.getObjectById(data.id).selectable = data.selectable;
+    });
+
+    socket.on('selection-deny',function(id){
+        console.log('SOCKET: selection-deny');
+
+    });
 
     socket.on('object-modified', function(obj){
         console.log('SOCKET: object-modified');
@@ -353,11 +430,11 @@ function initTools($scope, socket, canvas, $timeout){
         if(object !== null){
             object.animate(
                 {
-                    left: obj.properties.left,
-                    top: obj.properties.top,
-                    scaleX: obj.properties.scaleX,
-                    scaleY: obj.properties.scaleY,
-                    angle: obj.properties.angle
+                    left: obj.left,
+                    top: obj.top,
+                    scaleX: obj.scaleX,
+                    scaleY: obj.scaleY,
+                    angle: obj.angle
                 },{
                     duration:500,
                     onChange: function () {
@@ -366,30 +443,39 @@ function initTools($scope, socket, canvas, $timeout){
                     }
                 }
             );
-            object.set(obj.properties);
+            object.set(obj);
         }
         else{
-            object = addObject(obj.id, obj.properties);
+            object = addObject(obj);
         }
+        object.moveTo(object.index);
+
     });
 
     socket.on('object-created', function (obj) {
         console.log('SOCKET: object-created');
 
-        object = addObject(obj.id, obj.properties);
+        object = addObject(obj);
         object.setCoords();
         canvas.renderAll();
+        object.moveTo(object.index);
+
     });
     
-    socket.on('object-removed', function (obj) {
+    socket.on('object-removed', function (id) {
         console.log('SOCKET: object-removed');
 
-        var object = canvas.getObjectById(obj.id);
+        var object = canvas.getObjectById(id);
         object.remove();
         canvas.renderAll();
     });
 
-
+    socket.on('canvas-modified', function(properties){
+        canvas.setHeight(parseInt(properties.height, 10));
+        canvas.setWidth(parseInt(properties.width, 10));
+        canvas.backgroundColor = properties.backgroundColor;
+        canvas.renderAll();
+    });
 
 
     // ------------ Socket event listeners - END ------------
@@ -397,6 +483,76 @@ function initTools($scope, socket, canvas, $timeout){
 
 
     // ------------ Canvas event listeners - START ------------
+    // canvas.on('before:selection:cleared' , function (event) {
+    //     console.log('CANVAS: before:selection:cleared');
+    //     object = event.target;
+    //     // console.log(object);
+    // });
+    // canvas.on('selection:created' , function (event) {
+    //     console.log('CANVAS: selection:created');
+    //     object = event.target;
+    //     // console.log(object);
+    // });
+    // canvas.on('selection:updated' , function (event) {
+    //     console.log('CANVAS: selection:updated');
+    //     object = event.target;
+    //     // console.log(object);
+    // });
+    // canvas.on('selection:cleared' , function (event) {
+    //     console.log('CANVAS: selection:cleared');
+    //     object = event.target;
+    //     console.log(object);
+    // });
+    // canvas.on('selection:changed' , function (event) {
+    //     console.log('CANVAS: selection:changed');
+    //     object = event.target;
+    //     console.log(object);
+    // });
+
+    canvas.on('object:selected' , function (event) {
+        console.log('CANVAS: object:selected');
+        // console.log(object);
+        object = event.target;
+        // if(object.type === "group"){
+        //     object.getObjects().forEach(function (obj) {
+        //         socket.emit('selection-changed',{id:obj.id, selectable:false});
+        //
+        //     });
+        // }
+        // else{
+        //     socket.emit('selection-changed',{id:object.id, selectable:false});
+        //
+        // }
+    });
+    canvas.on('selection:cleared' , function (event) {
+        console.log('CANVAS: selection:cleared');
+        // console.log(object);
+        object = event.target;
+        // if(object.type === "group"){
+        //     object.getObjects().forEach(function (obj) {
+        //         socket.emit('selection-changed',{id:obj.id, selectable:false});
+        //
+        //     });
+        // }
+        // else{
+        //     socket.emit('selection-changed',{id:object.id, selectable:false});
+        //
+        // }
+    });
+    canvas.on('before:selection:cleared' , function (event) {
+        console.log('CANVAS: before:selection:cleared');
+        object = event.target;
+        // if(object.type === "group"){
+        //     object.getObjects().forEach(function (obj) {
+        //         socket.emit('selection-changed',{id:obj.id, selectable:true});
+        //     });
+        // }
+        // else{
+        //     socket.emit('selection-changed',{id:object.id, selectable:true});
+        //
+        // }
+    });
+
     canvas.on('object:modified', function (event) {
         console.log('CANVAS: object:modified');
 
@@ -407,13 +563,15 @@ function initTools($scope, socket, canvas, $timeout){
             var group = object;
             for(var i = group._objects.length-1; i>=0; i--){
                 obj = group._objects[i];
+                obj.index = obj.getIndex();
                 group.removeWithUpdate(obj);
-                socket.emit('object-modified',{id:obj.id, properties:obj.toJSON()});
+                socket.emit('object-modified',obj.toJSON(['id','selectable', 'index']));
                 group.addWithUpdate(obj);
             }
         }
         else{
-            socket.emit('object-modified',{id:object.id, properties:object.toJSON()});
+            object.index = object.getIndex();
+            socket.emit('object-modified',object.toJSON(['id','selectable', 'index']));
         }
     });
 
@@ -421,17 +579,23 @@ function initTools($scope, socket, canvas, $timeout){
         console.log('CANVAS: object:created');
 
         var obj = event.target;
-        socket.emit('object-created',{id:obj.id, properties:obj.toJSON()});
+        obj.index = obj.getIndex();
+        socket.emit('object-created',obj.toJSON(['id','selectable', 'index']));
     });
 
     canvas.on('object:removed',function (event) {
         console.log('CANVAS: object:removed');
 
         var obj = event.target;
-        socket.emit('object-removed',{id:obj.id});
+        socket.emit('object-removed',obj.id);
     });
-    // ------------ Canvas event listeners - END ------------
 
+    canvas.on('canvas:modified', function (event) {
+        socket.emit('canvas-modified', {width: canvas.width, height: canvas.height, backgroundColor: canvas.backgroundColor})
+    });
+
+    // ------------ Canvas event listeners - END ------------
 }
+
 
 

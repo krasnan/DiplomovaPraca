@@ -6,8 +6,23 @@ fabric.Canvas.prototype.getObjectById = function(id){
     return null;
 };
 
+fabric.Object.prototype.getIndex = function () {
+    return this.canvas.getObjects().indexOf(this);
+};
 
-var canvas = new fabric.Canvas('ie__canvas');
+// fabric.loadSVGFromURL('http://wiki.localhost/images/2/25/SVG_Test.svg', function(objects, options){
+//     var loadedObject = fabric.util.groupSVGElements(objects, options);
+//     // Set sourcePath
+//     // loadedObject.set('sourcePath', elem.getAttribute('data-url'));
+//
+//     canvas.add(loadedObject);
+//     console.log(loadedObject);
+//     loadedObject.center().setCoords();
+//     canvas.renderAll();
+// });
+
+
+var canvas = new fabric.Canvas('ie__canvas',  { preserveObjectStacking: true });
 
 var app = angular.module('ImageEditor', [
     'colorpicker.module'
@@ -62,6 +77,18 @@ app.directive('bindValueTo', function () {
             });
         }
     };
+});
+
+app.directive("filesInput", function() {
+    return {
+        require: "ngModel",
+        link: function postLink(scope,elem,attrs,ngModel) {
+            elem.on("change", function(e) {
+                var files = elem[0].files;
+                ngModel.$setViewValue(files);
+            })
+        }
+    }
 });
 
 app.factory('socket', function ($rootScope) {

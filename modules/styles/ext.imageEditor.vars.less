@@ -8,6 +8,7 @@
 @light: #fdfdfd;
 @blue: #00a5ff;
 @red: #ff444d;
+@success: #2c962b;
 @border: #d4d4d4;
 // Transition Time
 @time: 0.3s;
@@ -131,6 +132,7 @@ Roboto
     outline: none !important;
   }
 }
+
 .btn{
   .fs(20);
   margin: @offset-xs;
@@ -156,6 +158,24 @@ Roboto
     background: rgba(0,0,0,0.1);
     padding: 2px 5px;  }
 }
+.btn-color(@bg, @color:@white){
+  &:extend(.btn all);
+  background-color: @bg;
+  color: @color;
+  border-radius: @radius;
+  border: darken(@bg, 10%) 1px solid;
+  padding: 0 @offset;
+  .fs_px(16, 16);
+  &:hover{
+    background-color: darken(@bg, 4%);
+    color: @color;
+  }
+  &:active, &:focus{
+    background-color: lighten(@bg, 4%);
+    color: @color;
+  }
+}
+
 .ul_reset {
   margin: 0;
   padding: 0;
@@ -185,3 +205,30 @@ Roboto
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.08);
   border: @border solid 1px;
 }
+
+.text-primary{
+color: @blue;
+}
+.text-danger{
+color: @red;
+}
+.text-success{
+color: @success;
+}
+.text-white{
+color: @white;
+}
+
+.btn-primary{
+  .btn-color(@blue);
+}
+.btn-danger{
+  .btn-color(@red);
+}
+.btn-success{
+  .btn-color(@success);
+}
+.btn-white{
+  .btn-color(@white,@black);
+}
+

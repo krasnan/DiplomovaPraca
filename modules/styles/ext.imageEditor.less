@@ -82,13 +82,40 @@
     margin-top: @offset-lg;
     width: ((2 * @offset-lg) + (@offset-sm *2));
     text-align: left;
-    >div{
+
+    .ie__panel__vertical{
+      &:extend(.transition all);
       padding-left: @offset-sm;
       width: 100%;
+      padding-top: 0.5rem;
+      height: auto;
+      margin-bottom: 0.5rem;
+      //overflow-y: auto;
+
+      &.opened{
+        height: 1rem;
+        overflow: hidden;
+      }
     }
+    &__header{
+      display: block;
+      clear: both;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    &__toggle{
+      color: @blue;
+       &:extend(.transition all);
+       padding: 0 0.5rem;
+       float: right;
+       .opened &{
+         transform: rotate(180deg);
+       }
+     }
     &__title{
       display: block;
       clear: both;
+      //color: lighten(@black, 50%);
     }
     &__align{
       padding-left: @offset;
@@ -130,7 +157,7 @@
     }
   }
   &__tile{
-    &__11,&__22,&__23,&__24{
+    &__11,&__14,&__22,&__23,&__24{
 
       position: relative;
       display: block;
@@ -188,6 +215,18 @@
         min-width: 0;
         min-height: 0;
         font-size: 1rem;
+      }
+    }
+    &__14{
+      width: calc( @offset-xxl + @offset-sm);
+      height: @offset-md;
+      line-height: @offset-md;
+      >div{
+        padding: 0 @offset-xs;
+      }
+      a{
+        color: @blue;
+        text-decoration: none;
       }
     }
     &__22{
@@ -284,7 +323,6 @@
         opacity: 0.7;
         border-color: @border;
       }
-
     }
     &__controll{
       width: 100%;
@@ -309,7 +347,52 @@
         color: @white;
       }
     }
+  }
+  &__modal{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    &__container{
+      &:extend(.shadow-box all);
+      min-width: 100px;
+      background: @white;
+      border-radius: @radius;
+      position: relative;
+    }
+    &__header{
+      padding: @offset-sm @offset;
+      font-weight: bold;
+
+      .btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+    &__body{
+      padding: @offset;
+    }
+    &__footer{
+      text-align: right;
+      padding: @offset-sm @offset;
+    }
 
   }
-
+  .pull-right{
+    float: right;
+  }
+  .disabled{
+    color: darken(@black, 50%);
+    pointer-events: none;
+    cursor: pointer;
+  }
+  .hidden{
+    display: none;
+  }
 }

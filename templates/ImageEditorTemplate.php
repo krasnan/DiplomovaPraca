@@ -29,7 +29,7 @@ class ImageEditorTemplate extends QuickTemplate {
         $serverPort = '3000';
         $userName = $wgUser->getName();
         $userEmail = $wgUser->getEmail();
-        $roomName = $_GET['file'];
+        $roomName = isset($_GET['file']) ? $_GET['file'] : 'New File';
         ?>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/angular/angular.min.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/angular-bootstrap-colorpicker/bootstrap-colorpicker-module.min.js'></script>
@@ -82,12 +82,13 @@ class ImageEditorTemplate extends QuickTemplate {
                             <a ng-repeat="user in room.users" title="{[user.name]}" style="color: {[user.color]};" class="btn"><i class="fa fa-user-circle"></i></a>
                         </div>
                         <a title="Toggle fullscreen" ng-click="toggleFullScreen()" class="btn" ng-class="isFullscreen ? 'active' : ''"><i class="fa fa-expand-arrows-alt"></i></a>
-                        <a title="Toggle messenger" ng-click="scrollDown('ie__messenger__messages'); messengerVisible = !messengerVisible;" class="btn" ng-class="messengerVisible ? 'active' : ''"><i class="fa fa-comments"></i></a>
+                        <a title="Toggle messenger" ng-click="scrollDown('ie__messenger__messages'); messengerVisible = !messengerVisible; room.newMessage = false" class="btn" ng-class="room.newMessage && !messengerVisible ? 'text-primary' : ''"><i class="fa fa-comments"></i></a>
                         <div class="ie__messenger" ng-class="messengerVisible==true ? 'active' : ''">
                             <div class="ie__messenger__messages">
                                 <div ng-repeat="message in room.messages" class="ie__messenger__item" ng-class="message.type=='system' ? 'system_message' : ''">
-                                    <div class="ie__messenger__item__head">{[message.time]} | {[message.from]}</div>
-                                    <span class="ie__messenger__item__content">{[message.text]}</span>
+                                    <div ng-show="message.type === 'system'" class="ie__messenger__item__head">{[message.time]} | {[message.text]}</div>
+                                    <div ng-show="message.type !== 'system'" class="ie__messenger__item__head">{[message.time]} | {[message.from]}</div>
+                                    <span ng-show="message.type !== 'system'" class="ie__messenger__item__content">{[message.text]}</span>
                                 </div>
                             </div>
                             <div class="ie__messenger__controll">
@@ -102,6 +103,7 @@ class ImageEditorTemplate extends QuickTemplate {
                     <div class="ie__panel__vertical">
                         <a title="" ng-class="activeTool == tools.select ? 'active' : '' " ng-click="setActiveTool(tools.select)" class="btn"><i class="fa fa-mouse-pointer"></i></a>
                         <a title="" ng-class="activeTool == tools.brush ? 'active' : '' " ng-click="setActiveTool(tools.brush)" class="btn"><i class="fa fa-pencil-alt"></i></a>
+                        <a title="" ng-click="panels.file_upload.opened = true" class="btn"><i class="far fa-image"></i></a>
                         <a title="" ng-class="activeTool == tools.line ? 'active' : '' " ng-click="setActiveTool(tools.line)" class="btn"><big><b>\</b></big></a>
                         <a title="" ng-class="activeTool == tools.rectangle ? 'active' : '' " ng-click="setActiveTool(tools.rectangle)" class="btn"><i class="far fa-square" ng-click="addRect()"></i></a>
                         <a title="" ng-class="activeTool == tools.circle ? 'active' : '' " ng-click="setActiveTool(tools.circle)" class="btn"><i class="far fa-circle"></i></a>
@@ -115,8 +117,24 @@ class ImageEditorTemplate extends QuickTemplate {
                         </div>
                     </div>
                 </div>
+
                 <div class="ie__options">
-                    <div class="ie__panel__vertical">
+
+                    <div class="ie__panel__vertical" ng-class="panels.layers.opened === true ? 'opened' : '' ">
+                        <div class="ie__options__header">Layers <a class="ie__options__toggle" ng-click="panels.layers.opened = !panels.layers.opened"><i class="fa fa-angle-up"></i></a></div>
+
+                        <div ng-repeat="layer in getLayers()" class="ie__tile__14">
+                            <div>
+                                <a ng-class="layer.selectable ? '' : 'disabled' " ng-click="selectObject(layer)"><i class="far " ng-class="layer.active ? 'fa-dot-circle' : 'fa-circle'"></i></a>
+                                {[layer.type]}
+                                <a ng-class="layer.selectable ? '' : 'disabled' " ng-click="deleteObject(layer)" class="pull-right"><i class="fa fa-trash"></i></a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="ie__panel__vertical" ng-class="panels.properties.opened === true ? 'opened' : '' ">
+                        <div class="ie__options__header">Options <a class="ie__options__toggle" ng-click="panels.properties.opened = !panels.properties.opened"><i class="fa fa-angle-up"></i></a></div>
 
                         <!-- canvas properties-->
                         <div class="ie__options__canvas" ng-show="canvas.getActiveObject() == undefined">
@@ -190,9 +208,30 @@ class ImageEditorTemplate extends QuickTemplate {
                                 </div>
                             </div>
                         </div>
-                        <!-- canvas properties-->
-                        <div class="ie__options__text" ng-show="canvas.getActiveObject().get('type') == 'textbox'">
-                            <div class="ie__options__title">Font</div>
+
+                        <div class="ie__options__freedraw" ng-show="activeTool == tools.brush">
+
+                            <div class="ie__options__title">{[canvas.getActiveObject().get('type')]}</div>
+                            <div class="ie__tile__22">
+                                <label>Brush</label>
+                                <input type="number" bind-value-to="left">
+                            </div>
+                        </div>
+                        <!-- stroke properties-->
+                        <div class="ie__options__stroke" ng-show="canvas.getActiveObject() != undefined">
+                            <div class="ie__options__title">Stroke</div>
+                            <div class="ie__tile__22">
+                                <label>Width</label>
+                                <input title="" type="number" bind-value-to="strokeWidth" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ie__panel__vertical" ng-class="panels.font.opened === true ? 'opened' : '' " ng-show="canvas.getActiveObject().get('type') == 'textbox'">
+                        <div class="ie__options__text">
+                            <div class="ie__options__header">Font <a class="ie__options__toggle" ng-click="panels.font.opened = !panels.font.opened"><i class="fa fa-angle-up"></i></a></div>
+
                             <div class="ie__tile__24">
                                 <label>Font</label>
                                 <select title="" bind-value-to="fontFamily">
@@ -235,25 +274,38 @@ class ImageEditorTemplate extends QuickTemplate {
                             </div>
 
                         </div>
-                        <div class="ie__options__freedraw" ng-show="activeTool == tools.brush">
-
-                            <div class="ie__options__title">{[canvas.getActiveObject().get('type')]}</div>
-                            <div class="ie__tile__22">
-                                <label>Brush</label>
-                                <input type="number" bind-value-to="left">
-                            </div>
-                        </div>
-                        <!-- stroke properties-->
-                        <div class="ie__options__stroke" ng-show="canvas.getActiveObject() != undefined">
-                            <div class="ie__options__title">Stroke</div>
-                            <div class="ie__tile__22">
-                                <label>Width</label>
-                                <input title="" type="number" bind-value-to="strokeWidth" min="0">
-                            </div>
-                        </div>
 
                     </div>
+
                 </div>
+
+                <div class="ie__modal" ng-show="panels.file_upload.opened === true">
+                    <div class="ie__modal__container">
+                        <div class="ie__modal__header">Upload Image <a class="btn" ng-click="panels.file_upload.opened = false"><i class="far fa-times-circle"></i></a></div>
+                        <div class="ie__modal__body">
+                            <input class="hidden" files-input ng-model="new_file" id="file_upload" type="file" accept=".jpg, .png, .jpeg, .svg">
+                            <label class="btn-white" for="file_upload"><i class="fa fa-upload"></i> {[new_file.length > 0 ? new_file[0].name : 'Select File' ]}</label>
+                        </div>
+                        <div class="ie__modal__footer">
+<!--                            <div class="btn btn-danger" ng-click="panels.file_upload.opened = false">Cancel</div>-->
+                            <div class="btn-primary" ng-click="panels.file_upload.opened = false">Save</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ie__modal" ng-show="panels.modal.opened === true">
+                    <div class="ie__modal__container">
+                        <div class="ie__modal__header">{[panels.modal.header]}<a class="btn" ng-click="panels.modal.opened = false"><i class="far fa-times-circle"></i></a></div>
+                        <div class="ie__modal__body">
+                            {[panels.modal.text]}
+                        </div>
+                        <div class="ie__modal__footer">
+                            <a class="btn-danger" ng-show="panels.modal.cancelText != undefined" ng-click="panels.modal.cancel();panels.modal.opened = false">{[panels.modal.cancelText]}</a>
+                            <a class="btn-primary" ng-show="panels.modal.successText != undefined" ng-click="panels.modal.success();panels.modal.opened = false">{[panels.modal.successText]}</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
 

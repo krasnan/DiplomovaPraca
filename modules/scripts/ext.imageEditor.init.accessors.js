@@ -53,13 +53,15 @@ function initAccessors($scope, socket, canvas) {
         return canvas.height;
     };
     $scope.setCanvasHeight = function (value) {
-        canvas.setHeight(parseInt(value, 10))
+        canvas.setHeight(parseInt(value, 10));
+        canvas.trigger('canvas:modified', {target: canvas});
     };
     $scope.getCanvasWidth = function () {
         return canvas.width;
     };
     $scope.setCanvasWidth = function (value) {
-        canvas.setWidth(parseInt(value, 10))
+        canvas.setWidth(parseInt(value, 10));
+        canvas.trigger('canvas:modified', {target: canvas});
     };
 
     $scope.getCanvasBgColor = function () {
@@ -68,6 +70,7 @@ function initAccessors($scope, socket, canvas) {
     $scope.setCanvasBgColor = function (value) {
         canvas.backgroundColor = value;
         canvas.renderAll();
+        canvas.trigger('canvas:modified', {target: canvas});
     };
     //object
     $scope.getHeight = function () {
@@ -337,6 +340,8 @@ function initAccessors($scope, socket, canvas) {
         var activeObject = canvas.getActiveObject();
         if (activeObject) {
             canvas.sendBackwards(activeObject);
+            canvas.trigger('object:modified',{target:activeObject});
+
         }
     };
 
@@ -344,6 +349,8 @@ function initAccessors($scope, socket, canvas) {
         var activeObject = canvas.getActiveObject();
         if (activeObject) {
             canvas.sendToBack(activeObject);
+            canvas.trigger('object:modified',{target:activeObject});
+
         }
     };
 
@@ -351,6 +358,8 @@ function initAccessors($scope, socket, canvas) {
         var activeObject = canvas.getActiveObject();
         if (activeObject) {
             canvas.bringForward(activeObject);
+            canvas.trigger('object:modified',{target:activeObject});
+
         }
     };
 
@@ -358,6 +367,9 @@ function initAccessors($scope, socket, canvas) {
         var activeObject = canvas.getActiveObject();
         if (activeObject) {
             canvas.bringToFront(activeObject);
+            canvas.trigger('object:modified',{target:activeObject});
+
+
         }
     };
 }
