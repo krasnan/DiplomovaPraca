@@ -9,6 +9,9 @@ fabric.Canvas.prototype.getObjectById = function(id){
 fabric.Object.prototype.getIndex = function () {
     return this.canvas.getObjects().indexOf(this);
 };
+fabric.Object.prototype.isSelected = function(){
+    return canvas.getActiveObjects().indexOf(this) >= 0;
+};
 
 // fabric.loadSVGFromURL('http://wiki.localhost/images/2/25/SVG_Test.svg', function(objects, options){
 //     var loadedObject = fabric.util.groupSVGElements(objects, options);

@@ -125,7 +125,7 @@ class ImageEditorTemplate extends QuickTemplate {
 
                         <div ng-repeat="layer in getLayers()" class="ie__tile__14">
                             <div>
-                                <a ng-class="layer.selectable ? '' : 'disabled' " ng-click="selectObject(layer)"><i class="far " ng-class="layer.active ? 'fa-dot-circle' : 'fa-circle'"></i></a>
+                                <a ng-class="layer.selectable ? '' : 'disabled' " ng-click="selectObject(layer)"><i class="far " ng-class="layer.isSelected() ? 'fa-dot-circle' : 'fa-circle'"></i></a>
                                 {[layer.type]}
                                 <a ng-class="layer.selectable ? '' : 'disabled' " ng-click="deleteObject(layer)" class="pull-right"><i class="fa fa-trash"></i></a>
                             </div>
@@ -310,7 +310,7 @@ class ImageEditorTemplate extends QuickTemplate {
 
 
         </div>
-        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/fabricjs/fabric.min.js'></script>
+        <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/vendor/fabricjs2/fabric.min.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/ext.imageEditor.utils.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/ext.imageEditor.config.js'></script>
         <script src='<?php echo $wgScriptPath ?>/extensions/ImageEditor/modules/scripts/ext.imageEditor.init.accessors.js'></script>

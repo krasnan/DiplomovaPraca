@@ -12,7 +12,7 @@ io.on('connection', function (socket) {
 
     socket.join(room.name);
 
-    socket.emit('init',room);
+    socket.emit('init',{room:room, user:user});
 
     room.createUser(user);
 
@@ -27,23 +27,6 @@ io.on('connection', function (socket) {
         socket.broadcast.to(room.name).emit('canvas-modified', room.canvas);
     });
 
-    // socket.on('selection-changed',function(id){
-    //     if(room.isSelectable(id)){
-    //         room.setSelectable(id, false, user.id);
-    //         socket.broadcast.to(room.name).emit('selection-created', id);
-    //     }
-    //     else{
-    //         socket.emit('selection-deny',id);
-    //     }
-    // });
-    //
-    // socket.on('selection-removed',function(id){
-    //     if(room.getSelectedBy(id) !== user.id){
-    //         socket.emit('selection-deny',id);
-    //     }
-    //     room.setSelectable(id, true, user.id);
-    //     socket.broadcast.to(room.name).emit('selection-removed', id);
-    // });
     socket.on('selection-changed',function(data){
         if(room.setSelectable(data.id, data.selectable, user.id)){
             socket.broadcast.to(room.name).emit('selection-changed', {id:data.id, selectable:data.selectable});
@@ -57,16 +40,19 @@ io.on('connection', function (socket) {
         room.modifyObject(object);
         socket.broadcast.to(room.name).emit('object-modified', object);
     });
+
     socket.on('object-created',function(object){
         room.createObject(object);
         socket.broadcast.to(room.name).emit('object-created', object);
     });
+
     socket.on('object-removed',function(id){
         room.removeObject(id);
         socket.broadcast.to(room.name).emit('object-removed', id);
     });
 
     socket.on('disconnect', function () {
+        room.unselectObjectsBy(user);
         socket.broadcast.to(room.name).emit('user-removed', user);
 
         socket.leave(room.name);
@@ -154,18 +140,29 @@ function Room(name) {
         this.objects[obj.id] = obj;
     };
     this.isSelectable = function (id) {
-        if(this.objects[id] === undefined)
+        if(this.objects[id] === undefined){
             return false;
+        }
         return this.objects[id].selectable;
     };
     this.getSelectedBy = function (id) {
-        if(this.objects[id] === undefined)
+        if(this.objects[id] === undefined){
             return undefined;
+        }
         return this.objects[id].selectedBy;
     };
+    this.unselectObjectsBy = function (user) {
+        //TODO: not implemented method
+        for (var id in this.objects){
+            if(this.unselectObject(id, user)){
+                io.in(this.name).emit('selection-changed', {id:id, selectable:this.isSelectable(id)});
+            }
+        }
+    };
     this.unselectObject = function(id, user){
-        if(this.getSelectedBy(id) !== user.id)
+        if(this.getSelectedBy(id) !== user.id){
             return false;
+        }
         else{
             this.objects[id].selectable = true;
             this.objects[id].selectedBy = undefined;
@@ -173,15 +170,15 @@ function Room(name) {
         }
     };
     this.selectObject = function(id, user){
-        if(!this.isSelectable(id))
+        if(!this.isSelectable(id)) {
             return false;
+        }
         else{
             this.objects[id].selectable = false;
             this.objects[id].selectedBy = user.id;
             return true;
         }
     };
-
     this.setSelectable = function (id, selectable, user) {
         if(selectable){
             return this.unselectObject(id, user);
@@ -191,11 +188,6 @@ function Room(name) {
         }
     };
 
-    this.findObjectById = function(id){
-        return this.objects.filter(function (obj) {
-            return obj.id === id;
-        })
-    };
     this.loadFileInfo = function () {
         //TODO: load file info from api
         this.file = {
@@ -206,8 +198,6 @@ function Room(name) {
             "descriptionurl": "http://wiki.localhost/index.php/File:SVG_Test.svg",
             "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=1895005"
         };
-        // this.canvas.height = file.height;
-        // this.canvas.width = file.width;
         return this.file;
     }
 
@@ -241,6 +231,10 @@ function RoomManager() {
         console.log("- room "+name+" deleted");
     }
 }
+
+
+
+
 
 function getRandomColor() {
     var letters = '0123456789ABCD'.split('');

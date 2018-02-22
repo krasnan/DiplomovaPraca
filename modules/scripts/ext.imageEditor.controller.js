@@ -29,6 +29,8 @@ function watchCanvas($scope, socket) {
         .on('object:modified', updateScope)
         .on('group:selected', updateScope)
         .on('path:created', updateScope)
-        .on('selection:cleared', updateScope);
+        .on('selection:created', updateScope)
+        .on('selection:cleared', updateScope)
+        .on('selection:updated', updateScope);
 }
 

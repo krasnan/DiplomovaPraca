@@ -56,8 +56,8 @@ function initTools($scope, socket, canvas, $timeout){
 
     };
     $scope.deleteSelection = function(){
-        var activeObject = canvas.getActiveObject(), activeGroup = canvas.getActiveGroup();
-        if(activeObject || activeGroup){
+        var objects = canvas.getActiveObjects();
+        if(objects.length > 0){
             $scope.panels.modal = {
                 opened:true,
                 header: "Delete items?",
@@ -65,19 +65,11 @@ function initTools($scope, socket, canvas, $timeout){
                 successText: "Delete",
                 cancelText: "Cancel",
                 success: function () {
-                    if (activeObject) {
-                        canvas.remove(activeObject);
-                    }
-                    else if (activeGroup) {
-                        var objectsInGroup = activeGroup.getObjects();
-                        canvas.discardActiveGroup();
-                        objectsInGroup.forEach(function(object) {
-                            canvas.remove(object);
-                            canvas.trigger('object:removed',{target:object});
-
-                        });
-                    }
-
+                    objects.forEach(function (object) {
+                        canvas.trigger('object:removed',{target:object});
+                        canvas.remove(object);
+                    });
+                    canvas.discardActiveObject();
                 },
                 cancel: function () {
                 }
@@ -122,52 +114,37 @@ function initTools($scope, socket, canvas, $timeout){
     };
 
     $scope.copy = function(){
-        var object = canvas.getActiveObject();
-        var group = canvas.getActiveGroup();
-
-
-        if(object !== null){
-            object.clone(function(cloned){
-                $scope._clipboard = cloned;
-            })
-        }
-        else if(group !==null){
-            group.clone(function(cloned){
-                $scope._clipboard = cloned;
-            })
-        }
+        canvas.getActiveObject().clone(function(cloned) {
+            $scope._clipboard = cloned;
+        });
     };
 
     $scope.paste = function () {
-        if($scope._clipboard === undefined) return;
+        // clone again, so you can do multiple copies.
         $scope._clipboard.clone(function(clonedObj) {
+            canvas.discardActiveObject();
             clonedObj.set({
                 left: clonedObj.left + 10,
                 top: clonedObj.top + 10,
+                evented: true,
             });
-
-            if (clonedObj.type === "group") {
-                //TODO: implement paste operation for objects group
-                return
-                // canvas.discardActiveGroup();
-                // clonedObj.forEachObject(function (obj) {
-                //     obj.id = uniqueId();
-                //     obj.set('active', true);
-                //     canvas.add(obj);
-                //     console.log(obj);
-                // });
-                //canvas.setActiveGroup(clonedObj);
-            }
-
-            else {
-                canvas.discardActiveObject();
+            if (clonedObj.type === 'activeSelection') {
+                // active selection needs a reference to the canvas.
+                clonedObj.canvas = canvas;
+                clonedObj.forEachObject(function(obj) {
+                    obj.id = uniqueId();
+                    canvas.add(obj);
+                });
+                // this should solve the unselectability
+                clonedObj.setCoords();
+            } else {
                 clonedObj.id = uniqueId();
                 canvas.add(clonedObj);
-                canvas.trigger('object:created',{target:clonedObj})
             }
             $scope._clipboard.top += 10;
             $scope._clipboard.left += 10;
-            canvas.renderAll();
+            canvas.setActiveObject(clonedObj);
+            canvas.requestRenderAll();
         });
     };
 
@@ -337,7 +314,8 @@ function initTools($scope, socket, canvas, $timeout){
     };
 
     function addObject(object) {
-        var obj = new fabric[fabric.util.string.camelize(fabric.util.string.capitalize(object.type))].fromObject(object);
+        type  = fabric.util.string.camelize(fabric.util.string.capitalize(object.type));
+        var obj = new fabric[type](object);
         obj.id = object.id;
         canvas.add(obj);
         return obj;
@@ -364,10 +342,12 @@ function initTools($scope, socket, canvas, $timeout){
     // ------------ Socket event listeners - END ------------
 
 
-    socket.on('init', function (room) {
+    socket.on('init', function (data) {
         console.log('SOCKET: init');
 
-        $scope.room = room;
+        $scope.room = data.room;
+        $scope.user = data.user;
+
         console.log($scope.room);
 
         if(!$scope.room.loaded){
@@ -466,7 +446,9 @@ function initTools($scope, socket, canvas, $timeout){
         console.log('SOCKET: object-removed');
 
         var object = canvas.getObjectById(id);
-        object.remove();
+        console.log(object);
+        // object.remove();
+        canvas.remove(object);
         canvas.renderAll();
     });
 
@@ -483,75 +465,76 @@ function initTools($scope, socket, canvas, $timeout){
 
 
     // ------------ Canvas event listeners - START ------------
-    // canvas.on('before:selection:cleared' , function (event) {
-    //     console.log('CANVAS: before:selection:cleared');
-    //     object = event.target;
+    canvas.on('selection:created' , function (event) {
+        console.log('CANVAS: selection:created');
+        event.selected.forEach(function (obj) {
+            socket.emit('selection-changed',{id:obj.id, selectable:false});
+        });
+    });
+
+    canvas.on('selection:updated' , function (event) {
+        console.log('CANVAS: selection:updated');
+        event.selected.forEach(function (obj) {
+            socket.emit('selection-changed',{id:obj.id, selectable:false});
+        });
+        event.deselected.forEach(function (obj) {
+            socket.emit('selection-changed',{id:obj.id, selectable:true});
+        });
+    });
+
+    canvas.on('selection:cleared' , function (event) {
+        console.log('CANVAS: selection:cleared');
+        // console.log(event);
+        if(event.deselected === undefined) return;
+        event.deselected.forEach(function (obj) {
+            socket.emit('selection-changed',{id:obj.id, selectable:true});
+        });
+    });
+
+    //
+    // canvas.on('object:selected' , function (event) {
+    //     console.log('CANVAS: object:selected');
     //     // console.log(object);
-    // });
-    // canvas.on('selection:created' , function (event) {
-    //     console.log('CANVAS: selection:created');
     //     object = event.target;
-    //     // console.log(object);
-    // });
-    // canvas.on('selection:updated' , function (event) {
-    //     console.log('CANVAS: selection:updated');
-    //     object = event.target;
-    //     // console.log(object);
+    //     // if(object.type === "group"){
+    //     //     object.getObjects().forEach(function (obj) {
+    //     //         socket.emit('selection-changed',{id:obj.id, selectable:false});
+    //     //
+    //     //     });
+    //     // }
+    //     // else{
+    //     //     socket.emit('selection-changed',{id:object.id, selectable:false});
+    //     //
+    //     // }
     // });
     // canvas.on('selection:cleared' , function (event) {
     //     console.log('CANVAS: selection:cleared');
+    //     // console.log(object);
     //     object = event.target;
-    //     console.log(object);
+    //     // if(object.type === "group"){
+    //     //     object.getObjects().forEach(function (obj) {
+    //     //         socket.emit('selection-changed',{id:obj.id, selectable:false});
+    //     //
+    //     //     });
+    //     // }
+    //     // else{
+    //     //     socket.emit('selection-changed',{id:object.id, selectable:false});
+    //     //
+    //     // }
     // });
-    // canvas.on('selection:changed' , function (event) {
-    //     console.log('CANVAS: selection:changed');
+    // canvas.on('before:selection:cleared' , function (event) {
+    //     console.log('CANVAS: before:selection:cleared');
     //     object = event.target;
-    //     console.log(object);
+    //     // if(object.type === "group"){
+    //     //     object.getObjects().forEach(function (obj) {
+    //     //         socket.emit('selection-changed',{id:obj.id, selectable:true});
+    //     //     });
+    //     // }
+    //     // else{
+    //     //     socket.emit('selection-changed',{id:object.id, selectable:true});
+    //     //
+    //     // }
     // });
-
-    canvas.on('object:selected' , function (event) {
-        console.log('CANVAS: object:selected');
-        // console.log(object);
-        object = event.target;
-        // if(object.type === "group"){
-        //     object.getObjects().forEach(function (obj) {
-        //         socket.emit('selection-changed',{id:obj.id, selectable:false});
-        //
-        //     });
-        // }
-        // else{
-        //     socket.emit('selection-changed',{id:object.id, selectable:false});
-        //
-        // }
-    });
-    canvas.on('selection:cleared' , function (event) {
-        console.log('CANVAS: selection:cleared');
-        // console.log(object);
-        object = event.target;
-        // if(object.type === "group"){
-        //     object.getObjects().forEach(function (obj) {
-        //         socket.emit('selection-changed',{id:obj.id, selectable:false});
-        //
-        //     });
-        // }
-        // else{
-        //     socket.emit('selection-changed',{id:object.id, selectable:false});
-        //
-        // }
-    });
-    canvas.on('before:selection:cleared' , function (event) {
-        console.log('CANVAS: before:selection:cleared');
-        object = event.target;
-        // if(object.type === "group"){
-        //     object.getObjects().forEach(function (obj) {
-        //         socket.emit('selection-changed',{id:obj.id, selectable:true});
-        //     });
-        // }
-        // else{
-        //     socket.emit('selection-changed',{id:object.id, selectable:true});
-        //
-        // }
-    });
 
     canvas.on('object:modified', function (event) {
         console.log('CANVAS: object:modified');
@@ -559,12 +542,13 @@ function initTools($scope, socket, canvas, $timeout){
         object = event.target;
         // console.log(object);
 
-        if(object.type === "group"){
+        if(object.type === "activeSelection"){
             var group = object;
             for(var i = group._objects.length-1; i>=0; i--){
                 obj = group._objects[i];
                 obj.index = obj.getIndex();
                 group.removeWithUpdate(obj);
+                // console.log(obj);
                 socket.emit('object-modified',obj.toJSON(['id','selectable', 'index']));
                 group.addWithUpdate(obj);
             }
