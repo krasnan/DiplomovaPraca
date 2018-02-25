@@ -3,9 +3,7 @@ function uniqueId(){
 }
 
 function initTools($scope, socket, canvas, $timeout){
-    console.log($scope.serverUrl);
-
-
+    // console.log($scope.serverUrl);
 
     $scope.tools={
         select : 'select',
@@ -13,22 +11,45 @@ function initTools($scope, socket, canvas, $timeout){
         line : 'line',
         rectangle : 'rectangle',
         circle : 'circle',
+        ellipse : 'ellipse',
+        triangle : 'triangle',
         polygon : 'polygon',
         text : 'text',
         image : 'image'
     };
     $scope.panels = {};
 
+    // $scope.canvas = canvas;
+
     $scope.activeTool = $scope.tools.select;
     $scope.backgroundColor = 'rgba(0,0,0,0)';
     $scope.fillColor = 'rgba(0,0,0,1)';
-    $scope.strokeColor = 'rgba(255,255,255,0)';
+    $scope.strokeColor = 'rgba(0,0,0,1)';
     $scope.message = "";
 
+    $scope.setFreeDrawingBrush = function(type){
+        console.log(type);
+        canvas.freeDrawingBrush = new fabric[type+'Brush'](canvas);
+    };
+
+    $scope.selectAllObjects = function() {
+        canvas.discardActiveObject();
+        var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+            canvas: canvas,
+        });
+        canvas.setActiveObject(sel);
+        canvas.requestRenderAll();
+    };
+
     $scope.setActiveTool = function(tool){
+        $scope.polygon_edit = false;
         $scope.activeTool = tool;
-        canvas.isDrawingMode = ($scope.activeTool == $scope.tools.brush);
-        console.log($scope.serverUrl);
+        if($scope.activeTool === $scope.tools.brush){
+            canvas.isDrawingMode = true;
+            canvas.discardActiveObject();
+        }
+        else
+            canvas.isDrawingMode = false;
     };
 
     $scope.getStrokeColor = function(){
@@ -42,6 +63,7 @@ function initTools($scope, socket, canvas, $timeout){
             $scope.setStroke(value);
         else $scope.strokeColor = value;
 
+        canvas.freeDrawingBrush.strokeColor = value;
     };
     $scope.getFillColor = function(value){
         if(canvas.getActiveObject())
@@ -54,6 +76,7 @@ function initTools($scope, socket, canvas, $timeout){
             $scope.setFill(value);
         else $scope.fillColor = value;
 
+        canvas.freeDrawingBrush.color = value;
     };
     $scope.deleteSelection = function(){
         var objects = canvas.getActiveObjects();
@@ -168,22 +191,95 @@ function initTools($scope, socket, canvas, $timeout){
         var pointer = canvas.getPointer(o.e);
         switch($scope.activeTool) {
             case $scope.tools.line:
-                obj = createLine(pointer);
+                // obj = $scope.createLine(pointer);
+                obj = new fabric.Line([pointer.x, pointer.y,pointer.x, pointer.y], {
+                    id: uniqueId(),
+                    strokeWidth: 5,
+                    stroke: $scope.strokeColor,
+                    originX: 'center', originY: 'center'
+                });
                 break;
             case $scope.tools.rectangle:
-                obj = createRectangle(pointer);
+                obj = new fabric.Rect({
+                    id: uniqueId(),
+                    strokeWidth: 0,
+                    left: origX,
+                    top: origY,
+                    fill: $scope.fillColor,
+                    stroke: $scope.strokeColor
+                });
                 break;
             case $scope.tools.circle:
-                obj = createCircle(pointer);
+                obj = new fabric.Circle({
+                    id: uniqueId(),
+                    strokeWidth: 0,
+                    left: origX,
+                    top: origY,
+                    radius: 1,
+                    fill: $scope.fillColor,
+                    stroke: $scope.strokeColor
+                });
                 break;
+            case $scope.tools.ellipse:
+                obj = new fabric.Ellipse({
+                    id: uniqueId(),
+                    strokeWidth: 0,
+                    left: origX,
+                    top: origY,
+                    fill: $scope.fillColor,
+                    stroke: $scope.strokeColor
+                });
+                break;
+
             case $scope.tools.text:
-                obj = createText(pointer);
+                obj = new fabric.Textbox('Insert your text...', {
+                    id: uniqueId(),
+                    left: origX,
+                    top: origY,
+                    fill: $scope.fillColor,
+                    stroke: $scope.strokeColor,
+                    // fontFamily: 'helvetica',
+                    // originX: 'left'
+                });
+                break;
+
+            case $scope.tools.triangle:
+                obj = new fabric.Triangle({
+                    id: uniqueId(),
+                    strokeWidth: 0,
+                    left: origX,
+                    top: origY,
+                    fill: $scope.fillColor,
+                    stroke: $scope.strokeColor
+                });
                 break;
             case $scope.tools.polygon:
-                //code block
-                break;
-            case $scope.tools.image:
-                //code block
+                if($scope.polygon_edit === false) {
+                    obj = new fabric.Polygon([{x: origX, y: origY} ], {
+                        id: uniqueId(),
+                        strokeWidth: 0,
+                        fill: $scope.fillColor,
+                        stroke: $scope.strokeColor,
+                        objectCaching:false
+                    });
+                    $scope.polygon_edit = obj.id;
+                }
+                else{
+
+                    obj = canvas.getObjectById($scope.polygon_edit);
+                    obj.draggable = false;
+                    obj.points.push({x: pointer.x, y:pointer.y});
+                    tmp = obj.toObject('selectable', 'selectedBy', 'index');
+                    delete tmp.top;
+                    delete tmp.left;
+                    tmp = new fabric.Polygon(tmp.points, tmp);
+                    obj.set(tmp);
+                    canvas.renderAll();
+                    canvas.setActiveObject(obj);
+                    canvas.trigger('object:modified',{target:obj});
+                    return;
+                }
+
                 break;
 
             default:
@@ -208,18 +304,68 @@ function initTools($scope, socket, canvas, $timeout){
                         obj.set({ left: Math.abs(pointer.x) });
                     if(origY>pointer.y)
                         obj.set({ top: Math.abs(pointer.y) });
-                    obj.set({ width: Math.abs(origX - pointer.x) });
-                    obj.set({ height: Math.abs(origY - pointer.y) });
+
+                    width = Math.abs((origX - pointer.x));
+                    height = Math.abs((origY - pointer.y));
+                    if($scope.shiftPressed){
+                        obj.set({width: Math.max(width,height), height:Math.max(width,height)});
+                    }
+                    else{
+                        obj.set({width:width, height:height});
+                    }
                     break;
 
+
                 case 'circle':
-                    obj.set({ radius: Math.abs(origX - pointer.x) });
+                    x = Math.abs(origX - pointer.x);
+                    y = Math.abs(origY - pointer.y);
+                    obj.set({ radius:  Math.max(x,y)/2});
+                    break;
+
+                case 'ellipse':
+                    if(origX>pointer.x)
+                        obj.set({ left: Math.abs(pointer.x) });
+                    if(origY>pointer.y)
+                        obj.set({ top: Math.abs(pointer.y) });
+
+                    rx = Math.abs((origX - pointer.x)/2);
+                    ry = Math.abs((origY - pointer.y)/2);
+                    if($scope.shiftPressed){
+                        obj.set({rx: Math.max(rx,ry), ry:Math.max(rx,ry)});
+                    }
+                    else{
+                        obj.set({rx:rx, ry:ry});
+                    }
                     break;
 
                 case 'line':
-                    obj.set({ x2: pointer.x, y2: pointer.y });
+                    if($scope.shiftPressed) {
+                        dx = Math.abs(origX - pointer.x);
+                        dy = Math.abs(origY - pointer.y);
+                        if(dx > dy)
+                            obj.set({x2: pointer.x, y2: origY});
+                        else
+                            obj.set({x2: origX, y2: pointer.y});
+                    }
+                    else
+                        obj.set({ x2: pointer.x, y2: pointer.y });
+
                     break;
 
+                case 'triangle':
+                    if(origX>pointer.x)
+                        obj.set({ left: Math.abs(pointer.x) });
+                    if(origY>pointer.y)
+                        obj.set({ top: Math.abs(pointer.y) });
+                    width = Math.abs((origX - pointer.x));
+                    height = Math.abs((origY - pointer.y));
+                    if($scope.shiftPressed){
+                        obj.set({width: Math.max(width,height), height:Math.max(width,height)});
+                    }
+                    else{
+                        obj.set({width:width, height:height});
+                    }
+                    break;
 
                 default:
                     return;
@@ -234,57 +380,22 @@ function initTools($scope, socket, canvas, $timeout){
             canvas.trigger('object:modified',{target:obj});
             // canvas.trigger('object:created',{target:obj});
             obj.setCoords();
-            $scope.activeTool = $scope.tools.select;
+            if($scope.activeTool !== $scope.tools.polygon)
+                $scope.setActiveTool($scope.tools.select);
         }
         isDown = false;
         obj = null;
     });
 
-    function createRectangle(pointer) {
-        return new fabric.Rect({
-            id: uniqueId(),
-            left: origX,
-            top: origY,
-            originX: 'left',
-            originY: 'top',
-            width: pointer.x-origX,
-            height: pointer.y-origY,
-            angle: 0,
-            fill: $scope.fillColor
-        });
-    }
-
-    function createCircle(pointer) {
-        return new fabric.Circle({
-            id: uniqueId(),
-            left: origX,
-            top: origY,
-            radius: 50,
-            fill: $scope.fillColor,
-            originX: 'center', originY: 'center'
-        })
-    }
-
-    function createLine(pointer) {
-        return new fabric.Line([pointer.x, pointer.y,pointer.x, pointer.y], {
-            id: uniqueId(),
-            strokeWidth: 5,
-            fill: $scope.fillColor,
-            stroke: $scope.strokeColor,
-            originX: 'center', originY: 'center'
-        });
-    }
-
-    function createText(pointer) {
-        return  new fabric.Textbox('Insert your text...', {
-            id: uniqueId(),
-            left: origX,
-            top: origY,
-            fill: $scope.fillColor,
-            fontFamily: 'helvetica',
-            originX: 'left'
-        });
-    }
+     $scope.loadImage = function (file) {
+         var object;
+         new fabric.Image.fromURL(url, function(obj){
+             obj.id = uniqueId();
+             canvas.add(obj);
+             object = obj;
+             canvas.trigger('object:created',{target:obj});
+         });
+     };
 
     $scope.toggleFullScreen = function() {
         if ((document.fullScreenElement && document.fullScreenElement !== null) ||
@@ -314,12 +425,50 @@ function initTools($scope, socket, canvas, $timeout){
     };
 
     function addObject(object) {
-        type  = fabric.util.string.camelize(fabric.util.string.capitalize(object.type));
-        var obj = new fabric[type](object);
-        obj.id = object.id;
-        canvas.add(obj);
-        return obj;
+        var obj = undefined;
+        switch (object.type){
+            case 'line':
+                obj = new fabric.Line([object.x1,object.y1,object.x2,object.y2],object);
+                break;
+            case 'polygon':
+                obj = new fabric.Polygon(object.points, object);
+                break;
+            case 'textbox':
+                obj = new fabric.Textbox(object.text, object);
+                break;
+            case 'path':
+                obj = new fabric.Path(object.path, object);
+                break;
+            case 'image':
+                fabric.Image.fromURL(object.src, function(obj){
+                    obj.id = object.id;
+                    obj.set(object);
+                    obj.top = object.top;
+                    obj.left = object.left;
+                    canvas.add(obj);
+                    obj.moveTo(obj.index);
+                    return obj;
+                });
+                return;
+
+            default:
+                type  = fabric.util.string.camelize(fabric.util.string.capitalize(object.type));
+                obj = new fabric[type](object);
+                break;
+        }
+        if(obj !== undefined){
+            obj.id = object.id;
+            obj.selectable = object.selectable;
+            obj.selectedBy = object.selectedBy;
+            canvas.add(obj);
+            obj.moveTo(obj.index);
+            return obj;
+        }
+        else{
+            return undefined;
+        }
     }
+
     $scope.scrollDown = function(elementClass){
         $timeout(function() {
             var scroller = document.getElementsByClassName(elementClass);
@@ -395,7 +544,9 @@ function initTools($scope, socket, canvas, $timeout){
 
     socket.on('selection-changed',function(data){
         console.log('SOCKET: selection-changed');
-        canvas.getObjectById(data.id).selectable = data.selectable;
+        var obj = canvas.getObjectById(data.id);
+        obj.selectable = data.selectable;
+        obj.selectedBy = data.selectedBy;
     });
 
     socket.on('selection-deny',function(id){
@@ -428,13 +579,12 @@ function initTools($scope, socket, canvas, $timeout){
         else{
             object = addObject(obj);
         }
-        object.moveTo(object.index);
 
     });
 
     socket.on('object-created', function (obj) {
         console.log('SOCKET: object-created');
-
+        console.log(obj);
         object = addObject(obj);
         object.setCoords();
         canvas.renderAll();
@@ -468,6 +618,8 @@ function initTools($scope, socket, canvas, $timeout){
     canvas.on('selection:created' , function (event) {
         console.log('CANVAS: selection:created');
         event.selected.forEach(function (obj) {
+            // if(obj.type === 'polygon' && $scope.polygon_edit !== false) return;
+
             socket.emit('selection-changed',{id:obj.id, selectable:false});
         });
     });
@@ -484,63 +636,19 @@ function initTools($scope, socket, canvas, $timeout){
 
     canvas.on('selection:cleared' , function (event) {
         console.log('CANVAS: selection:cleared');
-        // console.log(event);
         if(event.deselected === undefined) return;
         event.deselected.forEach(function (obj) {
+            // if(obj.type === 'polygon' && $scope.polygon_edit !== false) return;
+
             socket.emit('selection-changed',{id:obj.id, selectable:true});
         });
     });
-
-    //
-    // canvas.on('object:selected' , function (event) {
-    //     console.log('CANVAS: object:selected');
-    //     // console.log(object);
-    //     object = event.target;
-    //     // if(object.type === "group"){
-    //     //     object.getObjects().forEach(function (obj) {
-    //     //         socket.emit('selection-changed',{id:obj.id, selectable:false});
-    //     //
-    //     //     });
-    //     // }
-    //     // else{
-    //     //     socket.emit('selection-changed',{id:object.id, selectable:false});
-    //     //
-    //     // }
-    // });
-    // canvas.on('selection:cleared' , function (event) {
-    //     console.log('CANVAS: selection:cleared');
-    //     // console.log(object);
-    //     object = event.target;
-    //     // if(object.type === "group"){
-    //     //     object.getObjects().forEach(function (obj) {
-    //     //         socket.emit('selection-changed',{id:obj.id, selectable:false});
-    //     //
-    //     //     });
-    //     // }
-    //     // else{
-    //     //     socket.emit('selection-changed',{id:object.id, selectable:false});
-    //     //
-    //     // }
-    // });
-    // canvas.on('before:selection:cleared' , function (event) {
-    //     console.log('CANVAS: before:selection:cleared');
-    //     object = event.target;
-    //     // if(object.type === "group"){
-    //     //     object.getObjects().forEach(function (obj) {
-    //     //         socket.emit('selection-changed',{id:obj.id, selectable:true});
-    //     //     });
-    //     // }
-    //     // else{
-    //     //     socket.emit('selection-changed',{id:object.id, selectable:true});
-    //     //
-    //     // }
-    // });
 
     canvas.on('object:modified', function (event) {
         console.log('CANVAS: object:modified');
 
         object = event.target;
-        // console.log(object);
+        console.log(object);
 
         if(object.type === "activeSelection"){
             var group = object;
@@ -548,7 +656,6 @@ function initTools($scope, socket, canvas, $timeout){
                 obj = group._objects[i];
                 obj.index = obj.getIndex();
                 group.removeWithUpdate(obj);
-                // console.log(obj);
                 socket.emit('object-modified',obj.toJSON(['id','selectable', 'index']));
                 group.addWithUpdate(obj);
             }
@@ -563,6 +670,10 @@ function initTools($scope, socket, canvas, $timeout){
         console.log('CANVAS: object:created');
 
         var obj = event.target;
+        // if(obj.type === 'polygon' && $scope.polygon_edit !== false) return;
+
+
+        console.log(obj);
         obj.index = obj.getIndex();
         socket.emit('object-created',obj.toJSON(['id','selectable', 'index']));
     });
@@ -571,12 +682,22 @@ function initTools($scope, socket, canvas, $timeout){
         console.log('CANVAS: object:removed');
 
         var obj = event.target;
+        // if(obj.type === 'polygon' && $scope.polygon_edit !== false) return;
+
         socket.emit('object-removed',obj.id);
     });
 
     canvas.on('canvas:modified', function (event) {
         socket.emit('canvas-modified', {width: canvas.width, height: canvas.height, backgroundColor: canvas.backgroundColor})
     });
+
+    canvas.on('path:created', function (event) {
+        console.log('CANVAS: path:created');
+        obj = event.path;
+        obj.index = obj.getIndex();
+        obj.id = uniqueId();
+        socket.emit('object-created',obj.toJSON(['id','selectable', 'index']));
+    })
 
     // ------------ Canvas event listeners - END ------------
 }

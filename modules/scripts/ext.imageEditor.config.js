@@ -16,7 +16,7 @@ fabric.Object.prototype.isSelected = function(){
 // fabric.loadSVGFromURL('http://wiki.localhost/images/2/25/SVG_Test.svg', function(objects, options){
 //     var loadedObject = fabric.util.groupSVGElements(objects, options);
 //     // Set sourcePath
-//     // loadedObject.set('sourcePath', elem.getAttribute('data-url'));
+//     // loadedObject.set('sourcePathu', elem.getAttribute('data-url'));
 //
 //     canvas.add(loadedObject);
 //     console.log(loadedObject);
@@ -87,12 +87,36 @@ app.directive("filesInput", function() {
         require: "ngModel",
         link: function postLink(scope,elem,attrs,ngModel) {
             elem.on("change", function(e) {
-                var files = elem[0].files;
-                ngModel.$setViewValue(files);
+                var file = elem[0].files[0];
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    file.dataUri = loadEvent.target.result;
+                };
+                reader.readAsDataURL(file);
+                ngModel.$setViewValue(file);
             })
         }
     }
 });
+app.directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                        console.log(scope.fileread);
+                    });
+                };
+                reader.readAsDataURL(changeEvent.target.files[0]);
+            });
+        }
+    }
+}]);
 
 app.factory('socket', function ($rootScope) {
     var socket;

@@ -12,62 +12,53 @@ io.on('connection', function (socket) {
 
     socket.join(room.name);
 
-    socket.emit('init',{room:room, user:user});
+    socket.emit('init', {room: room, user: user});
 
     room.createUser(user);
 
 
-
-    socket.on('message-created',function(message){
-        room.createMessage(message.text, user.name, '*');
+    socket.on('message-created', function (message) {
+        room.createMessage(message.text, user.id, '*');
     });
 
     socket.on('canvas-modified', function (properties) {
-        room.modifyCanvas(properties);
-        socket.broadcast.to(room.name).emit('canvas-modified', room.canvas);
+        room.modifyCanvas(properties, socket);
     });
 
-    socket.on('selection-changed',function(data){
-        if(room.setSelectable(data.id, data.selectable, user.id)){
-            socket.broadcast.to(room.name).emit('selection-changed', {id:data.id, selectable:data.selectable});
-        }
-        else{
-            socket.emit('selection-deny',data.id);
-        }
+    socket.on('selection-changed', function (data) {
+        room.setSelectable(data.id, data.selectable, user, socket);
     });
 
-    socket.on('object-modified',function(object){
-        room.modifyObject(object);
-        socket.broadcast.to(room.name).emit('object-modified', object);
+    socket.on('object-modified', function (object) {
+        room.modifyObject(object, socket);
     });
 
-    socket.on('object-created',function(object){
-        room.createObject(object);
-        socket.broadcast.to(room.name).emit('object-created', object);
+    socket.on('object-created', function (object) {
+        room.createObject(object, socket);
     });
 
-    socket.on('object-removed',function(id){
-        room.removeObject(id);
-        socket.broadcast.to(room.name).emit('object-removed', id);
+    socket.on('object-removed', function (id) {
+        room.removeObject(id, socket);
     });
 
     socket.on('disconnect', function () {
-        room.unselectObjectsBy(user);
-        socket.broadcast.to(room.name).emit('user-removed', user);
+        room.deselectObjectsBy(user);
 
+        socket.broadcast.to(room.name).emit('user-removed', user);
         socket.leave(room.name);
         room.removeUser(socket.id);
     });
 });
 
 
-
-
-
-function User(name, socket){
+function User(name, socket) {
     this.id = socket.id;
     this.name = name;
     this.color = getRandomColor();
+
+    this.getSocket = function(){
+        return io.sockets.connected[this.id];
+    };
 }
 
 function Message(text, from, to, type) {
@@ -92,100 +83,112 @@ function Room(name) {
         return Object.keys(this.users).length <= 0;
     };
 
-    this.createUser = function(user){
+    this.createUser = function (user) {
         this.users[user.id] = user;
-        console.log("+ user "+user.name+"("+user.id+") added");
-        this.createMessage('User '+user.name+' connected', 'SYSTEM', '*', 'system');
-
+        console.log("+ user " + user.name + "(" + user.id + ") added");
+        this.createMessage('User ' + user.name + ' connected', 'SYSTEM', '*', 'system');
         io.in(this.name).emit('user-created', this.users[user.id]);
     };
 
-    this.removeUser = function(id){
-        if(this.users[id] === undefined) return;
+    this.removeUser = function (id) {
+        if (this.users[id] === undefined) return;
 
-        this.createMessage('User '+this.users[id].name+' disconnected', 'SYSTEM', '*', 'system');
+        this.createMessage('User ' + this.users[id].name + ' disconnected', 'SYSTEM', '*', 'system');
         io.in(this.name).emit('user-removed', id);
 
         delete this.users[id];
-        console.log("- user "+id+" deleted");
+        console.log("- user " + id + " deleted");
 
-        if(this.isEmpty())
+        if (this.isEmpty())
             rm.removeRoom(this.name);
     };
 
-    this.createMessage = function(text, from, to, type)
-    {
+    this.createMessage = function (text, from, to, type) {
         message = new Message(text, from, to, type);
         this.messages.push(message);
         io.in(this.name).emit('message-created', message);
         // socket.broadcast.to(this.name).emit('message-created', message);
     };
 
-
-    this.modifyCanvas = function (properties) {
+    this.modifyCanvas = function (properties, socket) {
         this.canvas.height = properties.height;
         this.canvas.width = properties.width;
         this.canvas.backgroundColor = properties.backgroundColor;
+        socket.broadcast.to(room.name).emit('canvas-modified', this.canvas);
     };
 
-    this.createObject = function(obj){
+    this.createObject = function (obj, socket) {
         this.objects[obj.id] = obj;
-
+        socket.broadcast.to(room.name).emit('object-created', this.objects[obj.id]);
     };
-    this.removeObject = function (id) {
+
+    this.removeObject = function (id, socket) {
         delete this.objects[id];
+        socket.broadcast.to(room.name).emit('object-removed', id);
     };
-    this.modifyObject = function (obj) {
-        obj.selectable = this.isSelectable(obj.id)
+
+    this.modifyObject = function (obj, socket) {
+        obj.selectable = this.isSelectable(obj.id);
+        obj.selectedBy = this.getSelectedBy(obj.id);
         this.objects[obj.id] = obj;
+        socket.broadcast.to(this.name).emit('object-modified', this.objects[obj.id]);
     };
+
+
+
     this.isSelectable = function (id) {
-        if(this.objects[id] === undefined){
+        if (this.objects[id] === undefined) {
             return false;
         }
         return this.objects[id].selectable;
     };
     this.getSelectedBy = function (id) {
-        if(this.objects[id] === undefined){
+        if (this.objects[id] === undefined) {
             return undefined;
         }
         return this.objects[id].selectedBy;
     };
-    this.unselectObjectsBy = function (user) {
-        //TODO: not implemented method
-        for (var id in this.objects){
-            if(this.unselectObject(id, user)){
-                io.in(this.name).emit('selection-changed', {id:id, selectable:this.isSelectable(id)});
+    this.deselectObjectsBy = function (user) {
+        for (var id in this.objects) {
+            var unselected = this.deselectObject(id, user);
+            console.log("> unlocking object id: " + id + " user: " + user.id + " unselected: " + unselected);
+            if (unselected) {
+                io.in(this.name).emit('selection-changed', {id: id, selectable: this.isSelectable(id)});
             }
         }
     };
-    this.unselectObject = function(id, user){
-        if(this.getSelectedBy(id) !== user.id){
+    this.deselectObject = function (id, user) {
+        if (this.getSelectedBy(id) !== user.id) {
             return false;
         }
-        else{
+        else {
             this.objects[id].selectable = true;
             this.objects[id].selectedBy = undefined;
+
             return true;
         }
     };
-    this.selectObject = function(id, user){
-        if(!this.isSelectable(id)) {
+    this.selectObject = function (id, user) {
+        if (!this.isSelectable(id)) {
             return false;
         }
-        else{
+        else {
             this.objects[id].selectable = false;
             this.objects[id].selectedBy = user.id;
             return true;
         }
     };
-    this.setSelectable = function (id, selectable, user) {
-        if(selectable){
-            return this.unselectObject(id, user);
-        }
-        else{
-            return this.selectObject(id, user);
-        }
+    this.setSelectable = function (id, selectable, user, socket) {
+        var result = false;
+        if (selectable)
+            result = this.deselectObject(id, user);
+        else
+            result = this.selectObject(id, user);
+
+        if(result)
+            socket.broadcast.to(room.name).emit('selection-changed', {id: id, selectable: selectable, selectedBy:user.id});
+        else
+            socket.emit('selection-deny', id);
     };
 
     this.loadFileInfo = function () {
@@ -200,8 +203,6 @@ function Room(name) {
         };
         return this.file;
     }
-
-
 }
 
 function RoomManager() {
@@ -217,10 +218,10 @@ function RoomManager() {
 
     this.createRoom = function (name) {
         room = this.getRoom(name);
-        if (room === undefined){
+        if (room === undefined) {
             room = new Room(name);
             this.rooms[name] = room;
-            console.log("+ room "+name+" added");
+            console.log("+ room " + name + " added");
             room.loadFileInfo();
         }
         return room;
@@ -228,19 +229,16 @@ function RoomManager() {
 
     this.removeRoom = function (name) {
         delete this.rooms[name];
-        console.log("- room "+name+" deleted");
+        console.log("- room " + name + " deleted");
     }
 }
 
 
-
-
-
 function getRandomColor() {
-    var letters = '0123456789ABCD'.split('');
+    var letters = '0123456789ABCDE'.split('');
     var color = '#';
     for (var i = 0; i < 6; i++) {
-        color += letters[Math.round(Math.random() * 10)];
+        color += letters[Math.round(Math.random() * 14)];
     }
     return color;
 }
