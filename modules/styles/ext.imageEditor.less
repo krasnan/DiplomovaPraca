@@ -1,8 +1,15 @@
 @charset "UTF-8";
 @import "ext.imageEditor.vars";
 @import "ext.imageEditor.colorpicker";
+@import "ext.imageEditor.icons";
 
 .ie{
+  a{
+    text-decoration: none;
+    &:hover{
+      text-decoration: none;
+    }
+  }
   div{
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -143,12 +150,24 @@
        }
      }
     &__title{
+      .fs(11);
       display: block;
       clear: both;
       //color: lighten(@black, 50%);
     }
     &__align{
       padding-left: @offset;
+    }
+    &__reference{
+      width: @offset + @offset-md;
+      margin: auto;
+      rect{
+        &:extend(.transition);
+        fill: @grey;
+        &.active{
+          fill: @blue;
+        }
+      }
     }
   }
 
@@ -196,7 +215,7 @@
       border-radius: @radius;
       text-align: left;
       background: darken(@white, 3%);
-      color: lighten(@black, 50%);
+      color: @grey;
       &:extend(.transition);
       &:hover, &:focus,&:active{
         background: darken(@white, 6%);
@@ -204,7 +223,7 @@
       label{
         padding: @offset @offset-sm 0 @offset-sm;
         font-size: 10px;
-        color: lighten(@black, 50%);
+        color: @grey;
 
       }
       input[type="range" ]{
@@ -219,7 +238,7 @@
         left: 0;
         width: 100%;
         margin: 0;
-        color: lighten(@black, 50%);
+        color: @grey;
         border-bottom: transparent 1px solid;
         &:hover, &:focus,&:active {
           border-bottom: transparent 1px solid;
@@ -419,7 +438,7 @@
     float: right;
   }
   .disabled{
-    color: lighten(@black, 50%) !important;
+    color: @grey !important;
     pointer-events: none;
     cursor: pointer;
   }

@@ -5,6 +5,7 @@
 // Colors
 @white: #fff;
 @black: #000;
+@grey: lighten(@black, 50%);
 @light: #fdfdfd;
 @blue: #00a5ff;
 @red: #ff444d;
@@ -141,7 +142,7 @@ Roboto
   line-height: @offset-md;
   text-align: center;
   display: inline-block;
-  color: @black;
+  color: lighten(@black,25%);
   &:extend(.transition);
   &:hover,
   &:focus{

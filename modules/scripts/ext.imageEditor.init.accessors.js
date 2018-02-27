@@ -336,38 +336,46 @@ function initAccessors($scope, socket, canvas) {
     };
 
     // ----- layer management -----
-    $scope.sendBackwards = function() {
-        var activeObject = canvas.getActiveObject();
-        if (activeObject) {
-            canvas.sendBackwards(activeObject);
-            canvas.trigger('object:modified',{target:activeObject});
+    $scope.sendBackwards = function(object) {
+        if(object === undefined)
+            object = canvas.getActiveObject();
+
+        if (object) {
+            canvas.sendBackwards(object);
+            canvas.trigger('object:modified',{target:object});
 
         }
     };
 
-    $scope.sendToBack = function() {
-        var activeObject = canvas.getActiveObject();
-        if (activeObject) {
-            canvas.sendToBack(activeObject);
-            canvas.trigger('object:modified',{target:activeObject});
+    $scope.sendToBack = function(object) {
+        if(object === undefined)
+            object = canvas.getActiveObject();
+
+        if (object) {
+            canvas.sendToBack(object);
+            canvas.trigger('object:modified',{target:object});
 
         }
     };
 
-    $scope.bringForward = function() {
-        var activeObject = canvas.getActiveObject();
-        if (activeObject) {
-            canvas.bringForward(activeObject);
-            canvas.trigger('object:modified',{target:activeObject});
+    $scope.bringForward = function(object) {
+        if(object === undefined)
+            object = canvas.getActiveObject();
+
+        if (object) {
+            canvas.bringForward(object);
+            canvas.trigger('object:modified',{target:object});
 
         }
     };
 
-    $scope.bringToFront = function() {
-        var activeObject = canvas.getActiveObject();
-        if (activeObject) {
-            canvas.bringToFront(activeObject);
-            canvas.trigger('object:modified',{target:activeObject});
+    $scope.bringToFront = function(object) {
+        if(object === undefined)
+            object = canvas.getActiveObject();
+
+        if (object) {
+            canvas.bringToFront(object);
+            canvas.trigger('object:modified',{target:object});
 
 
         }
