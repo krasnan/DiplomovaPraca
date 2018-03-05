@@ -27,6 +27,7 @@ fabric.Object.prototype.isSelected = function(){
 
 var canvas = new fabric.Canvas('ie__canvas',  { preserveObjectStacking: true });
 
+
 var app = angular.module('ImageEditor', [
     'colorpicker.module'
 ]);
@@ -98,6 +99,7 @@ app.directive("filesInput", function() {
         }
     }
 });
+
 app.directive("fileread", [function () {
     return {
         scope: {

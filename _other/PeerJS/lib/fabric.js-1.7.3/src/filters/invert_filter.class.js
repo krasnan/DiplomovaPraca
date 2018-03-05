@@ -15,7 +15,7 @@
    * @example
    * var filter = new fabric.Image.filters.Invert();
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    */
   filters.Invert = createClass(filters.BaseFilter, /** @lends fabric.Image.filters.Invert.prototype */ {
 

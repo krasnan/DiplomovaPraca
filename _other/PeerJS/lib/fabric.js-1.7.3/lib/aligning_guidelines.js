@@ -5,7 +5,7 @@
  */
 function initAligningGuidelines(canvas) {
 
-  var ctx = canvas.getSelectionContext(),
+  var ctx = $scope.canvas.getSelectionContext(),
       aligningLineOffset = 5,
       aligningLineMargin = 4,
       aligningLineWidth = 1,
@@ -54,15 +54,15 @@ function initAligningGuidelines(canvas) {
   var verticalLines = [],
       horizontalLines = [];
 
-  canvas.on('mouse:down', function () {
-    viewportTransform = canvas.viewportTransform;
-    zoom = canvas.getZoom();
+  $scope.canvas.on('mouse:down', function () {
+    viewportTransform = $scope.canvas.viewportTransform;
+    zoom = $scope.canvas.getZoom();
   });
 
-  canvas.on('object:moving', function(e) {
+  $scope.canvas.on('object:moving', function(e) {
 
     var activeObject = e.target,
-        canvasObjects = canvas.getObjects(),
+        canvasObjects = $scope.canvas.getObjects(),
         activeObjectCenter = activeObject.getCenterPoint(),
         activeObjectLeft = activeObjectCenter.x,
         activeObjectTop = activeObjectCenter.y,
@@ -70,7 +70,7 @@ function initAligningGuidelines(canvas) {
         activeObjectWidth = activeObject.getBoundingRectWidth() / viewportTransform[0],
         horizontalInTheRange = false,
         verticalInTheRange = false,
-        transform = canvas._currentTransform;
+        transform = $scope.canvas._currentTransform;
 
     if (!transform) return;
 
@@ -187,11 +187,11 @@ function initAligningGuidelines(canvas) {
     }
   });
 
-  canvas.on('before:render', function() {
-    canvas.clearContext(canvas.contextTop);
+  $scope.canvas.on('before:render', function() {
+    $scope.canvas.clearContext($scope.canvas.contextTop);
   });
 
-  canvas.on('after:render', function() {
+  $scope.canvas.on('after:render', function() {
     for (var i = verticalLines.length; i--; ) {
       drawVerticalLine(verticalLines[i]);
     }
@@ -202,8 +202,8 @@ function initAligningGuidelines(canvas) {
     verticalLines.length = horizontalLines.length = 0;
   });
 
-  canvas.on('mouse:up', function() {
+  $scope.canvas.on('mouse:up', function() {
     verticalLines.length = horizontalLines.length = 0;
-    canvas.renderAll();
+    $scope.canvas.renderAll();
   });
 }

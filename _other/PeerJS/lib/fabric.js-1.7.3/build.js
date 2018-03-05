@@ -176,7 +176,7 @@ var filesToInclude = [
   ifSpecifiedInclude('pattern', 'src/pattern.class.js'),
   ifSpecifiedInclude('shadow', 'src/shadow.class.js'),
 
-  'src/static_canvas.class.js',
+  'src/static_$scope.canvas.class.js',
 
   ifSpecifiedInclude('freedrawing', 'src/brushes/base_brush.class.js'),
 
@@ -185,7 +185,7 @@ var filesToInclude = [
   ifSpecifiedInclude('freedrawing', 'src/brushes/spray_brush.class.js'),
   ifSpecifiedInclude('freedrawing', 'src/brushes/pattern_brush.class.js'),
 
-  ifSpecifiedInclude('interaction', 'src/canvas.class.js'),
+  ifSpecifiedInclude('interaction', 'src/$scope.canvas.class.js'),
   ifSpecifiedInclude('interaction', 'src/mixins/canvas_events.mixin.js'),
   ifSpecifiedInclude('interaction', 'src/mixins/canvas_grouping.mixin.js'),
 

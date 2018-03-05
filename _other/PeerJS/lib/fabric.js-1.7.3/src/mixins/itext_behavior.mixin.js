@@ -36,12 +36,12 @@
       this.on('added', function() {
         var canvas = _this.canvas;
         if (canvas) {
-          if (!canvas._hasITextHandlers) {
-            canvas._hasITextHandlers = true;
+          if (!$scope.canvas._hasITextHandlers) {
+            $scope.canvas._hasITextHandlers = true;
             _this._initCanvasHandlers(canvas);
           }
-          canvas._iTextInstances = canvas._iTextInstances || [];
-          canvas._iTextInstances.push(_this);
+          $scope.canvas._iTextInstances = $scope.canvas._iTextInstances || [];
+          $scope.canvas._iTextInstances.push(_this);
         }
       });
     },
@@ -51,10 +51,10 @@
       this.on('removed', function() {
         var canvas = _this.canvas;
         if (canvas) {
-          canvas._iTextInstances = canvas._iTextInstances || [];
-          fabric.util.removeFromArray(canvas._iTextInstances, _this);
-          if (canvas._iTextInstances.length === 0) {
-            canvas._hasITextHandlers = false;
+          $scope.canvas._iTextInstances = $scope.canvas._iTextInstances || [];
+          fabric.util.removeFromArray($scope.canvas._iTextInstances, _this);
+          if ($scope.canvas._iTextInstances.length === 0) {
+            $scope.canvas._hasITextHandlers = false;
             _this._removeCanvasHandlers(canvas);
           }
         }
@@ -66,19 +66,19 @@
      * @private
      */
     _initCanvasHandlers: function(canvas) {
-      canvas._canvasITextSelectionClearedHanlder = (function() {
+      $scope.canvas._canvasITextSelectionClearedHanlder = (function() {
         fabric.IText.prototype.exitEditingOnOthers(canvas);
       }).bind(this);
-      canvas._mouseUpITextHandler = (function() {
-        if (canvas._iTextInstances) {
-          canvas._iTextInstances.forEach(function(obj) {
+      $scope.canvas._mouseUpITextHandler = (function() {
+        if ($scope.canvas._iTextInstances) {
+          $scope.canvas._iTextInstances.forEach(function(obj) {
             obj.__isMousedown = false;
           });
         }
       }).bind(this);
-      canvas.on('selection:cleared', canvas._canvasITextSelectionClearedHanlder);
-      canvas.on('object:selected', canvas._canvasITextSelectionClearedHanlder);
-      canvas.on('mouse:up', canvas._mouseUpITextHandler);
+      $scope.canvas.on('selection:cleared', $scope.canvas._canvasITextSelectionClearedHanlder);
+      $scope.canvas.on('object:selected', $scope.canvas._canvasITextSelectionClearedHanlder);
+      $scope.canvas.on('mouse:up', $scope.canvas._mouseUpITextHandler);
     },
 
     /**
@@ -86,9 +86,9 @@
      * @private
      */
     _removeCanvasHandlers: function(canvas) {
-      canvas.off('selection:cleared', canvas._canvasITextSelectionClearedHanlder);
-      canvas.off('object:selected', canvas._canvasITextSelectionClearedHanlder);
-      canvas.off('mouse:up', canvas._mouseUpITextHandler);
+      $scope.canvas.off('selection:cleared', $scope.canvas._canvasITextSelectionClearedHanlder);
+      $scope.canvas.off('object:selected', $scope.canvas._canvasITextSelectionClearedHanlder);
+      $scope.canvas.off('mouse:up', $scope.canvas._mouseUpITextHandler);
     },
 
     /**
@@ -176,7 +176,7 @@
       // to clear just itext area we need to transform the context
       // it may not be worth it
       if (shouldClear) {
-        this.canvas && this.canvas.clearContext(this.canvas.contextTop || this.ctx);
+        this.canvas && this.$scope.canvas.clearContext(this.$scope.canvas.contextTop || this.ctx);
       }
 
     },
@@ -374,15 +374,15 @@
       if (!this.canvas) {
         return this;
       }
-      this.canvas.fire('text:editing:entered', { target: this });
+      this.$scope.canvas.fire('text:editing:entered', { target: this });
       this.initMouseMoveHandler();
-      this.canvas.renderAll();
+      this.$scope.canvas.renderAll();
       return this;
     },
 
     exitEditingOnOthers: function(canvas) {
-      if (canvas._iTextInstances) {
-        canvas._iTextInstances.forEach(function(obj) {
+      if ($scope.canvas._iTextInstances) {
+        $scope.canvas._iTextInstances.forEach(function(obj) {
           obj.selected = false;
           if (obj.isEditing) {
             obj.exitEditing();
@@ -395,7 +395,7 @@
      * Initializes "mousemove" event handler
      */
     initMouseMoveHandler: function() {
-      this.canvas.on('mouse:move', this.mouseMoveHandler);
+      this.$scope.canvas.on('mouse:move', this.mouseMoveHandler);
     },
 
     /**
@@ -434,7 +434,7 @@
       this.hoverCursor = 'text';
 
       if (this.canvas) {
-        this.canvas.defaultCursor = this.canvas.moveCursor = 'text';
+        this.$scope.canvas.defaultCursor = this.$scope.canvas.moveCursor = 'text';
       }
 
       this.borderColor = this.editingBorderColor;
@@ -484,12 +484,12 @@
             x: boundaries.left + leftOffset,
             y: boundaries.top + boundaries.topOffset + charHeight
           },
-          upperCanvas = this.canvas.upperCanvasEl,
+          upperCanvas = this.$scope.canvas.upperCanvasEl,
           maxWidth = upperCanvas.width - charHeight,
           maxHeight = upperCanvas.height - charHeight;
 
       p = fabric.util.transformPoint(p, m);
-      p = fabric.util.transformPoint(p, this.canvas.viewportTransform);
+      p = fabric.util.transformPoint(p, this.$scope.canvas.viewportTransform);
 
       if (p.x < 0) {
         p.x = 0;
@@ -505,8 +505,8 @@
       }
 
       // add canvas offset on document
-      p.x += this.canvas._offset.left;
-      p.y += this.canvas._offset.top;
+      p.x += this.$scope.canvas._offset.left;
+      p.y += this.$scope.canvas._offset.top;
 
       return { left: p.x + 'px', top: p.y + 'px', fontSize: charHeight };
     },
@@ -521,8 +521,8 @@
         lockMovementX: this.lockMovementX,
         lockMovementY: this.lockMovementY,
         hoverCursor: this.hoverCursor,
-        defaultCursor: this.canvas && this.canvas.defaultCursor,
-        moveCursor: this.canvas && this.canvas.moveCursor
+        defaultCursor: this.canvas && this.$scope.canvas.defaultCursor,
+        moveCursor: this.canvas && this.$scope.canvas.moveCursor
       };
     },
 
@@ -541,8 +541,8 @@
       this.lockMovementY = this._savedProps.lockMovementY;
 
       if (this.canvas) {
-        this.canvas.defaultCursor = this._savedProps.defaultCursor;
-        this.canvas.moveCursor = this._savedProps.moveCursor;
+        this.$scope.canvas.defaultCursor = this._savedProps.defaultCursor;
+        this.$scope.canvas.moveCursor = this._savedProps.moveCursor;
       }
     },
 
@@ -569,9 +569,9 @@
       this.fire('editing:exited');
       isTextChanged && this.fire('modified');
       if (this.canvas) {
-        this.canvas.off('mouse:move', this.mouseMoveHandler);
-        this.canvas.fire('text:editing:exited', { target: this });
-        isTextChanged && this.canvas.fire('object:modified', { target: this });
+        this.$scope.canvas.off('mouse:move', this.mouseMoveHandler);
+        this.$scope.canvas.fire('text:editing:exited', { target: this });
+        isTextChanged && this.$scope.canvas.fire('object:modified', { target: this });
       }
 
       return this;
@@ -655,8 +655,8 @@
       this.setCoords();
       this._fireSelectionChanged();
       this.fire('changed');
-      this.canvas && this.canvas.fire('text:changed', { target: this });
-      this.canvas && this.canvas.renderAll();
+      this.canvas && this.$scope.canvas.fire('text:changed', { target: this });
+      this.canvas && this.$scope.canvas.renderAll();
     },
 
     /**

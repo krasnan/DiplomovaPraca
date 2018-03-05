@@ -23,7 +23,7 @@
    * });
 
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    */
 
   filters.Blend = createClass(filters.BaseFilter, /** @lends fabric.Image.filters.Blend.prototype */ {

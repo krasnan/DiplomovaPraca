@@ -289,7 +289,7 @@
     },
 
     /**
-     * Method that defines the actions when mouse is released on canvas.
+     * Method that defines the actions when mouse is released on $scope.canvas.
      * The method resets the currentTransform parameters, store the image corner
      * position in the image object and render the canvas on top.
      * @private
@@ -447,7 +447,7 @@
     },
 
     /**
-     * Method that defines the actions when mouse is clicked on canvas.
+     * Method that defines the actions when mouse is clicked on $scope.canvas.
      * The method inits the currentTransform parameters and renders all the
      * canvas so the current image can be placed on the top canvas and the rest
      * in on the container one.
@@ -581,7 +581,7 @@
     },
 
     /**
-     * Method that defines the actions when mouse is hovering the canvas.
+     * Method that defines the actions when mouse is hovering the $scope.canvas.
      * The currentTransform parameter will definde whether the user is rotating/scaling/translating
      * an image or neither of them (only hovering). A group selection is also possible and would cancel
      * all any other type of action.

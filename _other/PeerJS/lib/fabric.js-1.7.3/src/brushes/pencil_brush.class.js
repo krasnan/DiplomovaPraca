@@ -37,7 +37,7 @@
       this._captureDrawingPath(pointer);
       // redraw curve
       // clear top canvas
-      this.canvas.clearContext(this.canvas.contextTop);
+      this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
       this._render();
     },
 
@@ -50,7 +50,7 @@
 
     /**
      * @private
-     * @param {Object} pointer Actual mouse position related to the canvas.
+     * @param {Object} pointer Actual mouse position related to the $scope.canvas.
      */
     _prepareForDrawing: function(pointer) {
 
@@ -59,7 +59,7 @@
       this._reset();
       this._addPoint(p);
 
-      this.canvas.contextTop.moveTo(p.x, p.y);
+      this.$scope.canvas.contextTop.moveTo(p.x, p.y);
     },
 
     /**
@@ -83,7 +83,7 @@
 
     /**
      * @private
-     * @param {Object} pointer Actual mouse position related to the canvas.
+     * @param {Object} pointer Actual mouse position related to the $scope.canvas.
      */
     _captureDrawingPath: function(pointer) {
       var pointerPoint = new fabric.Point(pointer.x, pointer.y);
@@ -95,8 +95,8 @@
      * @private
      */
     _render: function() {
-      var ctx  = this.canvas.contextTop,
-          v = this.canvas.viewportTransform,
+      var ctx  = this.$scope.canvas.contextTop,
+          v = this.$scope.canvas.viewportTransform,
           p1 = this._points[0],
           p2 = this._points[1];
 
@@ -185,10 +185,10 @@
     /**
      * On mouseup after drawing the path on contextTop canvas
      * we use the points captured to create an new fabric path object
-     * and add it to the fabric canvas.
+     * and add it to the fabric $scope.canvas.
      */
     _finalizeAndAddPath: function() {
-      var ctx = this.canvas.contextTop;
+      var ctx = this.$scope.canvas.contextTop;
       ctx.closePath();
 
       var pathData = this.convertPointsToSVGPath(this._points).join('');
@@ -197,21 +197,21 @@
         // rendered inconsistently across browsers
         // Firefox 4, for example, renders a dot,
         // whereas Chrome 10 renders nothing
-        this.canvas.renderAll();
+        this.$scope.canvas.renderAll();
         return;
       }
 
       var path = this.createPath(pathData);
 
-      this.canvas.add(path);
+      this.$scope.canvas.add(path);
       path.setCoords();
 
-      this.canvas.clearContext(this.canvas.contextTop);
+      this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
       this._resetShadow();
-      this.canvas.renderAll();
+      this.$scope.canvas.renderAll();
 
       // fire event 'path' created
-      this.canvas.fire('path:created', { path: path });
+      this.$scope.canvas.fire('path:created', { path: path });
     }
   });
 })();

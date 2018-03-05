@@ -1,5 +1,5 @@
 function getActiveStyle(styleName, object) {
-  object = object || canvas.getActiveObject();
+  object = object || $scope.canvas.getActiveObject();
   if (!object) return '';
 
   return (object.getSelectionStyles && object.isEditing)
@@ -8,7 +8,7 @@ function getActiveStyle(styleName, object) {
 };
 
 function setActiveStyle(styleName, value, object) {
-  object = object || canvas.getActiveObject();
+  object = object || $scope.canvas.getActiveObject();
   if (!object) return;
 
   if (object.setSelectionStyles && object.isEditing) {
@@ -22,21 +22,21 @@ function setActiveStyle(styleName, value, object) {
   }
 
   object.setCoords();
-  canvas.renderAll();
+  $scope.canvas.renderAll();
 };
 
 function getActiveProp(name) {
-  var object = canvas.getActiveObject();
+  var object = $scope.canvas.getActiveObject();
   if (!object) return '';
 
   return object[name] || '';
 }
 
 function setActiveProp(name, value) {
-  var object = canvas.getActiveObject();
+  var object = $scope.canvas.getActiveObject();
   if (!object) return;
   object.set(name, value).setCoords();
-  canvas.renderAll();
+  $scope.canvas.renderAll();
 }
 
 function addAccessors($scope) {
@@ -179,16 +179,16 @@ function addAccessors($scope) {
   };
 
   $scope.getCanvasBgColor = function() {
-    return canvas.backgroundColor;
+    return $scope.canvas.backgroundColor;
   };
   $scope.setCanvasBgColor = function(value) {
-    canvas.backgroundColor = value;
-    canvas.renderAll();
+    $scope.canvas.backgroundColor = value;
+    $scope.canvas.renderAll();
   };
 
   $scope.addRect = function() {
 
-    canvas.add(new fabric.Rect({
+    $scope.canvas.add(new fabric.Rect({
       left: 0,
       top: 0,
       fill: '#' + getRandomColor(),
@@ -200,7 +200,7 @@ function addAccessors($scope) {
 
   $scope.addCircle = function() {
 
-    canvas.add(new fabric.Circle({
+    $scope.canvas.add(new fabric.Circle({
       left: 0,
       top: 0,
       fill: '#' + getRandomColor(),
@@ -211,7 +211,7 @@ function addAccessors($scope) {
 
   $scope.addTriangle = function() {
 
-    canvas.add(new fabric.Triangle({
+    $scope.canvas.add(new fabric.Triangle({
       left: 0,
       top: 0,
       fill: '#' + getRandomColor(),
@@ -223,7 +223,7 @@ function addAccessors($scope) {
 
   $scope.addLine = function() {
 
-    canvas.add(new fabric.Line([ 50, 100, 200, 200], {
+    $scope.canvas.add(new fabric.Line([ 50, 100, 200, 200], {
       left: 0,
       top: 0,
       stroke: '#' + getRandomColor()
@@ -233,7 +233,7 @@ function addAccessors($scope) {
   $scope.addPolygon = function() {
     var coord = getRandomLeftTop();
 
-    this.canvas.add(new fabric.Polygon([
+    this.$scope.canvas.add(new fabric.Polygon([
       {x: 185, y: 0},
       {x: 250, y: 100},
       {x: 385, y: 170},
@@ -262,7 +262,7 @@ function addAccessors($scope) {
       centerTransform: true
     });
 
-    canvas.add(textSample);
+    $scope.canvas.add(textSample);
   };
 
   $scope.addTextbox = function() {
@@ -283,7 +283,7 @@ function addAccessors($scope) {
       centerTransform: true
     });
 
-    canvas.add(textSample);
+    $scope.canvas.add(textSample);
   };
 
   $scope.addIText = function() {
@@ -304,7 +304,7 @@ function addAccessors($scope) {
       centerTransform: true
     });
 
-    canvas.add(textSample);
+    $scope.canvas.add(textSample);
   };
 
   var addShape = function(shapeName) {
@@ -324,7 +324,7 @@ function addAccessors($scope) {
       })
       .setCoords();
 
-      canvas.add(loadedObject);
+      $scope.canvas.add(loadedObject);
     });
   };
 
@@ -351,7 +351,7 @@ function addAccessors($scope) {
       .scale(getRandomNum(minScale, maxScale))
       .setCoords();
 
-      canvas.add(image);
+      $scope.canvas.add(image);
     });
   };
 
@@ -369,7 +369,7 @@ function addAccessors($scope) {
 
   $scope.confirmClear = function() {
     if (confirm('Are you sure?')) {
-      canvas.clear();
+      $scope.canvas.clear();
     }
   };
 
@@ -378,14 +378,14 @@ function addAccessors($scope) {
       alert('This browser doesn\'t provide means to serialize canvas to an image');
     }
     else {
-      window.open(canvas.toDataURL('png'));
+      window.open($scope.canvas.toDataURL('png'));
     }
   };
 
   $scope.rasterizeSVG = function() {
     window.open(
       'data:image/svg+xml;utf8,' +
-      encodeURIComponent(canvas.toSVG()));
+      encodeURIComponent($scope.canvas.toSVG()));
   };
 
   $scope.rasterizeJSON = function() {
@@ -393,22 +393,22 @@ function addAccessors($scope) {
   };
 
   $scope.getSelected = function() {
-    return canvas.getActiveObject();
+    return $scope.canvas.getActiveObject();
   };
 
   $scope.removeSelected = function() {
-    var activeObject = canvas.getActiveObject(),
-        activeGroup = canvas.getActiveGroup();
+    var activeObject = $scope.canvas.getActiveObject(),
+        activeGroup = $scope.canvas.getActiveGroup();
 
     if (activeGroup) {
       var objectsInGroup = activeGroup.getObjects();
-      canvas.discardActiveGroup();
+      $scope.canvas.discardActiveGroup();
       objectsInGroup.forEach(function(object) {
-        canvas.remove(object);
+        $scope.canvas.remove(object);
       });
     }
     else if (activeObject) {
-      canvas.remove(activeObject);
+      $scope.canvas.remove(activeObject);
     }
   };
 
@@ -503,30 +503,30 @@ function addAccessors($scope) {
   };
 
   $scope.sendBackwards = function() {
-    var activeObject = canvas.getActiveObject();
+    var activeObject = $scope.canvas.getActiveObject();
     if (activeObject) {
-      canvas.sendBackwards(activeObject);
+      $scope.canvas.sendBackwards(activeObject);
     }
   };
 
   $scope.sendToBack = function() {
-    var activeObject = canvas.getActiveObject();
+    var activeObject = $scope.canvas.getActiveObject();
     if (activeObject) {
-      canvas.sendToBack(activeObject);
+      $scope.canvas.sendToBack(activeObject);
     }
   };
 
   $scope.bringForward = function() {
-    var activeObject = canvas.getActiveObject();
+    var activeObject = $scope.canvas.getActiveObject();
     if (activeObject) {
-      canvas.bringForward(activeObject);
+      $scope.canvas.bringForward(activeObject);
     }
   };
 
   $scope.bringToFront = function() {
-    var activeObject = canvas.getActiveObject();
+    var activeObject = $scope.canvas.getActiveObject();
     if (activeObject) {
-      canvas.bringToFront(activeObject);
+      $scope.canvas.bringToFront(activeObject);
     }
   };
 
@@ -536,7 +536,7 @@ function addAccessors($scope) {
   });
 
   $scope.patternify = function() {
-    var obj = canvas.getActiveObject();
+    var obj = $scope.canvas.getActiveObject();
 
     if (!obj) return;
 
@@ -551,11 +551,11 @@ function addAccessors($scope) {
         obj.set('fill', pattern);
       }
     }
-    canvas.renderAll();
+    $scope.canvas.renderAll();
   };
 
   $scope.clip = function() {
-    var obj = canvas.getActiveObject();
+    var obj = $scope.canvas.getActiveObject();
     if (!obj) return;
 
     if (obj.clipTo) {
@@ -567,11 +567,11 @@ function addAccessors($scope) {
         ctx.arc(0, 0, radius, 0, Math.PI * 2, true);
       };
     }
-    canvas.renderAll();
+    $scope.canvas.renderAll();
   };
 
   $scope.shadowify = function() {
-    var obj = canvas.getActiveObject();
+    var obj = $scope.canvas.getActiveObject();
     if (!obj) return;
 
     if (obj.shadow) {
@@ -585,11 +585,11 @@ function addAccessors($scope) {
         offsetY: 10
       });
     }
-    canvas.renderAll();
+    $scope.canvas.renderAll();
   };
 
   $scope.gradientify = function() {
-    var obj = canvas.getActiveObject();
+    var obj = $scope.canvas.getActiveObject();
     if (!obj) return;
 
     obj.setGradient('fill', {
@@ -602,7 +602,7 @@ function addAccessors($scope) {
         1: '#' + getRandomColor()
       }
     });
-    canvas.renderAll();
+    $scope.canvas.renderAll();
   };
 
   $scope.execute = function() {
@@ -621,11 +621,11 @@ function addAccessors($scope) {
 
   var consoleValue = (
     '// clear canvas\n' +
-    'canvas.clear();\n\n' +
+    '$scope.canvas.clear();\n\n' +
     '// remove currently selected object\n' +
-    'canvas.remove(canvas.getActiveObject());\n\n' +
+    '$scope.canvas.remove($scope.canvas.getActiveObject());\n\n' +
     '// add red rectangle\n' +
-    'canvas.add(new fabric.Rect({\n' +
+    '$scope.canvas.add(new fabric.Rect({\n' +
     '  width: 50,\n' +
     '  height: 50,\n' +
     '  left: 50,\n' +
@@ -633,7 +633,7 @@ function addAccessors($scope) {
     "  fill: 'rgb(255,0,0)'\n" +
     '}));\n\n' +
     '// add green, half-transparent circle\n' +
-    'canvas.add(new fabric.Circle({\n' +
+    '$scope.canvas.add(new fabric.Circle({\n' +
     '  radius: 40,\n' +
     '  left: 50,\n' +
     '  top: 50,\n' +
@@ -676,15 +676,15 @@ function addAccessors($scope) {
   var _loadSVG = function(svg) {
     fabric.loadSVGFromString(svg, function(objects, options) {
       var obj = fabric.util.groupSVGElements(objects, options);
-      canvas.add(obj).centerObject(obj).renderAll();
+      $scope.canvas.add(obj).centerObject(obj).renderAll();
       obj.setCoords();
     });
   };
 
   var _loadSVGWithoutGrouping = function(svg) {
     fabric.loadSVGFromString(svg, function(objects) {
-      canvas.add.apply(canvas, objects);
-      canvas.renderAll();
+      $scope.canvas.add.apply(canvas, objects);
+      $scope.canvas.renderAll();
     });
   };
 
@@ -701,8 +701,8 @@ function addAccessors($scope) {
   };
 
   var _loadJSON = function(json) {
-    canvas.loadFromJSON(json, function(){
-      canvas.renderAll();
+    $scope.canvas.loadFromJSON(json, function(){
+      $scope.canvas.renderAll();
     });
   };
 
@@ -748,24 +748,24 @@ function addAccessors($scope) {
       }
     });
 
-    canvas.add(iText2);
+    $scope.canvas.add(iText2);
   }
 
   addTexts();
 
 
   $scope.getPreserveObjectStacking = function() {
-    return canvas.preserveObjectStacking;
+    return $scope.canvas.preserveObjectStacking;
   };
   $scope.setPreserveObjectStacking = function(value) {
-    return canvas.preserveObjectStacking = value;
+    return $scope.canvas.preserveObjectStacking = value;
   };
 
   $scope.getFreeDrawingMode = function() {
-    return canvas.isDrawingMode;
+    return $scope.canvas.isDrawingMode;
   };
   $scope.setFreeDrawingMode = function(value) {
-    canvas.isDrawingMode = !!value;
+    $scope.canvas.isDrawingMode = !!value;
     $scope.$$phase || $scope.$digest();
   };
 
@@ -778,65 +778,65 @@ function addAccessors($scope) {
     $scope.freeDrawingMode = type;
 
     if (type === 'hline') {
-      canvas.freeDrawingBrush = $scope.vLinePatternBrush;
+      $scope.canvas.freeDrawingBrush = $scope.vLinePatternBrush;
     }
     else if (type === 'vline') {
-      canvas.freeDrawingBrush = $scope.hLinePatternBrush;
+      $scope.canvas.freeDrawingBrush = $scope.hLinePatternBrush;
     }
     else if (type === 'square') {
-      canvas.freeDrawingBrush = $scope.squarePatternBrush;
+      $scope.canvas.freeDrawingBrush = $scope.squarePatternBrush;
     }
     else if (type === 'diamond') {
-      canvas.freeDrawingBrush = $scope.diamondPatternBrush;
+      $scope.canvas.freeDrawingBrush = $scope.diamondPatternBrush;
     }
     else if (type === 'texture') {
-      canvas.freeDrawingBrush = $scope.texturePatternBrush;
+      $scope.canvas.freeDrawingBrush = $scope.texturePatternBrush;
     }
     else {
-      canvas.freeDrawingBrush = new fabric[type + 'Brush'](canvas);
+      $scope.canvas.freeDrawingBrush = new fabric[type + 'Brush'](canvas);
     }
 
     $scope.$$phase || $scope.$digest();
   };
 
   $scope.getDrawingLineWidth = function() {
-    if (canvas.freeDrawingBrush) {
-      return canvas.freeDrawingBrush.width;
+    if ($scope.canvas.freeDrawingBrush) {
+      return $scope.canvas.freeDrawingBrush.width;
     }
   };
   $scope.setDrawingLineWidth = function(value) {
-    if (canvas.freeDrawingBrush) {
-      canvas.freeDrawingBrush.width = parseInt(value, 10) || 1;
+    if ($scope.canvas.freeDrawingBrush) {
+      $scope.canvas.freeDrawingBrush.width = parseInt(value, 10) || 1;
     }
   };
 
   $scope.getDrawingLineColor = function() {
-    if (canvas.freeDrawingBrush) {
-      return canvas.freeDrawingBrush.color;
+    if ($scope.canvas.freeDrawingBrush) {
+      return $scope.canvas.freeDrawingBrush.color;
     }
   };
   $scope.setDrawingLineColor = function(value) {
-    if (canvas.freeDrawingBrush) {
-      canvas.freeDrawingBrush.color = value;
+    if ($scope.canvas.freeDrawingBrush) {
+      $scope.canvas.freeDrawingBrush.color = value;
     }
   };
 
   $scope.getDrawingLineShadowWidth = function() {
-    if (canvas.freeDrawingBrush && canvas.freeDrawingBrush.shadow) {
-      return canvas.freeDrawingBrush.shadow.blur || 1;
+    if ($scope.canvas.freeDrawingBrush && $scope.canvas.freeDrawingBrush.shadow) {
+      return $scope.canvas.freeDrawingBrush.shadow.blur || 1;
     }
     else {
       return 0
     }
   };
   $scope.setDrawingLineShadowWidth = function(value) {
-    if (canvas.freeDrawingBrush) {
+    if ($scope.canvas.freeDrawingBrush) {
       var blur = parseInt(value, 10) || 1;
       if (blur > 0) {
-        canvas.freeDrawingBrush.shadow = new fabric.Shadow({blur: blur, offsetX: 10, offsetY: 10}) ;
+        $scope.canvas.freeDrawingBrush.shadow = new fabric.Shadow({blur: blur, offsetX: 10, offsetY: 10}) ;
       }
       else {
-        canvas.freeDrawingBrush.shadow = null;
+        $scope.canvas.freeDrawingBrush.shadow = null;
       }
     }
   };
@@ -947,7 +947,7 @@ function watchCanvas($scope) {
 
   function updateScope() {
     $scope.$$phase || $scope.$digest();
-    canvas.renderAll();
+    $scope.canvas.renderAll();
   }
 
   canvas
@@ -960,7 +960,7 @@ function watchCanvas($scope) {
 colabedit.controller('CanvasControls', function($scope) {
 
   $scope.canvas = canvas;
-  $scope.canvas.backgroundColor = 'rgb(255,255,255)';
+  $scope.$scope.canvas.backgroundColor = 'rgb(255,255,255)';
   $scope.getActiveStyle = getActiveStyle;
 
   addAccessors($scope);

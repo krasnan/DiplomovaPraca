@@ -757,7 +757,7 @@
     excludeFromExport:        false,
 
     /**
-     * When `true`, object is cached on an additional canvas.
+     * When `true`, object is cached on an additional $scope.canvas.
      * default to true
      * since 1.7.0
      * @type Boolean
@@ -853,10 +853,10 @@
      * @return {Object}.zoomY zoomY zoom value to unscale the canvas before drawing cache
      */
     _getCacheCanvasDimensions: function() {
-      var zoom = this.canvas && this.canvas.getZoom() || 1,
+      var zoom = this.canvas && this.$scope.canvas.getZoom() || 1,
           objectScale = this.getObjectScaling(),
           dim = this._getNonTransformedDimensions(),
-          retina = this.canvas && this.canvas._isRetinaScaling() ? fabric.devicePixelRatio : 1,
+          retina = this.canvas && this.$scope.canvas._isRetinaScaling() ? fabric.devicePixelRatio : 1,
           zoomX = objectScale.scaleX * zoom * retina,
           zoomY = objectScale.scaleY * zoom * retina,
           width = dim.x * zoomX,
@@ -876,8 +876,8 @@
      * @return {Boolean} true if the canvas has been resized
      */
     _updateCacheCanvas: function() {
-      if (this.noScaleCache && this.canvas && this.canvas._currentTransform) {
-        var action = this.canvas._currentTransform.action;
+      if (this.noScaleCache && this.canvas && this.$scope.canvas._currentTransform) {
+        var action = this.$scope.canvas._currentTransform.action;
         if (action.slice(0, 5) === 'scale') {
           return false;
         }
@@ -919,7 +919,7 @@
      * @param {Boolean} fromLeft When true, context is transformed to object's top/left corner. This is used when rendering text on Node
      */
     transform: function(ctx, fromLeft) {
-      if (this.group && !this.group._transformDone && this.group === this.canvas._activeGroup) {
+      if (this.group && !this.group._transformDone && this.group === this.$scope.canvas._activeGroup) {
         this.group.transform(ctx);
       }
       var center = fromLeft ? this._getLeftTopCoords() : this.getCenterPoint();
@@ -1108,8 +1108,8 @@
      * @return {Boolean} flipY value // TODO
      */
     getViewportTransform: function() {
-      if (this.canvas && this.canvas.viewportTransform) {
-        return this.canvas.viewportTransform;
+      if (this.canvas && this.$scope.canvas.viewportTransform) {
+        return this.$scope.canvas.viewportTransform;
       }
       return [1, 0, 0, 1, 0, 0];
     },
@@ -1179,7 +1179,7 @@
     /**
      * Check if cache is dirty
      * @param {Boolean} skipCanvas skip canvas checks because this object is painted
-     * on parent canvas.
+     * on parent $scope.canvas.
      */
     isCacheDirty: function(skipCanvas) {
       if (!skipCanvas && this._updateCacheCanvas()) {
@@ -1279,7 +1279,7 @@
      */
     _renderControls: function(ctx, noTransform) {
       if (!this.active || noTransform
-          || (this.group && this.group !== this.canvas.getActiveGroup())) {
+          || (this.group && this.group !== this.$scope.canvas.getActiveGroup())) {
         return;
       }
 
@@ -1295,7 +1295,7 @@
       if (!this.group) {
         ctx.globalAlpha = this.isMoving ? this.borderOpacityWhenMoving : 1;
       }
-      if (this.group && this.group === this.canvas.getActiveGroup()) {
+      if (this.group && this.group === this.$scope.canvas.getActiveGroup()) {
         ctx.rotate(degreesToRadians(options.angle));
         this.drawBordersInGroup(ctx, options);
       }
@@ -1316,10 +1316,10 @@
         return;
       }
 
-      var multX = (this.canvas && this.canvas.viewportTransform[0]) || 1,
-          multY = (this.canvas && this.canvas.viewportTransform[3]) || 1,
+      var multX = (this.canvas && this.$scope.canvas.viewportTransform[0]) || 1,
+          multY = (this.canvas && this.$scope.canvas.viewportTransform[3]) || 1,
           scaling = this.getObjectScaling();
-      if (this.canvas && this.canvas._isRetinaScaling()) {
+      if (this.canvas && this.$scope.canvas._isRetinaScaling()) {
         multX *= fabric.devicePixelRatio;
         multY *= fabric.devicePixelRatio;
       }
@@ -1460,7 +1460,7 @@
       }
 
       if (options.format === 'jpeg') {
-        canvas.backgroundColor = '#fff';
+        $scope.canvas.backgroundColor = '#fff';
       }
 
       var origParams = {
@@ -1470,16 +1470,16 @@
       };
 
       this.set('active', false);
-      this.setPositionByOrigin(new fabric.Point(canvas.getWidth() / 2, canvas.getHeight() / 2), 'center', 'center');
+      this.setPositionByOrigin(new fabric.Point($scope.canvas.getWidth() / 2, $scope.canvas.getHeight() / 2), 'center', 'center');
 
       var originalCanvas = this.canvas;
-      canvas.add(this);
-      var data = canvas.toDataURL(options);
+      $scope.canvas.add(this);
+      var data = $scope.canvas.toDataURL(options);
 
       this.set(origParams).setCoords();
       this.canvas = originalCanvas;
 
-      canvas.dispose();
+      $scope.canvas.dispose();
       canvas = null;
 
       return data;
@@ -1542,7 +1542,7 @@
      *     1: 'rgba(0,0,255,0.5)'
      *   }
      * });
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      * @example <caption>Set radial gradient</caption>
      * object.setGradient('fill', {
      *   type: 'radial',
@@ -1558,7 +1558,7 @@
      *     1: 'rgba(0,0,255,0.5)'
      *   }
      * });
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      */
     setGradient: function(property, options) {
       options || (options = { });
@@ -1600,7 +1600,7 @@
      *     source: img,
      *     repeat: 'repeat'
      *   });
-     *   canvas.renderAll();
+     *   $scope.canvas.renderAll();
      * });
      */
     setPatternFill: function(options) {
@@ -1619,7 +1619,7 @@
      * @see {@link http://jsfiddle.net/fabricjs/7gvJG/|jsFiddle demo}
      * @example <caption>Set shadow with string notation</caption>
      * object.setShadow('2px 2px 10px rgba(0,0,0,0.2)');
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      * @example <caption>Set shadow with object notation</caption>
      * object.setShadow({
      *   color: 'red',
@@ -1627,7 +1627,7 @@
      *   offsetX: 20,
      *   offsetY: 20
      * });
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      */
     setShadow: function(options) {
       return this.set('shadow', options ? new fabric.Shadow(options) : null);
@@ -1673,7 +1673,7 @@
      * @chainable
      */
     centerH: function () {
-      this.canvas && this.canvas.centerObjectH(this);
+      this.canvas && this.$scope.canvas.centerObjectH(this);
       return this;
     },
 
@@ -1684,7 +1684,7 @@
      * @chainable
      */
     viewportCenterH: function () {
-      this.canvas && this.canvas.viewportCenterObjectH(this);
+      this.canvas && this.$scope.canvas.viewportCenterObjectH(this);
       return this;
     },
 
@@ -1695,7 +1695,7 @@
      * @chainable
      */
     centerV: function () {
-      this.canvas && this.canvas.centerObjectV(this);
+      this.canvas && this.$scope.canvas.centerObjectV(this);
       return this;
     },
 
@@ -1706,7 +1706,7 @@
      * @chainable
      */
     viewportCenterV: function () {
-      this.canvas && this.canvas.viewportCenterObjectV(this);
+      this.canvas && this.$scope.canvas.viewportCenterObjectV(this);
       return this;
     },
 
@@ -1717,7 +1717,7 @@
      * @chainable
      */
     center: function () {
-      this.canvas && this.canvas.centerObject(this);
+      this.canvas && this.$scope.canvas.centerObject(this);
       return this;
     },
 
@@ -1728,7 +1728,7 @@
      * @chainable
      */
     viewportCenter: function () {
-      this.canvas && this.canvas.viewportCenterObject(this);
+      this.canvas && this.$scope.canvas.viewportCenterObject(this);
       return this;
     },
 
@@ -1738,7 +1738,7 @@
      * @chainable
      */
     remove: function() {
-      this.canvas && this.canvas.remove(this);
+      this.canvas && this.$scope.canvas.remove(this);
       return this;
     },
 
@@ -1749,7 +1749,7 @@
      * @return {Object} Coordinates of a pointer (x, y)
      */
     getLocalPointer: function(e, pointer) {
-      pointer = pointer || this.canvas.getPointer(e);
+      pointer = pointer || this.$scope.canvas.getPointer(e);
       var pClicked = new fabric.Point(pointer.x, pointer.y),
           objectLeftTop = this._getLeftTopCoords();
       if (this.angle) {

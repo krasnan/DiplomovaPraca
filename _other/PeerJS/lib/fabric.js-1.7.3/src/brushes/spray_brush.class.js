@@ -62,7 +62,7 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
    */
   onMouseDown: function(pointer) {
     this.sprayChunks.length = 0;
-    this.canvas.clearContext(this.canvas.contextTop);
+    this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
     this._setShadow();
 
     this.addSprayChunk(pointer);
@@ -82,8 +82,8 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
    * Invoked on mouse up
    */
   onMouseUp: function() {
-    var originalRenderOnAddRemove = this.canvas.renderOnAddRemove;
-    this.canvas.renderOnAddRemove = false;
+    var originalRenderOnAddRemove = this.$scope.canvas.renderOnAddRemove;
+    this.$scope.canvas.renderOnAddRemove = false;
 
     var rects = [];
 
@@ -114,13 +114,13 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
     var group = new fabric.Group(rects, { originX: 'center', originY: 'center' });
     group.canvas = this.canvas;
 
-    this.canvas.add(group);
-    this.canvas.fire('path:created', { path: group });
+    this.$scope.canvas.add(group);
+    this.$scope.canvas.fire('path:created', { path: group });
 
-    this.canvas.clearContext(this.canvas.contextTop);
+    this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
     this._resetShadow();
-    this.canvas.renderOnAddRemove = originalRenderOnAddRemove;
-    this.canvas.renderAll();
+    this.$scope.canvas.renderOnAddRemove = originalRenderOnAddRemove;
+    this.$scope.canvas.renderAll();
   },
 
   /**
@@ -150,10 +150,10 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
    * Renders brush
    */
   render: function() {
-    var ctx = this.canvas.contextTop;
+    var ctx = this.$scope.canvas.contextTop;
     ctx.fillStyle = this.color;
 
-    var v = this.canvas.viewportTransform;
+    var v = this.$scope.canvas.viewportTransform;
     ctx.save();
     ctx.transform(v[0], v[1], v[2], v[3], v[4], v[5]);
 

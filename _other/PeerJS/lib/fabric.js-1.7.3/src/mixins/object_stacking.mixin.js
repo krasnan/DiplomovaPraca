@@ -10,7 +10,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
       fabric.StaticCanvas.prototype.sendToBack.call(this.group, this);
     }
     else {
-      this.canvas.sendToBack(this);
+      this.$scope.canvas.sendToBack(this);
     }
     return this;
   },
@@ -25,7 +25,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
       fabric.StaticCanvas.prototype.bringToFront.call(this.group, this);
     }
     else {
-      this.canvas.bringToFront(this);
+      this.$scope.canvas.bringToFront(this);
     }
     return this;
   },
@@ -41,7 +41,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
       fabric.StaticCanvas.prototype.sendBackwards.call(this.group, this, intersecting);
     }
     else {
-      this.canvas.sendBackwards(this, intersecting);
+      this.$scope.canvas.sendBackwards(this, intersecting);
     }
     return this;
   },
@@ -57,7 +57,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
       fabric.StaticCanvas.prototype.bringForward.call(this.group, this, intersecting);
     }
     else {
-      this.canvas.bringForward(this, intersecting);
+      this.$scope.canvas.bringForward(this, intersecting);
     }
     return this;
   },
@@ -73,7 +73,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
       fabric.StaticCanvas.prototype.moveTo.call(this.group, this, index);
     }
     else {
-      this.canvas.moveTo(this, index);
+      this.$scope.canvas.moveTo(this, index);
     }
     return this;
   }

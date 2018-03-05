@@ -4,7 +4,7 @@
 
   /**
    * IText class (introduced in <b>v1.4</b>) Events are also fired with "text:"
-   * prefix when observing canvas.
+   * prefix when observing $scope.canvas.
    * @class fabric.IText
    * @extends fabric.Text
    * @mixes fabric.Observable
@@ -244,7 +244,7 @@
      */
     _fireSelectionChanged: function() {
       this.fire('selection:changed');
-      this.canvas && this.canvas.fire('text:selection:changed', { target: this });
+      this.canvas && this.$scope.canvas.fire('text:selection:changed', { target: this });
     },
 
     /**
@@ -351,10 +351,10 @@
       if (!this.active || !this.isEditing) {
         return;
       }
-      if (this.canvas && this.canvas.contextTop) {
-        var ctx = this.canvas.contextTop;
+      if (this.canvas && this.$scope.canvas.contextTop) {
+        var ctx = this.$scope.canvas.contextTop;
         ctx.save();
-        ctx.transform.apply(ctx, this.canvas.viewportTransform);
+        ctx.transform.apply(ctx, this.$scope.canvas.viewportTransform);
         this.transform(ctx);
         this.transformMatrix && ctx.transform.apply(ctx, this.transformMatrix);
         this._clearTextArea(ctx);
@@ -371,10 +371,10 @@
       }
       var chars = this.text.split(''),
           boundaries, ctx;
-      if (this.canvas && this.canvas.contextTop) {
-        ctx = this.canvas.contextTop;
+      if (this.canvas && this.$scope.canvas.contextTop) {
+        ctx = this.$scope.canvas.contextTop;
         ctx.save();
-        ctx.transform.apply(ctx, this.canvas.viewportTransform);
+        ctx.transform.apply(ctx, this.$scope.canvas.viewportTransform);
         this.transform(ctx);
         this.transformMatrix && ctx.transform.apply(ctx, this.transformMatrix);
         this._clearTextArea(ctx);
@@ -551,7 +551,7 @@
           leftOffset = (lineIndex === 0 && charIndex === 0)
                     ? this._getLineLeftOffset(this._getLineWidth(ctx, lineIndex))
                     : boundaries.leftOffset,
-          multiplier = this.scaleX * this.canvas.getZoom(),
+          multiplier = this.scaleX * this.$scope.canvas.getZoom(),
           cursorWidth = this.cursorWidth / multiplier;
 
       ctx.fillStyle = this.getCurrentCharColor(lineIndex, charIndex);

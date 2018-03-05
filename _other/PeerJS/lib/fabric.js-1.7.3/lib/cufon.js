@@ -745,14 +745,14 @@ Cufon.registerEngine('canvas', (function() {
     }
 
     var wStyle = wrapper.style;
-    var cStyle = canvas.style || { };
+    var cStyle = $scope.canvas.style || { };
 
     var height = size.convert(viewBox.height - expandTop + expandBottom);
     var roundedHeight = Math.ceil(height);
     var roundingFactor = roundedHeight / height;
 
-    canvas.width = Math.ceil(size.convert(width + expandRight - expandLeft) * roundingFactor);
-    canvas.height = roundedHeight;
+    $scope.canvas.width = Math.ceil(size.convert(width + expandRight - expandLeft) * roundingFactor);
+    $scope.canvas.height = roundedHeight;
 
     expandTop += viewBox.minY;
 
@@ -778,7 +778,7 @@ Cufon.registerEngine('canvas', (function() {
       wStyle.paddingBottom = (_height - 1) + 'px';
     }
 
-    var g = Cufon.textOptions.context || canvas.getContext('2d'),
+    var g = Cufon.textOptions.context || $scope.canvas.getContext('2d'),
         scale = roundedHeight / viewBox.height;
 
     Cufon.textOptions.fontAscent = font.ascent * scale;
@@ -794,7 +794,7 @@ Cufon.registerEngine('canvas', (function() {
     g.translate(
       // we're at the center of an object and need to jump to the top left corner
       // where first character is to be drawn
-      -expandLeft - ((1/scale * canvas.width) / 2) + (Cufon.fonts[font.family].offsetLeft || 0),
+      -expandLeft - ((1/scale * $scope.canvas.width) / 2) + (Cufon.fonts[font.family].offsetLeft || 0),
       -expandTop - ((Cufon.textOptions.height / scale) / 2) + (Cufon.fonts[font.family].offsetTop || 0)
     );
 
@@ -1099,7 +1099,7 @@ Cufon.registerEngine('vml', (function() {
       wrapper.alt = text;
 
       canvas = fabric.document.createElement('span');
-      canvas.className = 'cufon-vml-canvas';
+      $scope.canvas.className = 'cufon-vml-canvas';
       wrapper.appendChild(canvas);
 
       if (options.printable) {
@@ -1116,7 +1116,7 @@ Cufon.registerEngine('vml', (function() {
     }
 
     var wStyle = wrapper.style;
-    var cStyle = canvas.style;
+    var cStyle = $scope.canvas.style;
 
     var height = size.convert(viewBox.height), roundedHeight = Math.ceil(height);
     var roundingFactor = roundedHeight / height;
@@ -1160,12 +1160,12 @@ Cufon.registerEngine('vml', (function() {
 
       if (redraw) {
         // some glyphs may be missing so we can't use i
-        shape = canvas.childNodes[k];
+        shape = $scope.canvas.childNodes[k];
         if (shape.firstChild) shape.removeChild(shape.firstChild); // shadow
       }
       else {
         shape = fabric.document.createElement('cvml:shape');
-        canvas.appendChild(shape);
+        $scope.canvas.appendChild(shape);
       }
 
       shape.stroked = 'f';

@@ -1,6 +1,6 @@
 {
 	"name": "ImageEditor",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"author": [
 		"Martin Krasňan"
 	],
@@ -36,28 +36,46 @@
 	"ResourceModules": {
 		"angular":{
 			"scripts": [
-				"scripts/angular.min.js"
+				"vendor/angular/angular.min.js"
+			]
+		},
+		"angular-bootstrap-colorpicker":{
+			"scripts": [
+				"vendor/angular-bootstrap-colorpicker/bootstrap-colorpicker-module.min.js"
+			],
+			"dependencies": [
+				"angular"
+			]
+		},
+		"socket.io-client":{
+			"scripts": [
+				"vendor/socket.io-client/socket.io.js"
 			]
 		},
 		"fabric":{
 			"scripts": [
-				"scripts/fabric.js"
-			]
-		},
-		"font-awesome":{
-			"styles": [
-				"styles/fontawesome-all.min.css"
+				"vendor/fabricjs2/fabric.js"
 			]
 		},
 		"ext.imageEditor": {
 			"scripts": [
-				"scripts/ext.ImageEditor.init.js"
+				"scripts/ext.imageEditor.utils.js",
+				"scripts/ext.imageEditor.config.js",
+				"scripts/ext.imageEditor.init.accessors.js",
+				"scripts/ext.imageEditor.init.tools.js",
+				"scripts/ext.imageEditor.init.keybindings.js",
+				"scripts/ext.imageEditor.controller.js"
 			],
 			"styles": [
 				"styles/ext.imageEditor.less"
 			],
 			"messages": [],
-			"dependencies": []
+			"dependencies": [
+				"angular",
+				"angular-bootstrap-colorpicker",
+				"socket.io-client",
+				"fabric"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {

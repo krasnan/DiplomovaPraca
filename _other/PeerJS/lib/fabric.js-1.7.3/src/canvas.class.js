@@ -231,7 +231,7 @@
     targetFindTolerance:    0,
 
     /**
-     * When true, target detection is skipped when hovering over canvas. This can be used to improve performance.
+     * When true, target detection is skipped when hovering over $scope.canvas. This can be used to improve performance.
      * @type Boolean
      * @default
      */
@@ -240,7 +240,7 @@
     /**
      * When true, mouse events on canvas (mousedown/mousemove/mouseup) result in free drawing.
      * After mousedown, mousemove creates a shape,
-     * and then mouseup finalizes it and adds an instance of `fabric.Path` onto canvas.
+     * and then mouseup finalizes it and adds an instance of `fabric.Path` onto $scope.canvas.
      * @tutorial {@link http://fabricjs.com/fabric-intro-part-4#free_drawing}
      * @type Boolean
      * @default
@@ -338,7 +338,7 @@
     },
 
     /**
-     * Renders both the top canvas and the secondary container canvas.
+     * Renders both the top canvas and the secondary container $scope.canvas.
      * @return {fabric.Canvas} instance
      * @chainable
      */
@@ -353,7 +353,7 @@
     },
 
     /**
-     * Method to render only the top canvas.
+     * Method to render only the top $scope.canvas.
      * Also used to render the group selection box.
      * @return {fabric.Canvas} thisArg
      * @chainable
@@ -1196,7 +1196,7 @@
     },
 
     /**
-     * Returns pointer coordinates relative to canvas.
+     * Returns pointer coordinates relative to $scope.canvas.
      * @param {Event} e
      * @param {Boolean} ignoreZoom
      * @return {Object} object with "x" and "y" number values

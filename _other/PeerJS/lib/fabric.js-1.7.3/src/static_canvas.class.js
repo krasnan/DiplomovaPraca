@@ -96,7 +96,7 @@
     stateful: false,
 
     /**
-     * Indicates whether {@link fabric.Collection.add}, {@link fabric.Collection.insertAt} and {@link fabric.Collection.remove} should also re-render canvas.
+     * Indicates whether {@link fabric.Collection.add}, {@link fabric.Collection.insertAt} and {@link fabric.Collection.remove} should also re-render $scope.canvas.
      * Disabling this option could give a great performance boost when adding/removing a lot of objects to/from canvas at once
      * (followed by a manual rendering after addition/deletion)
      * @type Boolean
@@ -247,13 +247,13 @@
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/MnzHT/|jsFiddle demo}
      * @example <caption>Normal overlayImage with left/top = 0</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
      *   // Needed to position overlayImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>overlayImage with different properties</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -263,19 +263,19 @@
      * });
      * @example <caption>Stretched overlayImage #1 - width/height correspond to canvas width/height</caption>
      * fabric.Image.fromURL('http://fabricjs.com/assets/jail_cell_bars.png', function(img) {
-     *    img.set({width: canvas.width, height: canvas.height, originX: 'left', originY: 'top'});
-     *    canvas.setOverlayImage(img, canvas.renderAll.bind(canvas));
+     *    img.set({width: $scope.canvas.width, height: $scope.canvas.height, originX: 'left', originY: 'top'});
+     *    $scope.canvas.setOverlayImage(img, $scope.canvas.renderAll.bind(canvas));
      * });
      * @example <caption>Stretched overlayImage #2 - width/height correspond to canvas width/height</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
-     *   width: canvas.width,
-     *   height: canvas.height,
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
+     *   width: $scope.canvas.width,
+     *   height: $scope.canvas.height,
      *   // Needed to position overlayImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>overlayImage loaded from cross-origin</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -298,13 +298,13 @@
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/YH9yD/|jsFiddle demo}
      * @example <caption>Normal backgroundImage with left/top = 0</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
      *   // Needed to position backgroundImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>backgroundImage with different properties</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -314,19 +314,19 @@
      * });
      * @example <caption>Stretched backgroundImage #1 - width/height correspond to canvas width/height</caption>
      * fabric.Image.fromURL('http://fabricjs.com/assets/honey_im_subtle.png', function(img) {
-     *    img.set({width: canvas.width, height: canvas.height, originX: 'left', originY: 'top'});
-     *    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+     *    img.set({width: $scope.canvas.width, height: $scope.canvas.height, originX: 'left', originY: 'top'});
+     *    $scope.canvas.setBackgroundImage(img, $scope.canvas.renderAll.bind(canvas));
      * });
      * @example <caption>Stretched backgroundImage #2 - width/height correspond to canvas width/height</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
-     *   width: canvas.width,
-     *   height: canvas.height,
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
+     *   width: $scope.canvas.width,
+     *   height: $scope.canvas.height,
      *   // Needed to position backgroundImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>backgroundImage loaded from cross-origin</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -348,18 +348,18 @@
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/pB55h/|jsFiddle demo}
      * @example <caption>Normal overlayColor - color value</caption>
-     * canvas.setOverlayColor('rgba(255, 73, 64, 0.6)', canvas.renderAll.bind(canvas));
+     * $scope.canvas.setOverlayColor('rgba(255, 73, 64, 0.6)', $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as overlayColor</caption>
-     * canvas.setOverlayColor({
+     * $scope.canvas.setOverlayColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png'
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as overlayColor with repeat and offset</caption>
-     * canvas.setOverlayColor({
+     * $scope.canvas.setOverlayColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png',
      *   repeat: 'repeat',
      *   offsetX: 200,
      *   offsetY: 100
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      */
     setOverlayColor: function(overlayColor, callback) {
       return this.__setBgOverlayColor('overlayColor', overlayColor, callback);
@@ -373,18 +373,18 @@
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/hXzvk/|jsFiddle demo}
      * @example <caption>Normal backgroundColor - color value</caption>
-     * canvas.setBackgroundColor('rgba(255, 73, 64, 0.6)', canvas.renderAll.bind(canvas));
+     * $scope.canvas.setBackgroundColor('rgba(255, 73, 64, 0.6)', $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as backgroundColor</caption>
-     * canvas.setBackgroundColor({
+     * $scope.canvas.setBackgroundColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png'
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as backgroundColor with repeat and offset</caption>
-     * canvas.setBackgroundColor({
+     * $scope.canvas.setBackgroundColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png',
      *   repeat: 'repeat',
      *   offsetX: 200,
      *   offsetY: 100
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      */
     setBackgroundColor: function(backgroundColor, callback) {
       return this.__setBgOverlayColor('backgroundColor', backgroundColor, callback);
@@ -782,7 +782,7 @@
     },
 
     /**
-     * Renders both the canvas.
+     * Renders both the $scope.canvas.
      * @return {fabric.Canvas} instance
      * @chainable
      */
@@ -882,7 +882,7 @@
     },
 
     /**
-     * Returns coordinates of a center of canvas.
+     * Returns coordinates of a center of $scope.canvas.
      * Returned value is an object with top and left properties
      * @return {Object} object with "top" and "left" number values
      */
@@ -1116,11 +1116,11 @@
      * @tutorial {@link http://fabricjs.com/fabric-intro-part-3#serialization}
      * @see {@link http://jsfiddle.net/fabricjs/jQ3ZZ/|jsFiddle demo}
      * @example <caption>Normal SVG output</caption>
-     * var svg = canvas.toSVG();
+     * var svg = $scope.canvas.toSVG();
      * @example <caption>SVG output without preamble (without &lt;?xml ../>)</caption>
-     * var svg = canvas.toSVG({suppressPreamble: true});
+     * var svg = $scope.canvas.toSVG({suppressPreamble: true});
      * @example <caption>SVG output with viewBox attribute</caption>
-     * var svg = canvas.toSVG({
+     * var svg = $scope.canvas.toSVG({
      *   viewBox: {
      *     x: 100,
      *     y: 100,
@@ -1129,9 +1129,9 @@
      *   }
      * });
      * @example <caption>SVG output with different encoding (default: UTF-8)</caption>
-     * var svg = canvas.toSVG({encoding: 'ISO-8859-1'});
+     * var svg = $scope.canvas.toSVG({encoding: 'ISO-8859-1'});
      * @example <caption>Modify SVG output with reviver function</caption>
-     * var svg = canvas.toSVG(null, function(svg) {
+     * var svg = $scope.canvas.toSVG(null, function(svg) {
      *   return svg.replace('stroke-dasharray: ; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; ', '');
      * });
      */
@@ -1646,12 +1646,12 @@
    * @tutorial {@link http://fabricjs.com/fabric-intro-part-3#serialization}
    * @see {@link http://jsfiddle.net/fabricjs/pec86/|jsFiddle demo}
    * @example <caption>JSON without additional properties</caption>
-   * var json = canvas.toJSON();
+   * var json = $scope.canvas.toJSON();
    * @example <caption>JSON with additional properties included</caption>
-   * var json = canvas.toJSON(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling']);
+   * var json = $scope.canvas.toJSON(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling']);
    * @example <caption>JSON without default values</caption>
-   * canvas.includeDefaultValues = false;
-   * var json = canvas.toJSON();
+   * $scope.canvas.includeDefaultValues = false;
+   * var json = $scope.canvas.toJSON();
    */
   fabric.StaticCanvas.prototype.toJSON = fabric.StaticCanvas.prototype.toObject;
 

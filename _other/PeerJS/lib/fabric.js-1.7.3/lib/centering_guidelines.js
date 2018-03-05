@@ -6,8 +6,8 @@
  */
 function initCenteringGuidelines(canvas) {
 
-  var canvasWidth = canvas.getWidth(),
-      canvasHeight = canvas.getHeight(),
+  var canvasWidth = $scope.canvas.getWidth(),
+      canvasHeight = $scope.canvas.getHeight(),
       canvasWidthCenter = canvasWidth / 2,
       canvasHeightCenter = canvasHeight / 2,
       canvasWidthCenterMap = { },
@@ -15,7 +15,7 @@ function initCenteringGuidelines(canvas) {
       centerLineMargin = 4,
       centerLineColor = 'rgba(255,0,241,0.5)',
       centerLineWidth = 1,
-      ctx = canvas.getSelectionContext(),
+      ctx = $scope.canvas.getSelectionContext(),
       viewportTransform;
 
   for (var i = canvasWidthCenter - centerLineMargin, len = canvasWidthCenter + centerLineMargin; i <= len; i++) {
@@ -48,14 +48,14 @@ function initCenteringGuidelines(canvas) {
       isInVerticalCenter,
       isInHorizontalCenter;
 
-  canvas.on('mouse:down', function () {
-    viewportTransform = canvas.viewportTransform;
+  $scope.canvas.on('mouse:down', function () {
+    viewportTransform = $scope.canvas.viewportTransform;
   });
 
-  canvas.on('object:moving', function(e) {
+  $scope.canvas.on('object:moving', function(e) {
     var object = e.target,
         objectCenter = object.getCenterPoint(),
-        transform = canvas._currentTransform;
+        transform = $scope.canvas._currentTransform;
 
     if (!transform) return;
 
@@ -67,11 +67,11 @@ function initCenteringGuidelines(canvas) {
     }
   });
 
-  canvas.on('before:render', function() {
-    canvas.clearContext(canvas.contextTop);
+  $scope.canvas.on('before:render', function() {
+    $scope.canvas.clearContext($scope.canvas.contextTop);
   });
 
-  canvas.on('after:render', function() {
+  $scope.canvas.on('after:render', function() {
     if (isInVerticalCenter) {
       showVerticalCenterLine();
     }
@@ -80,9 +80,9 @@ function initCenteringGuidelines(canvas) {
     }
   });
 
-  canvas.on('mouse:up', function() {
+  $scope.canvas.on('mouse:up', function() {
     // clear these values, to stop drawing guidelines once mouse is up
     isInVerticalCenter = isInHorizontalCenter = null;
-    canvas.renderAll();
+    $scope.canvas.renderAll();
   });
 }

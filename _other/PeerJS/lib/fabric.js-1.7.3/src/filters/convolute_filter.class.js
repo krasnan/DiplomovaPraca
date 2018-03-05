@@ -21,7 +21,7 @@
    *             0, -1,  0 ]
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    * @example <caption>Blur filter</caption>
    * var filter = new fabric.Image.filters.Convolute({
    *   matrix: [ 1/9, 1/9, 1/9,
@@ -29,7 +29,7 @@
    *             1/9, 1/9, 1/9 ]
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    * @example <caption>Emboss filter</caption>
    * var filter = new fabric.Image.filters.Convolute({
    *   matrix: [ 1,   1,  1,
@@ -37,7 +37,7 @@
    *            -1,  -1, -1 ]
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    * @example <caption>Emboss filter with opaqueness</caption>
    * var filter = new fabric.Image.filters.Convolute({
    *   opaque: true,
@@ -46,7 +46,7 @@
    *            -1,  -1, -1 ]
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    */
   filters.Convolute = createClass(filters.BaseFilter, /** @lends fabric.Image.filters.Convolute.prototype */ {
 

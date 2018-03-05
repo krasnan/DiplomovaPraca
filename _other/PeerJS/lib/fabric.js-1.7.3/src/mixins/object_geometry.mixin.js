@@ -198,7 +198,7 @@
 
     /**
      * Returns coordinates of object's bounding rectangle (left, top, width, height)
-     * the box is intented as aligned to axis of canvas.
+     * the box is intented as aligned to axis of $scope.canvas.
      * @param {Boolean} ignoreVpt bounding box will not be affected by viewportTransform
      * @return {Object} Object with left, top, width, height properties
      */
@@ -325,16 +325,16 @@
       // debugging
 
       /* setTimeout(function() {
-         canvas.contextTop.fillStyle = 'green';
-         canvas.contextTop.fillRect(mb.x, mb.y, 3, 3);
-         canvas.contextTop.fillRect(bl.x, bl.y, 3, 3);
-         canvas.contextTop.fillRect(br.x, br.y, 3, 3);
-         canvas.contextTop.fillRect(tl.x, tl.y, 3, 3);
-         canvas.contextTop.fillRect(tr.x, tr.y, 3, 3);
-         canvas.contextTop.fillRect(ml.x, ml.y, 3, 3);
-         canvas.contextTop.fillRect(mr.x, mr.y, 3, 3);
-         canvas.contextTop.fillRect(mt.x, mt.y, 3, 3);
-         canvas.contextTop.fillRect(mtr.x, mtr.y, 3, 3);
+         $scope.canvas.contextTop.fillStyle = 'green';
+         $scope.canvas.contextTop.fillRect(mb.x, mb.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(bl.x, bl.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(br.x, br.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(tl.x, tl.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(tr.x, tr.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(ml.x, ml.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(mr.x, mr.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(mt.x, mt.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(mtr.x, mtr.y, 3, 3);
        }, 50); */
 
       var coords = {

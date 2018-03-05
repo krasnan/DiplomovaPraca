@@ -6165,7 +6165,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     stateful: false,
 
     /**
-     * Indicates whether {@link fabric.Collection.add}, {@link fabric.Collection.insertAt} and {@link fabric.Collection.remove} should also re-render canvas.
+     * Indicates whether {@link fabric.Collection.add}, {@link fabric.Collection.insertAt} and {@link fabric.Collection.remove} should also re-render $scope.canvas.
      * Disabling this option could give a great performance boost when adding/removing a lot of objects to/from canvas at once
      * (followed by a manual rendering after addition/deletion)
      * @type Boolean
@@ -6316,13 +6316,13 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/MnzHT/|jsFiddle demo}
      * @example <caption>Normal overlayImage with left/top = 0</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
      *   // Needed to position overlayImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>overlayImage with different properties</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -6332,19 +6332,19 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      * });
      * @example <caption>Stretched overlayImage #1 - width/height correspond to canvas width/height</caption>
      * fabric.Image.fromURL('http://fabricjs.com/assets/jail_cell_bars.png', function(img) {
-     *    img.set({width: canvas.width, height: canvas.height, originX: 'left', originY: 'top'});
-     *    canvas.setOverlayImage(img, canvas.renderAll.bind(canvas));
+     *    img.set({width: $scope.canvas.width, height: $scope.canvas.height, originX: 'left', originY: 'top'});
+     *    $scope.canvas.setOverlayImage(img, $scope.canvas.renderAll.bind(canvas));
      * });
      * @example <caption>Stretched overlayImage #2 - width/height correspond to canvas width/height</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
-     *   width: canvas.width,
-     *   height: canvas.height,
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
+     *   width: $scope.canvas.width,
+     *   height: $scope.canvas.height,
      *   // Needed to position overlayImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>overlayImage loaded from cross-origin</caption>
-     * canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setOverlayImage('http://fabricjs.com/assets/jail_cell_bars.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -6367,13 +6367,13 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/YH9yD/|jsFiddle demo}
      * @example <caption>Normal backgroundImage with left/top = 0</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
      *   // Needed to position backgroundImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>backgroundImage with different properties</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -6383,19 +6383,19 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      * });
      * @example <caption>Stretched backgroundImage #1 - width/height correspond to canvas width/height</caption>
      * fabric.Image.fromURL('http://fabricjs.com/assets/honey_im_subtle.png', function(img) {
-     *    img.set({width: canvas.width, height: canvas.height, originX: 'left', originY: 'top'});
-     *    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+     *    img.set({width: $scope.canvas.width, height: $scope.canvas.height, originX: 'left', originY: 'top'});
+     *    $scope.canvas.setBackgroundImage(img, $scope.canvas.renderAll.bind(canvas));
      * });
      * @example <caption>Stretched backgroundImage #2 - width/height correspond to canvas width/height</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
-     *   width: canvas.width,
-     *   height: canvas.height,
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
+     *   width: $scope.canvas.width,
+     *   height: $scope.canvas.height,
      *   // Needed to position backgroundImage at 0/0
      *   originX: 'left',
      *   originY: 'top'
      * });
      * @example <caption>backgroundImage loaded from cross-origin</caption>
-     * canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', canvas.renderAll.bind(canvas), {
+     * $scope.canvas.setBackgroundImage('http://fabricjs.com/assets/honey_im_subtle.png', $scope.canvas.renderAll.bind(canvas), {
      *   opacity: 0.5,
      *   angle: 45,
      *   left: 400,
@@ -6417,18 +6417,18 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/pB55h/|jsFiddle demo}
      * @example <caption>Normal overlayColor - color value</caption>
-     * canvas.setOverlayColor('rgba(255, 73, 64, 0.6)', canvas.renderAll.bind(canvas));
+     * $scope.canvas.setOverlayColor('rgba(255, 73, 64, 0.6)', $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as overlayColor</caption>
-     * canvas.setOverlayColor({
+     * $scope.canvas.setOverlayColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png'
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as overlayColor with repeat and offset</caption>
-     * canvas.setOverlayColor({
+     * $scope.canvas.setOverlayColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png',
      *   repeat: 'repeat',
      *   offsetX: 200,
      *   offsetY: 100
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      */
     setOverlayColor: function(overlayColor, callback) {
       return this.__setBgOverlayColor('overlayColor', overlayColor, callback);
@@ -6442,18 +6442,18 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      * @chainable
      * @see {@link http://jsfiddle.net/fabricjs/hXzvk/|jsFiddle demo}
      * @example <caption>Normal backgroundColor - color value</caption>
-     * canvas.setBackgroundColor('rgba(255, 73, 64, 0.6)', canvas.renderAll.bind(canvas));
+     * $scope.canvas.setBackgroundColor('rgba(255, 73, 64, 0.6)', $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as backgroundColor</caption>
-     * canvas.setBackgroundColor({
+     * $scope.canvas.setBackgroundColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png'
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      * @example <caption>fabric.Pattern used as backgroundColor with repeat and offset</caption>
-     * canvas.setBackgroundColor({
+     * $scope.canvas.setBackgroundColor({
      *   source: 'http://fabricjs.com/assets/escheresque_ste.png',
      *   repeat: 'repeat',
      *   offsetX: 200,
      *   offsetY: 100
-     * }, canvas.renderAll.bind(canvas));
+     * }, $scope.canvas.renderAll.bind(canvas));
      */
     setBackgroundColor: function(backgroundColor, callback) {
       return this.__setBgOverlayColor('backgroundColor', backgroundColor, callback);
@@ -6851,7 +6851,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Renders both the canvas.
+     * Renders both the $scope.canvas.
      * @return {fabric.Canvas} instance
      * @chainable
      */
@@ -6951,7 +6951,7 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
     },
 
     /**
-     * Returns coordinates of a center of canvas.
+     * Returns coordinates of a center of $scope.canvas.
      * Returned value is an object with top and left properties
      * @return {Object} object with "top" and "left" number values
      */
@@ -7185,11 +7185,11 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      * @tutorial {@link http://fabricjs.com/fabric-intro-part-3#serialization}
      * @see {@link http://jsfiddle.net/fabricjs/jQ3ZZ/|jsFiddle demo}
      * @example <caption>Normal SVG output</caption>
-     * var svg = canvas.toSVG();
+     * var svg = $scope.canvas.toSVG();
      * @example <caption>SVG output without preamble (without &lt;?xml ../>)</caption>
-     * var svg = canvas.toSVG({suppressPreamble: true});
+     * var svg = $scope.canvas.toSVG({suppressPreamble: true});
      * @example <caption>SVG output with viewBox attribute</caption>
-     * var svg = canvas.toSVG({
+     * var svg = $scope.canvas.toSVG({
      *   viewBox: {
      *     x: 100,
      *     y: 100,
@@ -7198,9 +7198,9 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
      *   }
      * });
      * @example <caption>SVG output with different encoding (default: UTF-8)</caption>
-     * var svg = canvas.toSVG({encoding: 'ISO-8859-1'});
+     * var svg = $scope.canvas.toSVG({encoding: 'ISO-8859-1'});
      * @example <caption>Modify SVG output with reviver function</caption>
-     * var svg = canvas.toSVG(null, function(svg) {
+     * var svg = $scope.canvas.toSVG(null, function(svg) {
      *   return svg.replace('stroke-dasharray: ; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; ', '');
      * });
      */
@@ -7715,12 +7715,12 @@ fabric.ElementsParser.prototype.checkIfDone = function() {
    * @tutorial {@link http://fabricjs.com/fabric-intro-part-3#serialization}
    * @see {@link http://jsfiddle.net/fabricjs/pec86/|jsFiddle demo}
    * @example <caption>JSON without additional properties</caption>
-   * var json = canvas.toJSON();
+   * var json = $scope.canvas.toJSON();
    * @example <caption>JSON with additional properties included</caption>
-   * var json = canvas.toJSON(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling']);
+   * var json = $scope.canvas.toJSON(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling']);
    * @example <caption>JSON without default values</caption>
-   * canvas.includeDefaultValues = false;
-   * var json = canvas.toJSON();
+   * $scope.canvas.includeDefaultValues = false;
+   * var json = $scope.canvas.toJSON();
    */
   fabric.StaticCanvas.prototype.toJSON = fabric.StaticCanvas.prototype.toObject;
 
@@ -7794,7 +7794,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
    * @private
    */
   _setBrushStyles: function() {
-    var ctx = this.canvas.contextTop;
+    var ctx = this.$scope.canvas.contextTop;
 
     ctx.strokeStyle = this.color;
     ctx.lineWidth = this.width;
@@ -7814,8 +7814,8 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
       return;
     }
 
-    var ctx = this.canvas.contextTop,
-        zoom = this.canvas.getZoom();
+    var ctx = this.$scope.canvas.contextTop,
+        zoom = this.$scope.canvas.getZoom();
 
     ctx.shadowColor = this.shadow.color;
     ctx.shadowBlur = this.shadow.blur * zoom;
@@ -7828,7 +7828,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
    * @private
    */
   _resetShadow: function() {
-    var ctx = this.canvas.contextTop;
+    var ctx = this.$scope.canvas.contextTop;
 
     ctx.shadowColor = '';
     ctx.shadowBlur = ctx.shadowOffsetX = ctx.shadowOffsetY = 0;
@@ -7875,7 +7875,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
       this._captureDrawingPath(pointer);
       // redraw curve
       // clear top canvas
-      this.canvas.clearContext(this.canvas.contextTop);
+      this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
       this._render();
     },
 
@@ -7888,7 +7888,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
 
     /**
      * @private
-     * @param {Object} pointer Actual mouse position related to the canvas.
+     * @param {Object} pointer Actual mouse position related to the $scope.canvas.
      */
     _prepareForDrawing: function(pointer) {
 
@@ -7897,7 +7897,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
       this._reset();
       this._addPoint(p);
 
-      this.canvas.contextTop.moveTo(p.x, p.y);
+      this.$scope.canvas.contextTop.moveTo(p.x, p.y);
     },
 
     /**
@@ -7921,7 +7921,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
 
     /**
      * @private
-     * @param {Object} pointer Actual mouse position related to the canvas.
+     * @param {Object} pointer Actual mouse position related to the $scope.canvas.
      */
     _captureDrawingPath: function(pointer) {
       var pointerPoint = new fabric.Point(pointer.x, pointer.y);
@@ -7933,8 +7933,8 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
      * @private
      */
     _render: function() {
-      var ctx  = this.canvas.contextTop,
-          v = this.canvas.viewportTransform,
+      var ctx  = this.$scope.canvas.contextTop,
+          v = this.$scope.canvas.viewportTransform,
           p1 = this._points[0],
           p2 = this._points[1];
 
@@ -8023,10 +8023,10 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
     /**
      * On mouseup after drawing the path on contextTop canvas
      * we use the points captured to create an new fabric path object
-     * and add it to the fabric canvas.
+     * and add it to the fabric $scope.canvas.
      */
     _finalizeAndAddPath: function() {
-      var ctx = this.canvas.contextTop;
+      var ctx = this.$scope.canvas.contextTop;
       ctx.closePath();
 
       var pathData = this.convertPointsToSVGPath(this._points).join('');
@@ -8035,21 +8035,21 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
         // rendered inconsistently across browsers
         // Firefox 4, for example, renders a dot,
         // whereas Chrome 10 renders nothing
-        this.canvas.renderAll();
+        this.$scope.canvas.renderAll();
         return;
       }
 
       var path = this.createPath(pathData);
 
-      this.canvas.add(path);
+      this.$scope.canvas.add(path);
       path.setCoords();
 
-      this.canvas.clearContext(this.canvas.contextTop);
+      this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
       this._resetShadow();
-      this.canvas.renderAll();
+      this.$scope.canvas.renderAll();
 
       // fire event 'path' created
-      this.canvas.fire('path:created', { path: path });
+      this.$scope.canvas.fire('path:created', { path: path });
     }
   });
 })();
@@ -8084,8 +8084,8 @@ fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric
    */
   drawDot: function(pointer) {
     var point = this.addPoint(pointer),
-        ctx = this.canvas.contextTop,
-        v = this.canvas.viewportTransform;
+        ctx = this.$scope.canvas.contextTop,
+        v = this.$scope.canvas.viewportTransform;
     ctx.save();
     ctx.transform(v[0], v[1], v[2], v[3], v[4], v[5]);
 
@@ -8103,7 +8103,7 @@ fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric
    */
   onMouseDown: function(pointer) {
     this.points.length = 0;
-    this.canvas.clearContext(this.canvas.contextTop);
+    this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
     this._setShadow();
     this.drawDot(pointer);
   },
@@ -8120,8 +8120,8 @@ fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric
    * Invoked on mouse up
    */
   onMouseUp: function() {
-    var originalRenderOnAddRemove = this.canvas.renderOnAddRemove;
-    this.canvas.renderOnAddRemove = false;
+    var originalRenderOnAddRemove = this.$scope.canvas.renderOnAddRemove;
+    this.$scope.canvas.renderOnAddRemove = false;
 
     var circles = [];
 
@@ -8143,13 +8143,13 @@ fabric.CircleBrush = fabric.util.createClass(fabric.BaseBrush, /** @lends fabric
     var group = new fabric.Group(circles, { originX: 'center', originY: 'center' });
     group.canvas = this.canvas;
 
-    this.canvas.add(group);
-    this.canvas.fire('path:created', { path: group });
+    this.$scope.canvas.add(group);
+    this.$scope.canvas.fire('path:created', { path: group });
 
-    this.canvas.clearContext(this.canvas.contextTop);
+    this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
     this._resetShadow();
-    this.canvas.renderOnAddRemove = originalRenderOnAddRemove;
-    this.canvas.renderAll();
+    this.$scope.canvas.renderOnAddRemove = originalRenderOnAddRemove;
+    this.$scope.canvas.renderAll();
   },
 
   /**
@@ -8240,7 +8240,7 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
    */
   onMouseDown: function(pointer) {
     this.sprayChunks.length = 0;
-    this.canvas.clearContext(this.canvas.contextTop);
+    this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
     this._setShadow();
 
     this.addSprayChunk(pointer);
@@ -8260,8 +8260,8 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
    * Invoked on mouse up
    */
   onMouseUp: function() {
-    var originalRenderOnAddRemove = this.canvas.renderOnAddRemove;
-    this.canvas.renderOnAddRemove = false;
+    var originalRenderOnAddRemove = this.$scope.canvas.renderOnAddRemove;
+    this.$scope.canvas.renderOnAddRemove = false;
 
     var rects = [];
 
@@ -8292,13 +8292,13 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
     var group = new fabric.Group(rects, { originX: 'center', originY: 'center' });
     group.canvas = this.canvas;
 
-    this.canvas.add(group);
-    this.canvas.fire('path:created', { path: group });
+    this.$scope.canvas.add(group);
+    this.$scope.canvas.fire('path:created', { path: group });
 
-    this.canvas.clearContext(this.canvas.contextTop);
+    this.$scope.canvas.clearContext(this.$scope.canvas.contextTop);
     this._resetShadow();
-    this.canvas.renderOnAddRemove = originalRenderOnAddRemove;
-    this.canvas.renderAll();
+    this.$scope.canvas.renderOnAddRemove = originalRenderOnAddRemove;
+    this.$scope.canvas.renderAll();
   },
 
   /**
@@ -8328,10 +8328,10 @@ fabric.SprayBrush = fabric.util.createClass( fabric.BaseBrush, /** @lends fabric
    * Renders brush
    */
   render: function() {
-    var ctx = this.canvas.contextTop;
+    var ctx = this.$scope.canvas.contextTop;
     ctx.fillStyle = this.color;
 
-    var v = this.canvas.viewportTransform;
+    var v = this.$scope.canvas.viewportTransform;
     ctx.save();
     ctx.transform(v[0], v[1], v[2], v[3], v[4], v[5]);
 
@@ -8416,7 +8416,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
    * Creates "pattern" instance property
    */
   getPattern: function() {
-    return this.canvas.contextTop.createPattern(this.source || this.getPatternSrc(), 'repeat');
+    return this.$scope.canvas.contextTop.createPattern(this.source || this.getPatternSrc(), 'repeat');
   },
 
   /**
@@ -8424,7 +8424,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
    */
   _setBrushStyles: function() {
     this.callSuper('_setBrushStyles');
-    this.canvas.contextTop.strokeStyle = this.getPattern();
+    this.$scope.canvas.contextTop.strokeStyle = this.getPattern();
   },
 
   /**
@@ -8677,7 +8677,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     targetFindTolerance:    0,
 
     /**
-     * When true, target detection is skipped when hovering over canvas. This can be used to improve performance.
+     * When true, target detection is skipped when hovering over $scope.canvas. This can be used to improve performance.
      * @type Boolean
      * @default
      */
@@ -8686,7 +8686,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     /**
      * When true, mouse events on canvas (mousedown/mousemove/mouseup) result in free drawing.
      * After mousedown, mousemove creates a shape,
-     * and then mouseup finalizes it and adds an instance of `fabric.Path` onto canvas.
+     * and then mouseup finalizes it and adds an instance of `fabric.Path` onto $scope.canvas.
      * @tutorial {@link http://fabricjs.com/fabric-intro-part-4#free_drawing}
      * @type Boolean
      * @default
@@ -8784,7 +8784,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Renders both the top canvas and the secondary container canvas.
+     * Renders both the top canvas and the secondary container $scope.canvas.
      * @return {fabric.Canvas} instance
      * @chainable
      */
@@ -8799,7 +8799,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Method to render only the top canvas.
+     * Method to render only the top $scope.canvas.
      * Also used to render the group selection box.
      * @return {fabric.Canvas} thisArg
      * @chainable
@@ -9642,7 +9642,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Returns pointer coordinates relative to canvas.
+     * Returns pointer coordinates relative to $scope.canvas.
      * @param {Event} e
      * @param {Boolean} ignoreZoom
      * @return {Object} object with "x" and "y" number values
@@ -10386,7 +10386,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Method that defines the actions when mouse is released on canvas.
+     * Method that defines the actions when mouse is released on $scope.canvas.
      * The method resets the currentTransform parameters, store the image corner
      * position in the image object and render the canvas on top.
      * @private
@@ -10544,7 +10544,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Method that defines the actions when mouse is clicked on canvas.
+     * Method that defines the actions when mouse is clicked on $scope.canvas.
      * The method inits the currentTransform parameters and renders all the
      * canvas so the current image can be placed on the top canvas and the rest
      * in on the container one.
@@ -10678,7 +10678,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     },
 
     /**
-     * Method that defines the actions when mouse is hovering the canvas.
+     * Method that defines the actions when mouse is hovering the $scope.canvas.
      * The currentTransform parameter will definde whether the user is rotating/scaling/translating
      * an image or neither of them (only hovering). A group selection is also possible and would cancel
      * all any other type of action.
@@ -11125,12 +11125,12 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
      * @return {String} Returns a data: URL containing a representation of the object in the format specified by options.format
      * @see {@link http://jsfiddle.net/fabricjs/NfZVb/|jsFiddle demo}
      * @example <caption>Generate jpeg dataURL with lower quality</caption>
-     * var dataURL = canvas.toDataURL({
+     * var dataURL = $scope.canvas.toDataURL({
      *   format: 'jpeg',
      *   quality: 0.8
      * });
      * @example <caption>Generate cropped png dataURL (clipping of canvas)</caption>
-     * var dataURL = canvas.toDataURL({
+     * var dataURL = $scope.canvas.toDataURL({
      *   format: 'png',
      *   left: 100,
      *   top: 100,
@@ -11138,7 +11138,7 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
      *   height: 200
      * });
      * @example <caption>Generate double scaled png dataURL</caption>
-     * var dataURL = canvas.toDataURL({
+     * var dataURL = $scope.canvas.toDataURL({
      *   format: 'png',
      *   multiplier: 2
      * });
@@ -11264,9 +11264,9 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
    * @tutorial {@link http://fabricjs.com/fabric-intro-part-3#deserialization}
    * @see {@link http://jsfiddle.net/fabricjs/fmgXt/|jsFiddle demo}
    * @example <caption>loadFromJSON</caption>
-   * canvas.loadFromJSON(json, canvas.renderAll.bind(canvas));
+   * $scope.canvas.loadFromJSON(json, $scope.canvas.renderAll.bind(canvas));
    * @example <caption>loadFromJSON with reviver</caption>
-   * canvas.loadFromJSON(json, canvas.renderAll.bind(canvas), function(o, object) {
+   * $scope.canvas.loadFromJSON(json, $scope.canvas.renderAll.bind(canvas), function(o, object) {
    *   // `o` = json object
    *   // `object` = fabric.Object instance
    *   // ... do some stuff ...
@@ -12221,7 +12221,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     excludeFromExport:        false,
 
     /**
-     * When `true`, object is cached on an additional canvas.
+     * When `true`, object is cached on an additional $scope.canvas.
      * default to true
      * since 1.7.0
      * @type Boolean
@@ -12317,10 +12317,10 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @return {Object}.zoomY zoomY zoom value to unscale the canvas before drawing cache
      */
     _getCacheCanvasDimensions: function() {
-      var zoom = this.canvas && this.canvas.getZoom() || 1,
+      var zoom = this.canvas && this.$scope.canvas.getZoom() || 1,
           objectScale = this.getObjectScaling(),
           dim = this._getNonTransformedDimensions(),
-          retina = this.canvas && this.canvas._isRetinaScaling() ? fabric.devicePixelRatio : 1,
+          retina = this.canvas && this.$scope.canvas._isRetinaScaling() ? fabric.devicePixelRatio : 1,
           zoomX = objectScale.scaleX * zoom * retina,
           zoomY = objectScale.scaleY * zoom * retina,
           width = dim.x * zoomX,
@@ -12340,8 +12340,8 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @return {Boolean} true if the canvas has been resized
      */
     _updateCacheCanvas: function() {
-      if (this.noScaleCache && this.canvas && this.canvas._currentTransform) {
-        var action = this.canvas._currentTransform.action;
+      if (this.noScaleCache && this.canvas && this.$scope.canvas._currentTransform) {
+        var action = this.$scope.canvas._currentTransform.action;
         if (action.slice(0, 5) === 'scale') {
           return false;
         }
@@ -12383,7 +12383,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @param {Boolean} fromLeft When true, context is transformed to object's top/left corner. This is used when rendering text on Node
      */
     transform: function(ctx, fromLeft) {
-      if (this.group && !this.group._transformDone && this.group === this.canvas._activeGroup) {
+      if (this.group && !this.group._transformDone && this.group === this.$scope.canvas._activeGroup) {
         this.group.transform(ctx);
       }
       var center = fromLeft ? this._getLeftTopCoords() : this.getCenterPoint();
@@ -12572,8 +12572,8 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @return {Boolean} flipY value // TODO
      */
     getViewportTransform: function() {
-      if (this.canvas && this.canvas.viewportTransform) {
-        return this.canvas.viewportTransform;
+      if (this.canvas && this.$scope.canvas.viewportTransform) {
+        return this.$scope.canvas.viewportTransform;
       }
       return [1, 0, 0, 1, 0, 0];
     },
@@ -12643,7 +12643,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
     /**
      * Check if cache is dirty
      * @param {Boolean} skipCanvas skip canvas checks because this object is painted
-     * on parent canvas.
+     * on parent $scope.canvas.
      */
     isCacheDirty: function(skipCanvas) {
       if (!skipCanvas && this._updateCacheCanvas()) {
@@ -12743,7 +12743,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      */
     _renderControls: function(ctx, noTransform) {
       if (!this.active || noTransform
-          || (this.group && this.group !== this.canvas.getActiveGroup())) {
+          || (this.group && this.group !== this.$scope.canvas.getActiveGroup())) {
         return;
       }
 
@@ -12759,7 +12759,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
       if (!this.group) {
         ctx.globalAlpha = this.isMoving ? this.borderOpacityWhenMoving : 1;
       }
-      if (this.group && this.group === this.canvas.getActiveGroup()) {
+      if (this.group && this.group === this.$scope.canvas.getActiveGroup()) {
         ctx.rotate(degreesToRadians(options.angle));
         this.drawBordersInGroup(ctx, options);
       }
@@ -12780,10 +12780,10 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
         return;
       }
 
-      var multX = (this.canvas && this.canvas.viewportTransform[0]) || 1,
-          multY = (this.canvas && this.canvas.viewportTransform[3]) || 1,
+      var multX = (this.canvas && this.$scope.canvas.viewportTransform[0]) || 1,
+          multY = (this.canvas && this.$scope.canvas.viewportTransform[3]) || 1,
           scaling = this.getObjectScaling();
-      if (this.canvas && this.canvas._isRetinaScaling()) {
+      if (this.canvas && this.$scope.canvas._isRetinaScaling()) {
         multX *= fabric.devicePixelRatio;
         multY *= fabric.devicePixelRatio;
       }
@@ -12924,7 +12924,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
       }
 
       if (options.format === 'jpeg') {
-        canvas.backgroundColor = '#fff';
+        $scope.canvas.backgroundColor = '#fff';
       }
 
       var origParams = {
@@ -12934,16 +12934,16 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
       };
 
       this.set('active', false);
-      this.setPositionByOrigin(new fabric.Point(canvas.getWidth() / 2, canvas.getHeight() / 2), 'center', 'center');
+      this.setPositionByOrigin(new fabric.Point($scope.canvas.getWidth() / 2, $scope.canvas.getHeight() / 2), 'center', 'center');
 
       var originalCanvas = this.canvas;
-      canvas.add(this);
-      var data = canvas.toDataURL(options);
+      $scope.canvas.add(this);
+      var data = $scope.canvas.toDataURL(options);
 
       this.set(origParams).setCoords();
       this.canvas = originalCanvas;
 
-      canvas.dispose();
+      $scope.canvas.dispose();
       canvas = null;
 
       return data;
@@ -13006,7 +13006,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      *     1: 'rgba(0,0,255,0.5)'
      *   }
      * });
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      * @example <caption>Set radial gradient</caption>
      * object.setGradient('fill', {
      *   type: 'radial',
@@ -13022,7 +13022,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      *     1: 'rgba(0,0,255,0.5)'
      *   }
      * });
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      */
     setGradient: function(property, options) {
       options || (options = { });
@@ -13064,7 +13064,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      *     source: img,
      *     repeat: 'repeat'
      *   });
-     *   canvas.renderAll();
+     *   $scope.canvas.renderAll();
      * });
      */
     setPatternFill: function(options) {
@@ -13083,7 +13083,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @see {@link http://jsfiddle.net/fabricjs/7gvJG/|jsFiddle demo}
      * @example <caption>Set shadow with string notation</caption>
      * object.setShadow('2px 2px 10px rgba(0,0,0,0.2)');
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      * @example <caption>Set shadow with object notation</caption>
      * object.setShadow({
      *   color: 'red',
@@ -13091,7 +13091,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      *   offsetX: 20,
      *   offsetY: 20
      * });
-     * canvas.renderAll();
+     * $scope.canvas.renderAll();
      */
     setShadow: function(options) {
       return this.set('shadow', options ? new fabric.Shadow(options) : null);
@@ -13137,7 +13137,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @chainable
      */
     centerH: function () {
-      this.canvas && this.canvas.centerObjectH(this);
+      this.canvas && this.$scope.canvas.centerObjectH(this);
       return this;
     },
 
@@ -13148,7 +13148,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @chainable
      */
     viewportCenterH: function () {
-      this.canvas && this.canvas.viewportCenterObjectH(this);
+      this.canvas && this.$scope.canvas.viewportCenterObjectH(this);
       return this;
     },
 
@@ -13159,7 +13159,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @chainable
      */
     centerV: function () {
-      this.canvas && this.canvas.centerObjectV(this);
+      this.canvas && this.$scope.canvas.centerObjectV(this);
       return this;
     },
 
@@ -13170,7 +13170,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @chainable
      */
     viewportCenterV: function () {
-      this.canvas && this.canvas.viewportCenterObjectV(this);
+      this.canvas && this.$scope.canvas.viewportCenterObjectV(this);
       return this;
     },
 
@@ -13181,7 +13181,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @chainable
      */
     center: function () {
-      this.canvas && this.canvas.centerObject(this);
+      this.canvas && this.$scope.canvas.centerObject(this);
       return this;
     },
 
@@ -13192,7 +13192,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @chainable
      */
     viewportCenter: function () {
-      this.canvas && this.canvas.viewportCenterObject(this);
+      this.canvas && this.$scope.canvas.viewportCenterObject(this);
       return this;
     },
 
@@ -13202,7 +13202,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @chainable
      */
     remove: function() {
-      this.canvas && this.canvas.remove(this);
+      this.canvas && this.$scope.canvas.remove(this);
       return this;
     },
 
@@ -13213,7 +13213,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
      * @return {Object} Coordinates of a pointer (x, y)
      */
     getLocalPointer: function(e, pointer) {
-      pointer = pointer || this.canvas.getPointer(e);
+      pointer = pointer || this.$scope.canvas.getPointer(e);
       var pClicked = new fabric.Point(pointer.x, pointer.y),
           objectLeftTop = this._getLeftTopCoords();
       if (this.angle) {
@@ -13746,7 +13746,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
 
     /**
      * Returns coordinates of object's bounding rectangle (left, top, width, height)
-     * the box is intented as aligned to axis of canvas.
+     * the box is intented as aligned to axis of $scope.canvas.
      * @param {Boolean} ignoreVpt bounding box will not be affected by viewportTransform
      * @return {Object} Object with left, top, width, height properties
      */
@@ -13873,13 +13873,13 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
       // debugging
 
       /* setTimeout(function() {
-         canvas.contextTop.fillStyle = 'green';
-         canvas.contextTop.fillRect(mb.x, mb.y, 3, 3);
-         canvas.contextTop.fillRect(bl.x, bl.y, 3, 3);
-         canvas.contextTop.fillRect(br.x, br.y, 3, 3);
-         canvas.contextTop.fillRect(tl.x, tl.y, 3, 3);
-         canvas.contextTop.fillRect(tr.x, tr.y, 3, 3);
-         canvas.contextTop.fillRect(ml.x, ml.y, 3, 3);
+         $scope.canvas.contextTop.fillStyle = 'green';
+         $scope.canvas.contextTop.fillRect(mb.x, mb.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(bl.x, bl.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(br.x, br.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(tl.x, tl.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(tr.x, tr.y, 3, 3);
+         $scope.canvas.contextTop.fillRect(ml.x, ml.y, 3, 3);
          canvas.contextTop.fillRect(mr.x, mr.y, 3, 3);
          canvas.contextTop.fillRect(mt.x, mt.y, 3, 3);
          canvas.contextTop.fillRect(mtr.x, mtr.y, 3, 3);

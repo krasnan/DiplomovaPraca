@@ -111,9 +111,9 @@ function Room(name) {
     };
 
     this.modifyCanvas = function (properties, socket) {
-        this.canvas.height = properties.height;
-        this.canvas.width = properties.width;
-        this.canvas.backgroundColor = properties.backgroundColor;
+        this.$scope.canvas.height = properties.height;
+        this.$scope.canvas.width = properties.width;
+        this.$scope.canvas.backgroundColor = properties.backgroundColor;
         socket.broadcast.to(room.name).emit('canvas-modified', this.canvas);
     };
 

@@ -18,7 +18,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
   onMouseDown: function(options) {
 
     this.__newClickTime = +new Date();
-    var newPointer = this.canvas.getPointer(options.e);
+    var newPointer = this.$scope.canvas.getPointer(options.e);
 
     if (this.isTripleClick(newPointer)) {
       this.fire('tripleclick', options);
@@ -87,7 +87,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       if (!this.editable) {
         return;
       }
-      var pointer = this.canvas.getPointer(options.e);
+      var pointer = this.$scope.canvas.getPointer(options.e);
 
       this.__mousedownX = pointer.x;
       this.__mousedownY = pointer.y;
@@ -111,7 +111,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
    * @private
    */
   _isObjectMoved: function(e) {
-    var pointer = this.canvas.getPointer(e);
+    var pointer = this.$scope.canvas.getPointer(e);
 
     return this.__mousedownX !== pointer.x ||
            this.__mousedownY !== pointer.y;

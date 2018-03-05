@@ -4,7 +4,7 @@
   "authors": [
     "kangax", "Kienz", "asturur"
   ],
-  "description": "Object model for HTML5 canvas, and SVG-to-canvas parser. Backed by jsdom and node-canvas.",
+  "description": "Object model for HTML5 canvas, and SVG-to-canvas parser. Backed by jsdom and node-$scope.canvas.",
   "main": "./dist/fabric.min.js",
   "ignore": [
     "lib",

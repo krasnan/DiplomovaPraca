@@ -21,13 +21,13 @@
    *   opacity: 0.5
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    * @example <caption>Tint filter with rgba color</caption>
    * var filter = new fabric.Image.filters.Tint({
    *   color: 'rgba(53, 21, 176, 0.5)'
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    */
   filters.Tint = createClass(filters.BaseFilter, /** @lends fabric.Image.filters.Tint.prototype */ {
 

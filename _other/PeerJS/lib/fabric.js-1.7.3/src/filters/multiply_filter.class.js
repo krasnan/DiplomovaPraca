@@ -18,13 +18,13 @@
    *   color: '#F0F'
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    * @example <caption>Multiply filter with rgb color</caption>
    * var filter = new fabric.Image.filters.Multiply({
    *   color: 'rgb(53, 21, 176)'
    * });
    * object.filters.push(filter);
-   * object.applyFilters(canvas.renderAll.bind(canvas));
+   * object.applyFilters($scope.canvas.renderAll.bind(canvas));
    */
   filters.Multiply = createClass(filters.BaseFilter, /** @lends fabric.Image.filters.Multiply.prototype */ {
 

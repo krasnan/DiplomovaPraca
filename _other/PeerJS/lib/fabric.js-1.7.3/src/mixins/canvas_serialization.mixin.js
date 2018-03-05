@@ -30,9 +30,9 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
    * @tutorial {@link http://fabricjs.com/fabric-intro-part-3#deserialization}
    * @see {@link http://jsfiddle.net/fabricjs/fmgXt/|jsFiddle demo}
    * @example <caption>loadFromJSON</caption>
-   * canvas.loadFromJSON(json, canvas.renderAll.bind(canvas));
+   * $scope.canvas.loadFromJSON(json, $scope.canvas.renderAll.bind(canvas));
    * @example <caption>loadFromJSON with reviver</caption>
-   * canvas.loadFromJSON(json, canvas.renderAll.bind(canvas), function(o, object) {
+   * $scope.canvas.loadFromJSON(json, $scope.canvas.renderAll.bind(canvas), function(o, object) {
    *   // `o` = json object
    *   // `object` = fabric.Object instance
    *   // ... do some stuff ...

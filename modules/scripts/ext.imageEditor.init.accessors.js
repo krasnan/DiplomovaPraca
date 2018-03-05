@@ -41,11 +41,6 @@ function setActiveProp(name, value) {
     canvas.renderAll();
 }
 
-function getObjectById(id){
-    return canvas.forEachObject(function(obj){
-        if( obj.id === id ) return obj;
-    });
-}
 function initAccessors($scope, socket, canvas) {
 
     // -------------------- canvas ---------------------

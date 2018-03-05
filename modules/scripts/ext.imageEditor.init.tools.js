@@ -189,6 +189,8 @@ function initTools($scope, socket, canvas, $timeout) {
     var obj = null, isDown = false, origX = 0, origY = 0;
 
     canvas.on('mouse:down', function (o) {
+        if($scope.activeTool !== $scope.tools.select)
+            canvas.selection = false;
         var pointer = canvas.getPointer(o.e);
         origX = pointer.x;
         origY = pointer.y;
@@ -238,11 +240,12 @@ function initTools($scope, socket, canvas, $timeout) {
             case $scope.tools.text:
                 obj = new fabric.Textbox('Insert your text...', {
                     id: uniqueId(),
+                    strokeWidth:0,
                     left: origX,
                     top: origY,
                     fill: $scope.fillColor,
                     stroke: $scope.strokeColor,
-                    fontFamily: 'Arial',
+                    fontFamily: 'Arial'
                     // originX: 'left'
                 });
                 break;
@@ -292,6 +295,7 @@ function initTools($scope, socket, canvas, $timeout) {
         if (obj != null) {
             canvas.add(obj);
             canvas.trigger('object:created', {target: obj});
+            canvas.setActiveObject(obj);
         }
         isDown = true;
     });
@@ -371,6 +375,22 @@ function initTools($scope, socket, canvas, $timeout) {
                     }
                     break;
 
+                case 'textbox':
+                    if (origX > pointer.x)
+                        obj.set({left: Math.abs(pointer.x)});
+                    if (origY > pointer.y)
+                        obj.set({top: Math.abs(pointer.y)});
+
+                    width = Math.abs((origX - pointer.x));
+                    height = Math.abs((origY - pointer.y));
+                    if ($scope.shiftPressed) {
+                        obj.set({width: Math.max(width, height), height: Math.max(width, height)});
+                    }
+                    else {
+                        obj.set({width: width, height: height});
+                    }
+                    break;
+
 
                 default:
                     return;
@@ -380,13 +400,15 @@ function initTools($scope, socket, canvas, $timeout) {
     });
 
     canvas.on('mouse:up', function (o) {
+        canvas.selection = true;
         if (!isDown) return;
         if (obj != null) {
             canvas.trigger('object:modified', {target: obj});
             // canvas.trigger('object:created',{target:obj});
             obj.setCoords();
-            if ($scope.activeTool !== $scope.tools.polygon)
+            if ($scope.activeTool !== $scope.tools.polygon){
                 $scope.setActiveTool($scope.tools.select);
+            }
         }
         isDown = false;
         obj = null;

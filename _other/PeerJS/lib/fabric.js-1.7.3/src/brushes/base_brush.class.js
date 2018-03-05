@@ -65,7 +65,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
    * @private
    */
   _setBrushStyles: function() {
-    var ctx = this.canvas.contextTop;
+    var ctx = this.$scope.canvas.contextTop;
 
     ctx.strokeStyle = this.color;
     ctx.lineWidth = this.width;
@@ -85,8 +85,8 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
       return;
     }
 
-    var ctx = this.canvas.contextTop,
-        zoom = this.canvas.getZoom();
+    var ctx = this.$scope.canvas.contextTop,
+        zoom = this.$scope.canvas.getZoom();
 
     ctx.shadowColor = this.shadow.color;
     ctx.shadowBlur = this.shadow.blur * zoom;
@@ -99,7 +99,7 @@ fabric.BaseBrush = fabric.util.createClass(/** @lends fabric.BaseBrush.prototype
    * @private
    */
   _resetShadow: function() {
-    var ctx = this.canvas.contextTop;
+    var ctx = this.$scope.canvas.contextTop;
 
     ctx.shadowColor = '';
     ctx.shadowBlur = ctx.shadowOffsetX = ctx.shadowOffsetY = 0;

@@ -1,6 +1,8 @@
 app.controller('ImageEditor', function($scope, $timeout, socket) {
 
     $scope.canvas = canvas;
+    $scope.mw = mw;
+
     $scope.getActiveStyle = getActiveStyle;
 
     $scope.socketInit=function(serverUrl, serverPort, userName, roomName){
@@ -14,6 +16,8 @@ app.controller('ImageEditor', function($scope, $timeout, socket) {
         watchCanvas($scope, socket);
         $scope.loaded = true;
     };
+
+    console.log($scope.mw.user.tokens.get( 'editToken' ));
 });
 
 

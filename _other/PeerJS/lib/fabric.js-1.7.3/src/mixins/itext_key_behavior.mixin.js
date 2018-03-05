@@ -22,7 +22,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     fabric.util.addListener(this.hiddenTextarea, 'compositionend', this.onCompositionEnd.bind(this));
 
     if (!this._clickHandlerInitialized && this.canvas) {
-      fabric.util.addListener(this.canvas.upperCanvasEl, 'click', this.onClick.bind(this));
+      fabric.util.addListener(this.$scope.canvas.upperCanvasEl, 'click', this.onClick.bind(this));
       this._clickHandlerInitialized = true;
     }
   },
@@ -91,7 +91,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       this.renderCursorOrSelection();
     }
     else {
-      this.canvas && this.canvas.renderAll();
+      this.canvas && this.$scope.canvas.renderAll();
     }
   },
 
@@ -114,7 +114,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     }
     e.stopImmediatePropagation();
     e.preventDefault();
-    this.canvas && this.canvas.renderAll();
+    this.canvas && this.$scope.canvas.renderAll();
   },
 
   /**
@@ -621,11 +621,11 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
 
     this._removeExtraneousStyles();
 
-    this.canvas && this.canvas.renderAll();
+    this.canvas && this.$scope.canvas.renderAll();
 
     this.setCoords();
     this.fire('changed');
-    this.canvas && this.canvas.fire('text:changed', { target: this });
+    this.canvas && this.$scope.canvas.fire('text:changed', { target: this });
   },
 
   /**

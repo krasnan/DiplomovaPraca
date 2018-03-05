@@ -1,14 +1,14 @@
-Index: excanvas.js
+Index: ex$scope.canvas.js
 ===================================================================
---- excanvas.js	(revision 63)
-+++ excanvas.js	(working copy)
+--- ex$scope.canvas.js	(revision 63)
++++ ex$scope.canvas.js	(working copy)
 @@ -255,6 +255,7 @@
      o2.arcScaleX_    = o1.arcScaleX_;
      o2.arcScaleY_    = o1.arcScaleY_;
      o2.lineScale_    = o1.lineScale_;
 +    o2.rotation_     = o1.rotation_; // used for images
    }
- 
+
    var colorData = {
 @@ -599,6 +600,7 @@
      this.arcScaleX_ = 1;
@@ -16,12 +16,12 @@ Index: excanvas.js
      this.lineScale_ = 1;
 +    this.rotation_ = 0;
    }
- 
+
    var contextPrototype = CanvasRenderingContext2D_.prototype;
 @@ -763,23 +765,31 @@
      return gradient;
    };
- 
+
 -  contextPrototype.drawImage = function(image, var_args) {
 +  contextPrototype.drawImage = function(image) {
      var dx, dy, dw, dh, sx, sy, sw, sh;
@@ -42,7 +42,7 @@ Index: excanvas.js
 +      image.runtimeStyle.width = 'auto';
 +      image.runtimeStyle.height = 'auto';
 +    }
- 
+
      // get the original size
      var w = image.width;
      var h = image.height;
@@ -61,7 +61,7 @@ Index: excanvas.js
        dx = arguments[1];
        dy = arguments[2];
 @@ -816,29 +826,44 @@
- 
+
      var W = 10;
      var H = 10;
 +
@@ -69,7 +69,7 @@ Index: excanvas.js
 +
 +    // FIX: divs give better quality then vml image and also fixes transparent PNG's
 +    vmlStr.push(' <div style="position:absolute;');
- 
+
 -    // For some reason that I've now forgotten, using divs didn't work
 -    vmlStr.push(' <g_vml_:group',
 -                ' coordsize="', Z * W, ',', Z * H, '"',
@@ -84,7 +84,7 @@ Index: excanvas.js
      if (this.m_[0][0] != 1 || this.m_[0][1] ||
          this.m_[1][1] != 1 || this.m_[1][0]) {
        var filter = [];
- 
+
 -      // Note the 12/21 reversal
 -      filter.push('M11=', this.m_[0][0], ',',
 -                  'M12=', this.m_[1][0], ',',
@@ -116,7 +116,7 @@ Index: excanvas.js
 +                  'M22=', c, ',',
 +                  'Dx=', d.x / Z, ',',
 +                  'Dy=', d.y / Z);
- 
+
        // Bounding box calculation (need to minimize displayed area so that
        // filters don't waste time on unused pixels.
 @@ -853,23 +878,40 @@
@@ -127,7 +127,7 @@ Index: excanvas.js
      } else {
        vmlStr.push('top:', mr(d.y / Z), 'px;left:', mr(d.x / Z), 'px;');
      }
- 
+
 -    vmlStr.push(' ">' ,
 -                '<g_vml_:image src="', image.src, '"',
 -                ' style="width:', Z * dw, 'px;',
@@ -139,7 +139,7 @@ Index: excanvas.js
 -                ' />',
 -                '</g_vml_:group>');
 +    vmlStr.push(' ">');
- 
+
 -    this.element_.insertAdjacentHTML('BeforeEnd', vmlStr.join(''));
 +    // Draw a special cropping div if needed
 +    if (sx || sy) {
@@ -170,12 +170,12 @@ Index: excanvas.js
 +
 +    this.element_.insertAdjacentHTML('beforeEnd', vmlStr.join(''));
    };
- 
+
    contextPrototype.stroke = function(aFill) {
 @@ -1155,6 +1197,8 @@
      var c = mc(aRot);
      var s = ms(aRot);
- 
+
 +    this.rotation_ += aRot;
 +
      var m1 = [

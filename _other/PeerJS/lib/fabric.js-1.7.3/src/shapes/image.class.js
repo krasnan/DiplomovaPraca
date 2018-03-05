@@ -113,7 +113,7 @@
     stateProperties: stateProperties,
 
     /**
-     * When `true`, object is cached on an additional canvas.
+     * When `true`, object is cached on an additional $scope.canvas.
      * default to false for images
      * since 1.7.0
      * @type Boolean
@@ -147,7 +147,7 @@
     /**
      * Sets image element for this instance to a specified one.
      * If filters defined they are applied to new image.
-     * You might need to call `canvas.renderAll` and `object.setCoords` after replacing, to render new image and update controls area.
+     * You might need to call `$scope.canvas.renderAll` and `object.setCoords` after replacing, to render new image and update controls area.
      * @param {HTMLImageElement} element
      * @param {Function} [callback] Callback is invoked when all filters have been applied and new image is generated
      * @param {Object} [options] Options object
@@ -390,7 +390,7 @@
       }
 
       var replacement = fabric.util.createImage(),
-          retinaScaling = this.canvas ? this.canvas.getRetinaScaling() : fabric.devicePixelRatio,
+          retinaScaling = this.canvas ? this.$scope.canvas.getRetinaScaling() : fabric.devicePixelRatio,
           minimumScale = this.minimumScaleTrigger / retinaScaling,
           _this = this, scaleX, scaleY;
 
