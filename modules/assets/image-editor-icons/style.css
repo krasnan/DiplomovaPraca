@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'image-editor-icons';
-  src:  url('fonts/image-editor-icons.eot?8l6b4r');
-  src:  url('fonts/image-editor-icons.eot?8l6b4r#iefix') format('embedded-opentype'),
-    url('fonts/image-editor-icons.ttf?8l6b4r') format('truetype'),
-    url('fonts/image-editor-icons.woff?8l6b4r') format('woff'),
-    url('fonts/image-editor-icons.svg?8l6b4r#image-editor-icons') format('svg');
+  src:  url('fonts/image-editor-icons.eot?5t95xo');
+  src:  url('fonts/image-editor-icons.eot?5t95xo#iefix') format('embedded-opentype'),
+    url('fonts/image-editor-icons.ttf?5t95xo') format('truetype'),
+    url('fonts/image-editor-icons.woff?5t95xo') format('woff'),
+    url('fonts/image-editor-icons.svg?5t95xo#image-editor-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -93,7 +93,7 @@
 .icon-ungroup:before {
   content: "\e915";
 }
-.icon-group:before {
+.icon-group2:before {
   content: "\e916";
 }
 .icon-point:before {
@@ -164,6 +164,12 @@
 }
 .icon-oval:before {
   content: "\e92d";
+}
+.icon-group:before {
+  content: "\e93b";
+}
+.icon-users:before {
+  content: "\e93b";
 }
 .icon-user-circle-o:before {
   content: "\e92e";

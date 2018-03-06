@@ -1,378 +1,366 @@
-function getActiveStyle(styleName, object) {
-    object = object || canvas.getActiveObject();
-    if (!object) return '';
+function initAccessors($scope) {
+    $scope.getActiveStyle = function (styleName, object) {
+        object = object || $scope.canvas.getActiveObject();
+        if (!object) return '';
 
-    return (object.getSelectionStyles && object.isEditing)
-        ? (object.getSelectionStyles()[styleName] || '')
-        : (object[styleName] || '');
-}
+        return (object.getSelectionStyles && object.isEditing)
+            ? (object.getSelectionStyles()[styleName] || '')
+            : (object[styleName] || '');
+    };
 
-function setActiveStyle(styleName, value, object) {
-    object = object || canvas.getActiveObject();
-    if (!object) return;
+    $scope.setActiveProp = function (name, value) {
+        var object = $scope.canvas.getActiveObject();
+        if (!object) return;
+        object.set(name, value).setCoords();
+        $scope.canvas.trigger('object:modified', {target: object});
+        $scope.canvas.renderAll();
+    };
 
-    if (object.setSelectionStyles && object.isEditing) {
-        var style = { };
-        style[styleName] = value;
-        object.setSelectionStyles(style);
+    $scope.getActiveProp = function (name) {
+        var object = $scope.canvas.getActiveObject();
+        if (!object) return '';
+        return object[name] || '';
+    };
+
+    $scope.setActiveStyle = function (styleName, value, object) {
+        object = object || $scope.canvas.getActiveObject();
+        if (!object) return;
+        if (object.setSelectionStyles && object.isEditing) {
+            var style = {};
+            style[styleName] = value;
+            object.setSelectionStyles(style);
+            object.setCoords();
+        }
+        else {
+            object.set(styleName, value);
+        }
         object.setCoords();
-    }
-    else {
-        object.set(styleName, value);
-    }
+        $scope.canvas.trigger('object:modified', {target: object});
+        $scope.canvas.renderAll();
+    };
 
-    object.setCoords();
-    canvas.trigger('object:modified',{target:object});
-    canvas.renderAll();
-}
-
-function getActiveProp(name) {
-    var object = canvas.getActiveObject();
-    if (!object) return '';
-
-    return object[name] || '';
-}
-
-function setActiveProp(name, value) {
-    var object = canvas.getActiveObject();
-    if (!object) return;
-    object.set(name, value).setCoords();
-    canvas.trigger('object:modified',{target:object});
-    canvas.renderAll();
-}
-
-function initAccessors($scope, socket, canvas) {
 
     // -------------------- canvas ---------------------
     $scope.getCanvasHeight = function () {
-        return canvas.height;
+        return $scope.canvas.height;
     };
     $scope.setCanvasHeight = function (value) {
-        canvas.setHeight(parseInt(value, 10));
-        canvas.trigger('canvas:modified', {target: canvas});
+        $scope.canvas.setHeight(parseInt(value, 10));
+        $scope.canvas.trigger('canvas:modified', {target: $scope.canvas});
     };
     $scope.getCanvasWidth = function () {
-        return canvas.width;
+        return $scope.canvas.width;
     };
     $scope.setCanvasWidth = function (value) {
-        canvas.setWidth(parseInt(value, 10));
-        canvas.trigger('canvas:modified', {target: canvas});
+        $scope.canvas.setWidth(parseInt(value, 10));
+        $scope.canvas.trigger('canvas:modified', {target: $scope.canvas});
     };
-
     $scope.getCanvasBgColor = function () {
-        return canvas.backgroundColor;
+        return $scope.canvas.backgroundColor;
     };
     $scope.setCanvasBgColor = function (value) {
-        canvas.backgroundColor = value;
-        canvas.renderAll();
-        canvas.trigger('canvas:modified', {target: canvas});
+        $scope.canvas.backgroundColor = value;
+        $scope.canvas.renderAll();
+        $scope.canvas.trigger('canvas:modified', {target: $scope.canvas});
     };
-    //object
+
+    // -------------------- object ---------------------
     $scope.getHeight = function () {
-        return getActiveStyle('height') * getActiveStyle('scaleY');
+        return $scope.getActiveStyle('height') * $scope.getActiveStyle('scaleY');
     };
     $scope.setHeight = function (value) {
-        setActiveStyle('scaleY', parseInt(value, 10) / getActiveStyle('height'));
+        $scope.setActiveStyle('scaleY', parseInt(value, 10) / $scope.getActiveStyle('height'));
     };
 
     $scope.getAngle = function () {
-        return (getActiveStyle('angle') == 0 ) ? "0" : getActiveStyle('angle');
+        return ($scope.getActiveStyle('angle') === 0) ? "0" : $scope.getActiveStyle('angle');
     };
     $scope.setAngle = function (value) {
-        setActiveProp('angle',parseInt(value, 10))
+        $scope.setActiveProp('angle', parseInt(value, 10))
     };
 
     $scope.getWidth = function () {
-        return getActiveStyle('width') * getActiveStyle('scaleX');
+        return $scope.getActiveStyle('width') * $scope.getActiveStyle('scaleX');
     };
     $scope.setWidth = function (value) {
-        setActiveStyle('scaleX', parseInt(value, 10) / getActiveStyle('width'));
+        $scope.setActiveStyle('scaleX', parseInt(value, 10) / $scope.getActiveStyle('width'));
     };
     $scope.getTop = function () {
-        return getActiveStyle('top');
+        return $scope.getActiveStyle('top');
     };
     $scope.setTop = function (value) {
-        setActiveStyle('top', parseInt(value, 10));
+        $scope.setActiveStyle('top', parseInt(value, 10));
     };
     $scope.getLeft = function () {
-        return getActiveStyle('left');
+        return $scope.getActiveStyle('left');
     };
     $scope.setLeft = function (value) {
-        setActiveStyle('left', parseInt(value, 10));
+        $scope.setActiveStyle('left', parseInt(value, 10));
     };
     $scope.getOpacity = function () {
-        return getActiveStyle('opacity') * 100;
+        return $scope.getActiveStyle('opacity') * 100;
     };
     $scope.setOpacity = function (value) {
-        setActiveStyle('opacity', parseInt(value, 10) / 100);
+        $scope.setActiveStyle('opacity', parseInt(value, 10) / 100);
     };
 
     $scope.getFill = function () {
-        return getActiveStyle('fill');
+        return $scope.getActiveStyle('fill');
     };
     $scope.setFill = function (value) {
-        setActiveStyle('fill', value);
+        $scope.setActiveStyle('fill', value);
     };
 
     $scope.getStroke = function () {
-        return getActiveStyle('stroke');
+        return $scope.getActiveStyle('stroke');
     };
     $scope.setStroke = function (value) {
-        setActiveStyle('stroke', value);
+        $scope.setActiveStyle('stroke', value);
     };
 
     $scope.getStrokeWidth = function () {
-        return getActiveStyle('strokeWidth');
+        return $scope.getActiveStyle('strokeWidth');
     };
     $scope.setStrokeWidth = function (value) {
-        setActiveStyle('strokeWidth', parseInt(value, 10));
+        $scope.setActiveStyle('strokeWidth', parseInt(value, 10));
     };
 
 
     //text
     $scope.isBold = function () {
-        return getActiveStyle('fontWeight') === 'bold';
+        return $scope.getActiveStyle('fontWeight') === 'bold';
     };
     $scope.toggleBold = function () {
-        setActiveStyle('fontWeight',
-            getActiveStyle('fontWeight') === 'bold' ? '' : 'bold');
+        $scope.setActiveStyle('fontWeight',
+            $scope.getActiveStyle('fontWeight') === 'bold' ? '' : 'bold');
     };
     $scope.isItalic = function () {
-        return getActiveStyle('fontStyle') === 'italic';
+        return $scope.getActiveStyle('fontStyle') === 'italic';
     };
     $scope.toggleItalic = function () {
-        setActiveStyle('fontStyle',
-            getActiveStyle('fontStyle') === 'italic' ? '' : 'italic');
+        $scope.setActiveStyle('fontStyle',
+            $scope.getActiveStyle('fontStyle') === 'italic' ? '' : 'italic');
     };
 
     $scope.isUnderline = function () {
-        return getActiveStyle('textDecoration').indexOf('underline') > -1;
+        return $scope.getActiveStyle('textDecoration').indexOf('underline') > -1;
     };
     $scope.toggleUnderline = function () {
         var value = $scope.isUnderline()
-            ? getActiveStyle('textDecoration').replace('underline', '')
-            : (getActiveStyle('textDecoration') + ' underline');
+            ? $scope.getActiveStyle('textDecoration').replace('underline', '')
+            : ($scope.getActiveStyle('textDecoration') + ' underline');
 
-        setActiveStyle('textDecoration', value);
+        $scope.setActiveStyle('textDecoration', value);
     };
 
     $scope.isLinethrough = function () {
-        return getActiveStyle('textDecoration').indexOf('line-through') > -1;
+        return $scope.getActiveStyle('textDecoration').indexOf('line-through') > -1;
     };
     $scope.toggleLinethrough = function () {
         var value = $scope.isLinethrough()
-            ? getActiveStyle('textDecoration').replace('line-through', '')
-            : (getActiveStyle('textDecoration') + ' line-through');
+            ? $scope.getActiveStyle('textDecoration').replace('line-through', '')
+            : ($scope.getActiveStyle('textDecoration') + ' line-through');
 
-        setActiveStyle('textDecoration', value);
+        $scope.setActiveStyle('textDecoration', value);
     };
     $scope.isOverline = function () {
-        return getActiveStyle('textDecoration').indexOf('overline') > -1;
+        return $scope.getActiveStyle('textDecoration').indexOf('overline') > -1;
     };
     $scope.toggleOverline = function () {
         var value = $scope.isOverline()
-            ? getActiveStyle('textDecoration').replace('overline', '')
-            : (getActiveStyle('textDecoration') + ' overline');
+            ? $scope.getActiveStyle('textDecoration').replace('overline', '')
+            : ($scope.getActiveStyle('textDecoration') + ' overline');
 
-        setActiveStyle('textDecoration', value);
+        $scope.setActiveStyle('textDecoration', value);
     };
 
     $scope.getText = function () {
-        return getActiveProp('text');
+        return $scope.getActiveProp('text');
     };
     $scope.setText = function (value) {
-        setActiveProp('text', value);
+        $scope.setActiveProp('text', value);
     };
 
     $scope.getTextAlign = function () {
-        return capitalize(getActiveProp('textAlign'));
+        return capitalize($scope.getActiveProp('textAlign'));
     };
     $scope.setTextAlign = function (value) {
-        setActiveProp('textAlign', value.toLowerCase());
+        $scope.setActiveProp('textAlign', value.toLowerCase());
     };
 
     $scope.getFontFamily = function () {
-        return getActiveProp('fontFamily').toLowerCase();
+        return $scope.getActiveProp('fontFamily').toLowerCase();
     };
     $scope.setFontFamily = function (value) {
-        setActiveProp('fontFamily', value.toLowerCase());
+        $scope.setActiveProp('fontFamily', value.toLowerCase());
     };
 
     $scope.getBgColor = function () {
-        return getActiveProp('backgroundColor');
+        return $scope.getActiveProp('backgroundColor');
     };
     $scope.setBgColor = function (value) {
-        setActiveProp('backgroundColor', value);
+        $scope.setActiveProp('backgroundColor', value);
     };
 
     $scope.getTextBgColor = function () {
-        return getActiveProp('textBackgroundColor');
+        return $scope.getActiveProp('textBackgroundColor');
     };
     $scope.setTextBgColor = function (value) {
-        setActiveProp('textBackgroundColor', value);
+        $scope.setActiveProp('textBackgroundColor', value);
     };
 
     $scope.getFontSize = function () {
-        return getActiveStyle('fontSize');
+        return $scope.getActiveStyle('fontSize');
     };
     $scope.setFontSize = function (value) {
-        setActiveStyle('fontSize', parseInt(value, 10));
+        $scope.setActiveStyle('fontSize', parseInt(value, 10));
     };
 
     $scope.getLineHeight = function () {
-        return getActiveStyle('lineHeight');
+        return $scope.getActiveStyle('lineHeight');
     };
     $scope.setLineHeight = function (value) {
-        setActiveStyle('lineHeight', parseFloat(value, 10));
+        $scope.setActiveStyle('lineHeight', parseFloat(value, 10));
     };
     $scope.getCharSpacing = function () {
-        return getActiveStyle('charSpacing');
+        return $scope.getActiveStyle('charSpacing');
     };
     $scope.setCharSpacing = function (value) {
-        setActiveStyle('charSpacing', value);
+        $scope.setActiveStyle('charSpacing', value);
     };
 
     $scope.getBold = function () {
-        return getActiveStyle('fontWeight');
+        return $scope.getActiveStyle('fontWeight');
     };
     $scope.setBold = function (value) {
-        setActiveStyle('fontWeight', value ? 'bold' : '');
+        $scope.setActiveStyle('fontWeight', value ? 'bold' : '');
     };
 
     //object advanced
     $scope.getHorizontalLock = function () {
-        return getActiveProp('lockMovementX');
+        return $scope.getActiveProp('lockMovementX');
     };
     $scope.setHorizontalLock = function (value) {
-        setActiveProp('lockMovementX', value);
+        $scope.setActiveProp('lockMovementX', value);
     };
 
     $scope.getVerticalLock = function () {
-        return getActiveProp('lockMovementY');
+        return $scope.getActiveProp('lockMovementY');
     };
     $scope.setVerticalLock = function (value) {
-        setActiveProp('lockMovementY', value);
+        $scope.setActiveProp('lockMovementY', value);
     };
 
     $scope.getScaleLockX = function () {
-        return getActiveProp('lockScalingX');
+        return $scope.getActiveProp('lockScalingX');
     };
-        $scope.setScaleLockX = function (value) {
-            setActiveProp('lockScalingX', value);
-        };
+    $scope.setScaleLockX = function (value) {
+        $scope.setActiveProp('lockScalingX', value);
+    };
 
     $scope.getScaleLockY = function () {
-        return getActiveProp('lockScalingY');
+        return $scope.getActiveProp('lockScalingY');
     };
     $scope.setScaleLockY = function (value) {
-        setActiveProp('lockScalingY', value);
+        $scope.setActiveProp('lockScalingY', value);
     };
 
     $scope.getRotationLock = function () {
-        return getActiveProp('lockRotation');
+        return $scope.getActiveProp('lockRotation');
     };
     $scope.setRotationLock = function (value) {
-        setActiveProp('lockRotation', value);
+        $scope.setActiveProp('lockRotation', value);
     };
 
     $scope.getOriginX = function () {
-        return getActiveProp('originX');
+        return $scope.getActiveProp('originX');
     };
 
     $scope.setOriginX = function (value) {
-        setActiveProp('originX', value);
+        $scope.setActiveProp('originX', value);
     };
 
     $scope.getOriginY = function () {
-        return getActiveProp('originY');
+        return $scope.getActiveProp('originY');
     };
     $scope.setOriginY = function (value) {
-        setActiveProp('originY', value);
+        $scope.setActiveProp('originY', value);
     };
 
     $scope.getObjectCaching = function () {
-        return getActiveProp('objectCaching');
+        return $scope.getActiveProp('objectCaching');
     };
 
     $scope.setObjectCaching = function (value) {
-        return setActiveProp('objectCaching', value);
+        return $scope.setActiveProp('objectCaching', value);
     };
 
     $scope.getNoScaleCache = function () {
-        return getActiveProp('noScaleCache');
+        return $scope.getActiveProp('noScaleCache');
     };
 
     $scope.setNoScaleCache = function (value) {
-        return setActiveProp('noScaleCache', value);
+        return $scope.setActiveProp('noScaleCache', value);
     };
 
     $scope.getTransparentCorners = function () {
-        return getActiveProp('transparentCorners');
+        return $scope.getActiveProp('transparentCorners');
     };
 
     $scope.setTransparentCorners = function (value) {
-        return setActiveProp('transparentCorners', value);
+        return $scope.setActiveProp('transparentCorners', value);
     };
 
     $scope.getHasBorders = function () {
-        return getActiveProp('hasBorders');
+        return $scope.getActiveProp('hasBorders');
     };
 
     $scope.setHasBorders = function (value) {
-        return setActiveProp('hasBorders', value);
+        return $scope.setActiveProp('hasBorders', value);
     };
 
     $scope.getHasControls = function () {
-        return getActiveProp('hasControls');
+        return $scope.getActiveProp('hasControls');
     };
 
     $scope.setHasControls = function (value) {
-        return setActiveProp('hasControls', value);
+        return $scope.setActiveProp('hasControls', value);
     };
 
-    // ----- layer management -----
-    $scope.sendBackwards = function(object) {
-        if(object === undefined)
-            object = canvas.getActiveObject();
-
+    // -------------------- layer management ---------------------
+    $scope.sendBackwards = function (object) {
+        if (object === undefined)
+            object = $scope.canvas.getActiveObject();
         if (object) {
-            canvas.sendBackwards(object);
-            canvas.trigger('object:modified',{target:object});
-
+            $scope.canvas.sendBackwards(object);
+            $scope.canvas.trigger('object:modified', {target: object});
         }
     };
 
-    $scope.sendToBack = function(object) {
-        if(object === undefined)
-            object = canvas.getActiveObject();
-
+    $scope.sendToBack = function (object) {
+        if (object === undefined)
+            object = $scope.canvas.getActiveObject();
         if (object) {
-            canvas.sendToBack(object);
-            canvas.trigger('object:modified',{target:object});
-
+            $scope.canvas.sendToBack(object);
+            $scope.canvas.trigger('object:modified', {target: object});
         }
     };
 
-    $scope.bringForward = function(object) {
-        if(object === undefined)
-            object = canvas.getActiveObject();
-
+    $scope.bringForward = function (object) {
+        if (object === undefined)
+            object = $scope.canvas.getActiveObject();
         if (object) {
-            canvas.bringForward(object);
-            canvas.trigger('object:modified',{target:object});
-
+            $scope.canvas.bringForward(object);
+            $scope.canvas.trigger('object:modified', {target: object});
         }
     };
 
-    $scope.bringToFront = function(object) {
-        if(object === undefined)
-            object = canvas.getActiveObject();
-
+    $scope.bringToFront = function (object) {
+        if (object === undefined)
+            object = $scope.canvas.getActiveObject();
         if (object) {
-            canvas.bringToFront(object);
-            canvas.trigger('object:modified',{target:object});
-
-
+            $scope.canvas.bringToFront(object);
+            $scope.canvas.trigger('object:modified', {target: object});
         }
     };
 }

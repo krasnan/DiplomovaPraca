@@ -1,31 +1,18 @@
-fabric.Canvas.prototype.getObjectById = function(id){
+fabric.Canvas.prototype.getObjectById = function (id) {
     var objects = this.getObjects();
-    for(var i = 0; i<objects.length; i++){
-        if(objects[i].id === id ) return objects[i];
+    for (var i = 0; i < objects.length; i++) {
+        if (objects[i].id === id) return objects[i];
     }
     return null;
 };
-
 fabric.Object.prototype.getIndex = function () {
     return this.canvas.getObjects().indexOf(this);
 };
-fabric.Object.prototype.isSelected = function(){
+fabric.Object.prototype.isSelected = function () {
     return canvas.getActiveObjects().indexOf(this) >= 0;
 };
 
-// fabric.loadSVGFromURL('http://wiki.localhost/images/2/25/SVG_Test.svg', function(objects, options){
-//     var loadedObject = fabric.util.groupSVGElements(objects, options);
-//     // Set sourcePath
-//     // loadedObject.set('sourcePathu', elem.getAttribute('data-url'));
-//
-//     canvas.add(loadedObject);
-//     console.log(loadedObject);
-//     loadedObject.center().setCoords();
-//     canvas.renderAll();
-// });
-
-
-var canvas = new fabric.Canvas('ie__canvas',  { preserveObjectStacking: true });
+var canvas = new fabric.Canvas('ie__canvas', {preserveObjectStacking: true});
 
 
 var app = angular.module('ImageEditor', [
@@ -83,11 +70,11 @@ app.directive('bindValueTo', function () {
     };
 });
 
-app.directive("filesInput", function() {
+app.directive("filesInput", function () {
     return {
         require: "ngModel",
-        link: function postLink(scope,elem,attrs,ngModel) {
-            elem.on("change", function(e) {
+        link: function postLink(scope, elem, attrs, ngModel) {
+            elem.on("change", function (e) {
                 var file = elem[0].files[0];
                 var reader = new FileReader();
                 reader.onload = function (loadEvent) {
@@ -146,17 +133,3 @@ app.factory('socket', function ($rootScope) {
         }
     };
 });
-
-(function (global) {
-    function capitalize(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    function getFileName() {
-        return location.href.search();
-    }
-
-    global.capitalize = capitalize;
-    global.getFileName = getFileName;
-})(this);
-

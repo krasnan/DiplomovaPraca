@@ -1,34 +1,34 @@
-app.controller('ImageEditor', function($scope, $timeout, socket) {
+app.controller('ImageEditor', function ($scope, $timeout, socket) {
 
+    $scope.socket = socket;
     $scope.canvas = canvas;
     $scope.mw = mw;
 
-    $scope.getActiveStyle = getActiveStyle;
-
-    $scope.socketInit=function(serverUrl, serverPort, userName, roomName){
-        var server = serverUrl+':'+serverPort;
-        var query = {query:'name='+userName+'&room='+roomName};
+    $scope.socketInit = function (serverUrl, serverPort, userName, roomName) {
+        var server = serverUrl + ':' + serverPort;
+        var query = {query: 'name=' + userName + '&room=' + roomName};
 
         socket.connect(server, query);
-        initAccessors($scope, socket, canvas);
-        initTools($scope, socket, canvas, $timeout);
-        initKeyBindings($scope, socket, canvas);
-        watchCanvas($scope, socket);
+        initAccessors($scope);
+        initTools($scope, $timeout);
+        initEvents($scope);
+        initKeyBindings($scope);
+        watchCanvas($scope);
         $scope.loaded = true;
     };
 
-    console.log($scope.mw.user.tokens.get( 'editToken' ));
+    // console.log($scope.mw.user.tokens.get( 'editToken' ));
 });
 
 
-function watchCanvas($scope, socket) {
+function watchCanvas($scope) {
 
     function updateScope() {
         $scope.$$phase || $scope.$digest();
-        canvas.renderAll();
+        $scope.canvas.renderAll();
     }
 
-    canvas
+    $scope.canvas
         .on('object:selected', updateScope)
         .on('object:modified', updateScope)
         .on('group:selected', updateScope)

@@ -56,7 +56,7 @@ function User(name, socket) {
     this.name = name;
     this.color = getRandomColor();
 
-    this.getSocket = function(){
+    this.getSocket = function () {
         return io.sockets.connected[this.id];
     };
 }
@@ -135,7 +135,6 @@ function Room(name) {
     };
 
 
-
     this.isSelectable = function (id) {
         if (this.objects[id] === undefined) {
             return false;
@@ -185,8 +184,12 @@ function Room(name) {
         else
             result = this.selectObject(id, user);
 
-        if(result)
-            socket.broadcast.to(room.name).emit('selection-changed', {id: id, selectable: selectable, selectedBy:user.id});
+        if (result)
+            socket.broadcast.to(room.name).emit('selection-changed', {
+                id: id,
+                selectable: selectable,
+                selectedBy: user.id
+            });
         else
             socket.emit('selection-deny', id);
     };

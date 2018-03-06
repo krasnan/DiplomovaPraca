@@ -1,4 +1,4 @@
-function initKeyBindings($scope, socket, canvas) {
+function initKeyBindings($scope) {
     $scope.ctrlPressed = false;
     $scope.shiftPressed = false;
     $scope.altPressed = false;
@@ -37,36 +37,36 @@ function initKeyBindings($scope, socket, canvas) {
         }
 
         // tools key bindings
-        else if(e.keyCode == 83){
+        else if (e.keyCode == 83) {
             $scope.setActiveTool($scope.tools.select);
         }
-        else if(e.keyCode == 80){
+        else if (e.keyCode == 80) {
             $scope.setActiveTool($scope.tools.pencil);
         }
-        else if(e.keyCode == 76){
+        else if (e.keyCode == 76) {
             $scope.setActiveTool($scope.tools.line);
         }
-        else if(e.keyCode == 82){
+        else if (e.keyCode == 82) {
             $scope.setActiveTool($scope.tools.rectangle);
         }
-        else if(e.keyCode == 67){
+        else if (e.keyCode == 67) {
             $scope.setActiveTool($scope.tools.circle);
         }
-        else if(e.keyCode == 84){
+        else if (e.keyCode == 84) {
             $scope.setActiveTool($scope.tools.text);
         }
 
         //object
-        else if(e.keyCode == 38 && $scope.ctrlPressed && $scope.shiftPressed){
+        else if (e.keyCode == 38 && $scope.ctrlPressed && $scope.shiftPressed) {
             $scope.bringToFront();
         }
-        else if(e.keyCode == 40 && $scope.ctrlPressed && $scope.shiftPressed){
+        else if (e.keyCode == 40 && $scope.ctrlPressed && $scope.shiftPressed) {
             $scope.sendToBack();
         }
-        else if(e.keyCode == 40 && $scope.ctrlPressed){
+        else if (e.keyCode == 40 && $scope.ctrlPressed) {
             $scope.sendBackwards();
         }
-        else if(e.keyCode == 38 && $scope.ctrlPressed){
+        else if (e.keyCode == 38 && $scope.ctrlPressed) {
             $scope.bringForward();
         }
 
@@ -79,7 +79,6 @@ function initKeyBindings($scope, socket, canvas) {
         $scope.shiftPressed = e.shiftKey;
         $scope.altPressed = e.altKey;
     };
-
 
 
 }

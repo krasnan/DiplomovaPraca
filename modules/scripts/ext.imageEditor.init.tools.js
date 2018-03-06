@@ -2,8 +2,7 @@ function uniqueId() {
     return Math.random().toString(36).substr(2, 16);
 }
 
-function initTools($scope, socket, canvas, $timeout) {
-    // console.log($scope.serverUrl);
+function initTools($scope, $timeout) {
 
     $scope.tools = {
         select: 'select',
@@ -29,60 +28,78 @@ function initTools($scope, socket, canvas, $timeout) {
     $scope.grid = 5;
     $scope.snapToGrid = false;
 
+    $scope.saveRevision = function () {
+        token = $scope.mw.user.tokens.get( 'editToken' );
+        console.log(token);
+        formData = new FormData();
+        formData.append("action","upload");
+        formData.append("filename",$scope.filename);
+        formData.append("token",token);
+        formData.append("",);
+        formData.append("",);
+        formData.append("",);
+
+    };
+    $scope.loadFile = function () {
+
+    };
+
+
     $scope.setFreeDrawingBrush = function (type) {
         $scope.brushType = type;
         console.log(type);
-        canvas.freeDrawingBrush = new fabric[type + 'Brush'](canvas);
+        $scope.canvas.freeDrawingBrush = new fabric[type + 'Brush']($scope.canvas);
     };
 
     $scope.selectAllObjects = function () {
-        canvas.discardActiveObject();
-        var sel = new fabric.ActiveSelection(canvas.getObjects(), {
-            canvas: canvas
+        $scope.canvas.discardActiveObject();
+        var sel = new fabric.ActiveSelection($scope.canvas.getObjects(), {
+            canvas: $scope.canvas
         });
-        canvas.setActiveObject(sel);
-        canvas.requestRenderAll();
+        $scope.canvas.setActiveObject(sel);
+        $scope.canvas.requestRenderAll();
     };
 
     $scope.setActiveTool = function (tool) {
         $scope.polygon_edit = false;
         $scope.activeTool = tool;
         if ($scope.activeTool === $scope.tools.brush) {
-            canvas.isDrawingMode = true;
-            canvas.discardActiveObject();
+            $scope.canvas.isDrawingMode = true;
+            $scope.canvas.discardActiveObject();
         }
-        else
-            canvas.isDrawingMode = false;
+        else {
+            $scope.canvas.isDrawingMode = false;
+        }
     };
 
     $scope.getStrokeColor = function () {
-        if (canvas.getActiveObject())
+        if ($scope.canvas.getActiveObject())
             return $scope.getStroke();
         else return $scope.strokeColor;
 
     };
     $scope.setStrokeColor = function (value) {
-        if (canvas.getActiveObject())
+        if ($scope.canvas.getActiveObject())
             $scope.setStroke(value);
         else $scope.strokeColor = value;
 
-        canvas.freeDrawingBrush.strokeColor = value;
+        $scope.canvas.freeDrawingBrush.strokeColor = value;
     };
     $scope.getFillColor = function (value) {
-        if (canvas.getActiveObject())
+        if ($scope.canvas.getActiveObject())
             return $scope.getFill(value);
         else return $scope.fillColor;
 
     };
     $scope.setFillColor = function (value) {
-        if (canvas.getActiveObject())
+        if ($scope.canvas.getActiveObject())
             $scope.setFill(value);
         else $scope.fillColor = value;
 
-        canvas.freeDrawingBrush.color = value;
+        $scope.canvas.freeDrawingBrush.color = value;
     };
     $scope.deleteSelection = function () {
-        var objects = canvas.getActiveObjects();
+        var objects = $scope.canvas.getActiveObjects();
         if (objects.length > 0) {
             $scope.panels.modal = {
                 opened: true,
@@ -92,10 +109,10 @@ function initTools($scope, socket, canvas, $timeout) {
                 cancelText: "Cancel",
                 success: function () {
                     objects.forEach(function (object) {
-                        canvas.trigger('object:removed', {target: object});
-                        canvas.remove(object);
+                        $scope.canvas.trigger('object:removed', {target: object});
+                        $scope.canvas.remove(object);
                     });
-                    canvas.discardActiveObject();
+                    $scope.canvas.discardActiveObject();
                 },
                 cancel: function () {
                 }
@@ -110,8 +127,8 @@ function initTools($scope, socket, canvas, $timeout) {
             successText: "Delete",
             cancelText: "Cancel",
             success: function () {
-                canvas.remove(object);
-                canvas.trigger('object:removed', {target: object});
+                $scope.canvas.remove(object);
+                $scope.canvas.trigger('object:removed', {target: object});
             },
             cancel: function () {
             }
@@ -119,7 +136,7 @@ function initTools($scope, socket, canvas, $timeout) {
     };
 
     $scope.selectObject = function (object) {
-        canvas.setActiveObject(object);
+        $scope.canvas.setActiveObject(object);
     };
 
     $scope.rasterize = function (e, filename) {
@@ -128,19 +145,19 @@ function initTools($scope, socket, canvas, $timeout) {
         }
         else {
             var elem = angular.element(e.currentTarget)[0];
-            elem.href = canvas.toDataURL();
+            elem.href = $scope.canvas.toDataURL();
             elem.download = filename;
         }
     };
 
     $scope.rasterizeSVG = function (e, filename) {
         var elem = angular.element(e.currentTarget)[0];
-        elem.href = 'data:image/svg+xml;utf8,' + encodeURIComponent(canvas.toSVG());
+        elem.href = 'data:image/svg+xml;utf8,' + encodeURIComponent($scope.canvas.toSVG());
         elem.download = filename;
     };
 
     $scope.copy = function () {
-        canvas.getActiveObject().clone(function (cloned) {
+        $scope.canvas.getActiveObject().clone(function (cloned) {
             $scope._clipboard = cloned;
         });
     };
@@ -148,7 +165,7 @@ function initTools($scope, socket, canvas, $timeout) {
     $scope.paste = function () {
         // clone again, so you can do multiple copies.
         $scope._clipboard.clone(function (clonedObj) {
-            canvas.discardActiveObject();
+            $scope.canvas.discardActiveObject();
             clonedObj.set({
                 left: clonedObj.left + 10,
                 top: clonedObj.top + 10,
@@ -156,22 +173,22 @@ function initTools($scope, socket, canvas, $timeout) {
             });
             if (clonedObj.type === 'activeSelection') {
                 // active selection needs a reference to the canvas.
-                clonedObj.canvas = canvas;
+                clonedObj.canvas = $scope.canvas;
                 clonedObj.forEachObject(function (obj) {
                     obj.id = uniqueId();
-                    canvas.add(obj);
+                    $scope.canvas.add(obj);
                 });
                 // this should solve the unselectability
                 clonedObj.setCoords();
             } else {
                 clonedObj.id = uniqueId();
-                canvas.add(clonedObj);
+                $scope.canvas.add(clonedObj);
             }
             $scope._clipboard.top += 10;
             $scope._clipboard.left += 10;
-            canvas.setActiveObject(clonedObj);
-            canvas.trigger('object:created', {target: clonedObj});
-            canvas.requestRenderAll();
+            $scope.canvas.setActiveObject(clonedObj);
+            $scope.canvas.trigger('object:created', {target: clonedObj});
+            $scope.canvas.requestRenderAll();
         });
     };
 
@@ -188,13 +205,13 @@ function initTools($scope, socket, canvas, $timeout) {
 
     var obj = null, isDown = false, origX = 0, origY = 0;
 
-    canvas.on('mouse:down', function (o) {
-        if($scope.activeTool !== $scope.tools.select)
-            canvas.selection = false;
-        var pointer = canvas.getPointer(o.e);
+    $scope.canvas.on('mouse:down', function (o) {
+        if ($scope.activeTool !== $scope.tools.select)
+            $scope.canvas.selection = false;
+        var pointer = $scope.canvas.getPointer(o.e);
         origX = pointer.x;
         origY = pointer.y;
-        var pointer = canvas.getPointer(o.e);
+        var pointer = $scope.canvas.getPointer(o.e);
         switch ($scope.activeTool) {
             case $scope.tools.line:
                 // obj = $scope.createLine(pointer);
@@ -240,7 +257,7 @@ function initTools($scope, socket, canvas, $timeout) {
             case $scope.tools.text:
                 obj = new fabric.Textbox('Insert your text...', {
                     id: uniqueId(),
-                    strokeWidth:0,
+                    strokeWidth: 0,
                     left: origX,
                     top: origY,
                     fill: $scope.fillColor,
@@ -273,7 +290,7 @@ function initTools($scope, socket, canvas, $timeout) {
                 }
                 else {
 
-                    obj = canvas.getObjectById($scope.polygon_edit);
+                    obj = $scope.canvas.getObjectById($scope.polygon_edit);
                     obj.draggable = false;
                     obj.points.push({x: pointer.x, y: pointer.y});
                     tmp = obj.toObject('selectable', 'selectedBy', 'index');
@@ -281,9 +298,9 @@ function initTools($scope, socket, canvas, $timeout) {
                     delete tmp.left;
                     tmp = new fabric.Polygon(tmp.points, tmp);
                     obj.set(tmp);
-                    canvas.renderAll();
-                    canvas.setActiveObject(obj);
-                    canvas.trigger('object:modified', {target: obj});
+                    $scope.canvas.renderAll();
+                    $scope.canvas.setActiveObject(obj);
+                    $scope.canvas.trigger('object:modified', {target: obj});
                     return;
                 }
 
@@ -293,17 +310,17 @@ function initTools($scope, socket, canvas, $timeout) {
                 return false;
         }
         if (obj != null) {
-            canvas.add(obj);
-            canvas.trigger('object:created', {target: obj});
-            canvas.setActiveObject(obj);
+            $scope.canvas.add(obj);
+            $scope.canvas.trigger('object:created', {target: obj});
+            $scope.canvas.setActiveObject(obj);
         }
         isDown = true;
     });
 
 
-    canvas.on('mouse:move', function (o) {
+    $scope.canvas.on('mouse:move', function (o) {
         if (!isDown) return;
-        var pointer = canvas.getPointer(o.e);
+        var pointer = $scope.canvas.getPointer(o.e);
 
         if (obj != null) {
             switch (obj.get('type')) {
@@ -396,17 +413,17 @@ function initTools($scope, socket, canvas, $timeout) {
                     return;
             }
         }
-        canvas.renderAll();
+        $scope.canvas.renderAll();
     });
 
-    canvas.on('mouse:up', function (o) {
-        canvas.selection = true;
+    $scope.canvas.on('mouse:up', function (o) {
+        $scope.canvas.selection = true;
         if (!isDown) return;
         if (obj != null) {
-            canvas.trigger('object:modified', {target: obj});
+            $scope.canvas.trigger('object:modified', {target: obj});
             // canvas.trigger('object:created',{target:obj});
             obj.setCoords();
-            if ($scope.activeTool !== $scope.tools.polygon){
+            if ($scope.activeTool !== $scope.tools.polygon) {
                 $scope.setActiveTool($scope.tools.select);
             }
         }
@@ -418,9 +435,9 @@ function initTools($scope, socket, canvas, $timeout) {
         var object;
         new fabric.Image.fromURL(file.dataUri, function (obj) {
             obj.id = uniqueId();
-            canvas.add(obj);
+            $scope.canvas.add(obj);
             object = obj;
-            canvas.trigger('object:created', {target: obj});
+            $scope.canvas.trigger('object:created', {target: obj});
         });
     };
 
@@ -451,7 +468,7 @@ function initTools($scope, socket, canvas, $timeout) {
         }
     };
 
-    function addObject(object) {
+    $scope.addObject = function (object) {
         var obj = undefined;
         switch (object.type) {
             case 'line':
@@ -472,7 +489,7 @@ function initTools($scope, socket, canvas, $timeout) {
                     obj.set(object);
                     obj.top = object.top;
                     obj.left = object.left;
-                    canvas.add(obj);
+                    $scope.canvas.add(obj);
                     obj.moveTo(obj.index);
                     return obj;
                 });
@@ -484,7 +501,7 @@ function initTools($scope, socket, canvas, $timeout) {
                     obj.set(object);
                     obj.top = object.top;
                     obj.left = object.left;
-                    canvas.add(obj);
+                    $scope.canvas.add(obj);
                     obj.moveTo(obj.index);
                     return obj;
 
@@ -501,36 +518,36 @@ function initTools($scope, socket, canvas, $timeout) {
             obj.id = object.id;
             obj.selectable = object.selectable;
             obj.selectedBy = object.selectedBy;
-            canvas.add(obj);
+            $scope.canvas.add(obj);
             obj.moveTo(obj.index);
             return obj;
         }
         else {
             return undefined;
         }
-    }
+    };
 
     $scope.groupSelection = function () {
-        obj = canvas.getActiveObject();
+        obj = $scope.canvas.getActiveObject();
         if (obj.type === 'activeSelection') {
             obj.toGroup();
         }
-        canvas.renderAll();
+        $scope.canvas.renderAll();
     };
 
     $scope.ungroupSelection = function () {
-        obj = canvas.getActiveObject();
+        obj = $scope.canvas.getActiveObject();
         if (obj.type === 'group') {
             obj.ungroupOnCanvas();
-            canvas.renderAll();
+            $scope.canvas.renderAll();
         }
     };
 
     $scope.groupAlign = function (direction, object) {
-        if(object === undefined)
-            object = canvas.getActiveObject();
+        if (object === undefined)
+            object = $scope.canvas.getActiveObject();
 
-        if(object.type !== 'group' && object.type !== 'activeSelection' ) return;
+        if (object.type !== 'group' && object.type !== 'activeSelection') return;
 
         var groupWidth = object.getWidth();
         var groupHeight = object.getHeight();
@@ -538,7 +555,7 @@ function initTools($scope, socket, canvas, $timeout) {
         object.forEachObject(function (obj) {
             var itemWidth = obj.getBoundingRect().width;
             var itemHeight = obj.getBoundingRect().height;
-            switch (direction){
+            switch (direction) {
                 case 'vertical-top':
                     obj.set({
                         originY: 'center',
@@ -548,7 +565,7 @@ function initTools($scope, socket, canvas, $timeout) {
                 case 'vertical-center':
                     obj.set({
                         originY: 'center',
-                        top:0
+                        top: 0
                     });
                     break;
                 case 'vertical-bottom':
@@ -579,9 +596,9 @@ function initTools($scope, socket, canvas, $timeout) {
                     return;
             }
             obj.setCoords();
-            canvas.renderAll();
+            $scope.canvas.renderAll();
         });
-        canvas.trigger('object:modified', {target: object});
+        $scope.canvas.trigger('object:modified', {target: object});
 
     };
 
@@ -594,227 +611,14 @@ function initTools($scope, socket, canvas, $timeout) {
 
     $scope.sendMessage = function () {
         if ($scope.message === "") return;
-        socket.emit('message-created', {text: $scope.message});
+        $scope.socket.emit('message-created', {text: $scope.message});
         $scope.message = "";
         $scope.scrollDown('ie__messenger__messages');
     };
 
     $scope.getLayers = function () {
-        return canvas._objects;
+        return $scope.canvas._objects;
     };
-
-
-    // ------------ Socket event listeners - END ------------
-
-
-    socket.on('init', function (data) {
-        console.log('SOCKET: init');
-
-        $scope.room = data.room;
-        $scope.user = data.user;
-
-        console.log($scope.room);
-
-        if (!$scope.room.loaded) {
-            console.log(fabric);
-        }
-
-        for (let key in $scope.room.objects) {
-            if ($scope.room.objects.hasOwnProperty(key)) {
-                addObject($scope.room.objects[key]);
-            }
-        }
-        canvas.getObjects().forEach(function (obj) {
-            obj.moveTo(obj.index);
-        })
-    });
-
-    socket.on('user-created', function (user) {
-        console.log('SOCKET: user-created');
-        $scope.room.users[user.id] = user;
-    });
-    socket.on('user-removed', function (id) {
-        console.log('SOCKET: user-removed');
-        delete $scope.room.users[id];
-    });
-
-    socket.on('message-created', function (message) {
-        console.log('SOCKET: message-created');
-        console.log(message);
-        $scope.room.messages.push(message);
-        $scope.room.newMessage = true
-    });
-
-    socket.on('selection-changed', function (data) {
-        console.log('SOCKET: selection-changed');
-        var obj = canvas.getObjectById(data.id);
-        obj.selectable = data.selectable;
-        obj.selectedBy = data.selectedBy;
-    });
-
-    socket.on('selection-deny', function (id) {
-        console.log('SOCKET: selection-deny');
-
-    });
-
-    socket.on('object-modified', function (obj) {
-        console.log('SOCKET: object-modified');
-
-        var object = canvas.getObjectById(obj.id);
-        if (object !== null) {
-            object.animate(
-                {
-                    left: obj.left,
-                    top: obj.top,
-                    scaleX: obj.scaleX,
-                    scaleY: obj.scaleY,
-                    angle: obj.angle
-                }, {
-                    duration: 500,
-                    onChange: function () {
-                        object.setCoords();
-                        canvas.renderAll();
-                    }
-                }
-            );
-            object.set(obj);
-        }
-        else {
-            object = addObject(obj);
-        }
-
-    });
-
-    socket.on('object-created', function (obj) {
-        console.log('SOCKET: object-created');
-        // console.log(obj);
-        object = addObject(obj);
-        if(object === undefined) return;
-        object.setCoords();
-        canvas.renderAll();
-        object.moveTo(object.index);
-
-    });
-
-    socket.on('object-removed', function (id) {
-        console.log('SOCKET: object-removed');
-
-        var object = canvas.getObjectById(id);
-        console.log(object);
-        // object.remove();
-        canvas.remove(object);
-        canvas.renderAll();
-    });
-
-    socket.on('canvas-modified', function (properties) {
-        canvas.setHeight(parseInt(properties.height, 10));
-        canvas.setWidth(parseInt(properties.width, 10));
-        canvas.backgroundColor = properties.backgroundColor;
-        canvas.renderAll();
-    });
-
-
-    // ------------ Socket event listeners - END ------------
-
-
-    // ------------ Canvas event listeners - START ------------
-    canvas.on('selection:created', function (event) {
-        console.log('CANVAS: selection:created');
-        event.selected.forEach(function (obj) {
-            // if(obj.type === 'polygon' && $scope.polygon_edit !== false) return;
-
-            socket.emit('selection-changed', {id: obj.id, selectable: false});
-        });
-    });
-
-    canvas.on('selection:updated', function (event) {
-        console.log('CANVAS: selection:updated');
-        event.selected.forEach(function (obj) {
-            socket.emit('selection-changed', {id: obj.id, selectable: false});
-        });
-        event.deselected.forEach(function (obj) {
-            socket.emit('selection-changed', {id: obj.id, selectable: true});
-        });
-    });
-
-    canvas.on('selection:cleared', function (event) {
-        console.log('CANVAS: selection:cleared');
-        if (event.deselected === undefined) return;
-        event.deselected.forEach(function (obj) {
-            // if(obj.type === 'polygon' && $scope.polygon_edit !== false) return;
-
-            socket.emit('selection-changed', {id: obj.id, selectable: true});
-        });
-    });
-
-    canvas.on('object:modified', function (event) {
-        console.log('CANVAS: object:modified');
-
-        object = event.target;
-        console.log(object);
-
-        if (object.type === "activeSelection") {
-            var group = object;
-            for (var i = group._objects.length - 1; i >= 0; i--) {
-                obj = group._objects[i];
-                obj.index = obj.getIndex();
-                group.removeWithUpdate(obj);
-                socket.emit('object-modified', obj.toJSON(['id', 'selectable', 'index']));
-                group.addWithUpdate(obj);
-            }
-        }
-        else {
-            object.index = object.getIndex();
-            socket.emit('object-modified', object.toJSON(['id', 'selectable', 'index']));
-        }
-    });
-
-    canvas.on('object:created', function (event) {
-        console.log('CANVAS: object:created');
-
-        var obj = event.target;
-        console.log(obj);
-        obj.index = obj.getIndex();
-        socket.emit('object-created', obj.toJSON(['id', 'selectable', 'index']));
-    });
-
-    canvas.on('object:removed', function (event) {
-        console.log('CANVAS: object:removed');
-
-        var obj = event.target;
-        // if(obj.type === 'polygon' && $scope.polygon_edit !== false) return;
-
-        socket.emit('object-removed', obj.id);
-    });
-
-    canvas.on('canvas:modified', function (event) {
-        socket.emit('canvas-modified', {
-            width: canvas.width,
-            height: canvas.height,
-            backgroundColor: canvas.backgroundColor
-        })
-    });
-
-    canvas.on('path:created', function (event) {
-        console.log('CANVAS: path:created');
-        obj = event.path;
-        console.log(obj);
-        obj.index = obj.getIndex();
-        obj.id = uniqueId();
-        console.log(obj.toJSON(['id', 'selectable', 'index']));
-        socket.emit('object-created', obj.toJSON(['id', 'selectable', 'index']));
-    });
-
-    canvas.on('object:moving', function (options) {
-        if($scope.snapToGrid) {
-            options.target.set({
-                left: Math.round(options.target.left / $scope.grid) * $scope.grid,
-                top: Math.round(options.target.top / $scope.grid) * $scope.grid
-            });
-        }
-    });
-
-    // ------------ Canvas event listeners - END ------------
 }
 
 

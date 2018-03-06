@@ -49,7 +49,7 @@ class ImageEditorTemplate extends QuickTemplate {
                                 <a title="" class="btn" ng-click="rasterize($event,'export.png')">Export as PNG</a>
                                 <a title="" class="btn" ng-click="rasterizeSVG($event,'export.svg')">Export as SVG</a>
 
-                                <a title="" class="btn">Save</a>
+                                <a title="" class="btn" ng-click="saveRevision()">Save</a>
                                 <a title="" class="btn" ng-click="">Close</a>
                             </div>
                         </div>
@@ -74,10 +74,13 @@ class ImageEditorTemplate extends QuickTemplate {
                             </div>
                         </div>
 
-
-                        <div class="ie__collaborators">
-                            <a ng-repeat="user in room.users" title="{[user.name]}" style="color: {[user.color]};" class="btn"><i class="icon-user-circle-o"></i></a>
+                        <div class="ie__dropdown ie__collaborators">
+                            <a title="" class="btn ie__dropdown__btn" ng-click=""><i class="icon-users"></i></a>
+                            <div class="ie__dropdown__list">
+                                <a ng-repeat="user in room.users" title="{[user.name]}" style="color: {[user.color]};" class="btn"><i class="icon-user-circle-o"></i> {[user.name]}</a>
+                            </div>
                         </div>
+
                         <a title="Toggle fullscreen" ng-click="toggleFullScreen()" class="btn" ><i ng-class="isFullscreen ? 'icon-shrink' : 'icon-enlarge'"></i></a>
                         <a title="Toggle messenger" ng-click="scrollDown('ie__messenger__messages'); messengerVisible = !messengerVisible; room.newMessage = false" class="btn" ng-class="room.newMessage && !messengerVisible ? 'text-primary' : ''"><i class="icon-bubbles2"></i></a>
                         <div class="ie__messenger" ng-class="messengerVisible==true ? 'active' : ''">
@@ -136,16 +139,16 @@ class ImageEditorTemplate extends QuickTemplate {
                             </div>
 
                             <div class="ie__tile__11">
-                                <a title="Group selected objects" ng-class="$scope.canvas.getActiveObject().type === 'activeSelection' ? 'text-primary' : 'disabled' " ng-click="groupSelection();" ><i class="icon-group"></i></a>
+                                <a title="Group selected objects" ng-class="canvas.getActiveObject().type === 'activeSelection' ? 'text-primary' : 'disabled' " ng-click="groupSelection();" ><i class="icon-group"></i></a>
                             </div>
                             <div class="ie__tile__11">
-                                <a title="Ungroup selected objects" ng-class="$scope.canvas.getActiveObject().type === 'group' ? 'text-primary' : 'disabled' " ng-click="ungroupSelection();" ><i class="icon-ungroup"></i></a>
+                                <a title="Ungroup selected objects" ng-class="canvas.getActiveObject().type === 'group' ? 'text-primary' : 'disabled' " ng-click="ungroupSelection();" ><i class="icon-ungroup"></i></a>
                             </div>
                             <div class="ie__tile__11">
-                                <a title="Select all objects" ng-class="$scope.canvas.getObjects().length>0 ? 'text-primary' : 'disabled' "  ng-click="selectAllObjects();"><i class="icon-checkbox-checked"></i></a>
+                                <a title="Select all objects" ng-class="canvas.getObjects().length>0 ? 'text-primary' : 'disabled' "  ng-click="selectAllObjects();"><i class="icon-checkbox-checked"></i></a>
                             </div>
                             <div class="ie__tile__11">
-                                <a title="Deselect all objects" ng-class="$scope.canvas.getActiveObjects().length>0 ? 'text-primary' : 'disabled' " ng-click="$scope.canvas.discardActiveObject();" ><i class="icon-checkbox-unchecked"></i></a>
+                                <a title="Deselect all objects" ng-class="canvas.getActiveObjects().length>0 ? 'text-primary' : 'disabled' " ng-click="canvas.discardActiveObject();" ><i class="icon-checkbox-unchecked"></i></a>
                             </div>
                         </div>
 
@@ -155,7 +158,7 @@ class ImageEditorTemplate extends QuickTemplate {
                         <div class="ie__options__header">Options <a class="ie__options__toggle" ng-click="panels.properties.opened = !panels.properties.opened"><i class="icon-circle-up"></i></a></div>
                         <div class="ie__options__body">
                             <!-- canvas properties-->
-                            <div class="ie__options__canvas" ng-show="$scope.canvas.getActiveObject() == undefined">
+                            <div class="ie__options__canvas" ng-show="canvas.getActiveObject() == undefined">
                                 <div class="ie__options__title">Canvas</div>
                                 <div class="ie__tile__22">
                                     <label>Width</label>
@@ -176,9 +179,9 @@ class ImageEditorTemplate extends QuickTemplate {
 
 
                             <!-- object default properties-->
-                            <div class="ie__options__object" ng-show="$scope.canvas.getActiveObject() != undefined">
+                            <div class="ie__options__object" ng-show="canvas.getActiveObject() != undefined">
 
-                                <div class="ie__options__title">{[$scope.canvas.getActiveObject().get('type')]}</div>
+                                <div class="ie__options__title">{[canvas.getActiveObject().get('type')]}</div>
                                 <div class="ie__tile__22">
                                     <label>X coord</label>
                                     <input type="number" bind-value-to="left">
@@ -218,7 +221,7 @@ class ImageEditorTemplate extends QuickTemplate {
                                         <rect ng-click="setOriginX('right');setOriginY('bottom')" ng-class="getOriginX() == 'right' && getOriginY() == 'bottom'  ? 'active' : ''"   x="24" y="24"  width="8" height="8"/>
                                     </svg>
                                 </div>
-                                <div ng-show="$scope.canvas.getActiveObjects().length > 1">
+                                <div ng-show="canvas.getActiveObjects().length > 1">
                                     <div class="ie__options__title">Align objects</div>
                                     <div class="ie__options__align">
                                         <div class="ie__tile__11">
@@ -247,7 +250,7 @@ class ImageEditorTemplate extends QuickTemplate {
 
 
                             <!-- stroke properties-->
-                            <div class="ie__options__stroke" ng-show="$scope.canvas.getActiveObject() != undefined">
+                            <div class="ie__options__stroke" ng-show="canvas.getActiveObject() != undefined">
                                 <div class="ie__options__title">Stroke</div>
                                 <div class="ie__tile__22">
                                     <label>Width</label>
@@ -258,7 +261,7 @@ class ImageEditorTemplate extends QuickTemplate {
                     </div>
 
 
-                    <div class="ie__panel__vertical" ng-class="panels.font.opened === true ? 'opened' : '' " ng-show="$scope.canvas.getActiveObject().get('type') == 'textbox'">
+                    <div class="ie__panel__vertical" ng-class="panels.font.opened === true ? 'opened' : '' " ng-show="canvas.getActiveObject().get('type') == 'textbox'">
                         <div class="ie__options__text">
                             <div class="ie__options__header">Font <a class="ie__options__toggle" ng-click="panels.font.opened = !panels.font.opened"><i class="icon-circle-up"></i></a></div>
                             <div class="ie__options__body">
@@ -308,7 +311,7 @@ class ImageEditorTemplate extends QuickTemplate {
 
                     </div>
 
-                    <div class="ie__panel__vertical" ng-class="panels.brush.opened === true ? 'opened' : '' " ng-show="$scope.canvas.isDrawingMode">
+                    <div class="ie__panel__vertical" ng-class="panels.brush.opened === true ? 'opened' : '' " ng-show="canvas.isDrawingMode">
                         <div class="ie__options__text">
                             <div class="ie__options__header">Brush <a class="ie__options__toggle" ng-click="panels.brush.opened = !panels.brush.opened"><i class="icon-circle-up"></i></a></div>
                             <div class="ie__options__body" >
@@ -332,16 +335,16 @@ class ImageEditorTemplate extends QuickTemplate {
 
                                 <div class="ie__tile__22">
                                     <label>Brush size</label>
-                                    <input title="" type="number" min="1" step="1" ng-model="$scope.canvas.freeDrawingBrush.width">
+                                    <input title="" type="number" min="1" step="1" ng-model="canvas.freeDrawingBrush.width">
                                 </div>
                                 <div class="ie__options__title">Shadow</div>
                                 <div class="ie__tile__22">
                                     <label>Blur</label>
-                                    <input title="" type="number" min="0" step="1" ng-model="$scope.canvas.freeDrawingBrush.shadow.blur">
+                                    <input title="" type="number" min="0" step="1" ng-model="canvas.freeDrawingBrush.shadow.blur">
                                 </div>
                                 <div class="ie__tile__22">
                                     <label>Color</label>
-                                    <div title="" colorpicker="rgba" colorpicker-position="left" colorpicker-with-input="true" ng-model="$scope.canvas.freeDrawingBrush.shadow.color" class="ie__colorpicker" style="background:{[$scope.canvas.freeDrawingBrush.shadow.color]}"></div>
+                                    <div title="" colorpicker="rgba" colorpicker-position="left" colorpicker-with-input="true" ng-model="canvas.freeDrawingBrush.shadow.color" class="ie__colorpicker" style="background:{[canvas.freeDrawingBrush.shadow.color]}"></div>
 
                                     <!--                            <input type="color" bind-value-to="canvasBgColor">-->
                                 </div>
@@ -350,7 +353,7 @@ class ImageEditorTemplate extends QuickTemplate {
                         </div>
                     </div>
 
-                    <div class="ie__panel__vertical" ng-class="panels.image.opened === true ? 'opened' : '' " ng-show="$scope.canvas.getActiveObject().get('type') == 'textbox'">
+                    <div class="ie__panel__vertical" ng-class="panels.image.opened === true ? 'opened' : '' " ng-show="canvas.getActiveObject().get('type') == 'textbox'">
                         <div class="ie__options__text">
                             <div class="ie__options__header">Image <a class="ie__options__toggle" ng-click="panels.image.opened = !panels.image.opened"><i class="icon-circle-up"></i></a></div>
                             <div class="ie__options__body">

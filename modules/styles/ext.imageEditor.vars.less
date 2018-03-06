@@ -1,4 +1,5 @@
 @import "ext.imageEditor.vars";
+
 /*---------------------------------------*\
    Variables
 \*---------------------------------------*/
@@ -75,6 +76,7 @@ Roboto
 .ff_default() {
   font-family: 'Roboto', sans-serif;
 }
+
 .ff_title() {
   font-family: 'Georgia', serif;
 }
@@ -88,24 +90,30 @@ Roboto
       @rules();
     }
   }
-};
+}
+
+;
 .transitions(@rules) {
   .transition-on & {
     @rules();
   }
-};
+}
+
+;
 
 .fs(@value, @lh: @lh) {
   font-size: (@value / @bs) * 1rem;
   line-height: (@value + @lh) / @bs * 1rem;
 }
+
 .fs_px(@value, @lh: @lh) {
   font-size: (@value) * 1px;
   line-height: (@value + @lh) * 1px;
 }
-.btn_color(@color){
-  cursor:pointer;
-  display:inline-block;
+
+.btn_color(@color) {
+  cursor: pointer;
+  display: inline-block;
   background: @color;
   color: @white;
   border: 2px solid @color;
@@ -116,7 +124,8 @@ Roboto
     color: @white;
   }
 }
-.input{
+
+.input {
   background: transparent !important;
   font-size: 18px;
   margin: @offset-xs;
@@ -128,13 +137,13 @@ Roboto
   border-bottom: @border 1px solid;
   float: left;
   &:extend(.transition);
-  &:focus,&:active,&:hover{
+  &:focus, &:active, &:hover {
     border-bottom: @blue 1px solid;
     outline: none !important;
   }
 }
 
-.btn{
+.btn {
   .fs(20);
   margin: @offset-xs;
   min-width: @offset-md;
@@ -142,24 +151,26 @@ Roboto
   line-height: @offset-md;
   text-align: center;
   display: inline-block;
-  color: lighten(@black,25%);
+  color: lighten(@black, 25%);
   &:extend(.transition);
   &:hover,
-  &:focus{
+  &:focus {
     text-decoration: none;
     color: lighten(@black, 50%);
     cursor: pointer;
   }
-  &.active{
+  &.active {
     color: @blue;
   }
-  > span{
+  > span {
     margin-left: 5px;
     font-size: 11px;
-    background: rgba(0,0,0,0.1);
-    padding: 2px 5px;  }
+    background: rgba(0, 0, 0, 0.1);
+    padding: 2px 5px;
+  }
 }
-.btn-color(@bg, @color:@white){
+
+.btn-color(@bg, @color:@white) {
   &:extend(.btn all);
   background-color: @bg;
   color: @color;
@@ -167,11 +178,11 @@ Roboto
   border: darken(@bg, 10%) 1px solid;
   padding: 0 @offset;
   .fs_px(16, 16);
-  &:hover{
+  &:hover {
     background-color: darken(@bg, 4%);
     color: @color;
   }
-  &:active, &:focus{
+  &:active, &:focus {
     background-color: lighten(@bg, 4%);
     color: @color;
   }
@@ -185,14 +196,15 @@ Roboto
     display: block;
     a {
       display: block;
-      &:hover,&:focus,&:active,&:visited{
+      &:hover, &:focus, &:active, &:visited {
         text-decoration: none;
-        
+
       }
     }
   }
 }
-.transition{
+
+.transition {
   -webkit-transition: ease-in-out all 0.2s;
   -moz-transition: ease-in-out all 0.2s;
   -ms-transition: ease-in-out all 0.2s;
@@ -200,36 +212,42 @@ Roboto
   transition: ease-in-out all 0.2s;
 }
 
-.shadow-box{
+.shadow-box {
   -webkit-box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.08);
   -moz-box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.08);
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.08);
   border: @border solid 1px;
 }
 
-.text-primary{
-color: @blue !important;
-}
-.text-danger{
-color: @red !important;;
-}
-.text-success{
-color: @success !important;;
-}
-.text-white{
-color: @white !important;;
+.text-primary {
+  color: @blue !important;
 }
 
-.btn-primary{
+.text-danger {
+  color: @red !important;;
+}
+
+.text-success {
+  color: @success !important;;
+}
+
+.text-white {
+  color: @white !important;;
+}
+
+.btn-primary {
   .btn-color(@blue);
 }
-.btn-danger{
+
+.btn-danger {
   .btn-color(@red);
 }
-.btn-success{
+
+.btn-success {
   .btn-color(@success);
 }
-.btn-white{
-  .btn-color(@white,@black);
+
+.btn-white {
+  .btn-color(@white, @black);
 }
 
