@@ -2,7 +2,7 @@ function uniqueId() {
     return Math.random().toString(36).substr(2, 16);
 }
 
-function initTools($scope, $timeout) {
+function initTools($scope, $http, $timeout) {
 
     $scope.tools = {
         select: 'select',
@@ -29,20 +29,72 @@ function initTools($scope, $timeout) {
     $scope.snapToGrid = false;
 
     $scope.saveRevision = function () {
-        token = $scope.mw.user.tokens.get( 'editToken' );
-        console.log(token);
+        var token = $scope.mw.user.tokens.get('editToken');
+
+        var file = dataURItoBlob($scope.canvas.toDataURL({format:"png"}));
+
         formData = new FormData();
-        formData.append("action","upload");
-        formData.append("filename",$scope.filename);
-        formData.append("token",token);
-        formData.append("",);
-        formData.append("",);
-        formData.append("",);
+        formData.append("action", "upload");
+        formData.append("filename", $scope.filename);
+        formData.append("token", token);
+        formData.append("file", file);
+        formData.append("format", "json");
+        formData.append("ignorewarnings", true);
+        formData.append("text", JSON.stringify($scope.canvas.toJSON()));
 
+        $http({
+            method: "POST",
+            url:$scope.mw.util.wikiScript('api'),
+            data:formData,
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        }).then(
+            function (value) {
+                console.log(value)
+            },
+            function (reason) {
+                console.log(reason);
+            }
+        );
     };
+
+    function dataURItoBlob(dataURI) {
+        // convert base64 to raw binary data held in a string
+        // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+        var byteString = atob(dataURI.split(',')[1]);
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], {type: mimeString});
+    }
+
+
     $scope.loadFile = function () {
-
+        formData = new FormData();
+        formData.append("action", "query");
+        formData.append("format", "json");
+        formData.append("prop", "imageinfo");
+        formData.append("titles", $scope.filename);
+        formData.append("iiprop", "url|uploadwarning|comment|dimensions|mediatype|mime|parsedcomment");
+        $http({
+            method: "POST",
+            url:$scope.mw.util.wikiScript('api'),
+            data:formData,
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        }).then(
+            function (value) {
+                console.log(value)
+            },
+            function (reason) {
+                console.log(reason);
+            }
+        );
     };
+    $scope.loadFile();
 
 
     $scope.setFreeDrawingBrush = function (type) {

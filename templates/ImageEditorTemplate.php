@@ -29,10 +29,10 @@ class ImageEditorTemplate extends QuickTemplate {
         $serverPort = '3000';
         $userName = $wgUser->getName();
         $userEmail = $wgUser->getEmail();
-        $roomName = isset($_GET['file']) ? $_GET['file'] : 'New File';
+        $fileName = isset($_GET['file']) ? $_GET['file'] : 'New File';
         ?>
 
-        <div class="ie"  ng-app="ImageEditor" ng-controller="ImageEditor" ng-init="socketInit('<?php echo $serverUrl; ?>','<?php echo $serverPort; ?>','<?php echo $userName; ?>','<?php echo $roomName; ?>')">
+        <div class="ie"  ng-app="ImageEditor" ng-controller="ImageEditor" ng-init="socketInit('<?php echo $serverUrl; ?>','<?php echo $serverPort; ?>','<?php echo $userName; ?>','<?php echo $fileName; ?>')">
             <div class="ie__container" ng-show="loaded">
                 <div class="ie__playground">
                     <div class="ie__playground__container">

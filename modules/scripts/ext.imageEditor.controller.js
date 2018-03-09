@@ -1,16 +1,21 @@
-app.controller('ImageEditor', function ($scope, $timeout, socket) {
+app.controller('ImageEditor', function ($scope, $http, $timeout, socket) {
 
     $scope.socket = socket;
     $scope.canvas = canvas;
     $scope.mw = mw;
 
-    $scope.socketInit = function (serverUrl, serverPort, userName, roomName) {
+    $scope.socketInit = function (serverUrl, serverPort, userName, fileName) {
+        $scope.filename = fileName;
+        $scope.serverUrl = serverUrl;
+        $scope.serverPort = serverPort;
+        $scope.userName = userName;
+
         var server = serverUrl + ':' + serverPort;
-        var query = {query: 'name=' + userName + '&room=' + roomName};
+        var query = {query: 'name=' + userName + '&room=' + fileName};
 
         socket.connect(server, query);
         initAccessors($scope);
-        initTools($scope, $timeout);
+        initTools($scope, $http, $timeout);
         initEvents($scope);
         initKeyBindings($scope);
         watchCanvas($scope);
