@@ -17,6 +17,13 @@ function initTools($scope, $http, $timeout) {
         image: 'image'
     };
     $scope.panels = {};
+    $scope.room = {
+        canvas:{},
+        objects:{},
+        users:{},
+        messages:[],
+        loaded:false
+    };
 
     // $scope.canvas = canvas;
 
@@ -29,6 +36,7 @@ function initTools($scope, $http, $timeout) {
     $scope.snapToGrid = false;
 
     $scope.saveRevision = function () {
+        //TODO ukladat vo formate podla urlky
         var token = $scope.mw.user.tokens.get('editToken');
 
         var file = dataURItoBlob($scope.canvas.toDataURL({format:"png"}));
@@ -40,7 +48,7 @@ function initTools($scope, $http, $timeout) {
         formData.append("file", file);
         formData.append("format", "json");
         formData.append("ignorewarnings", true);
-        formData.append("text", JSON.stringify($scope.canvas.toJSON()));
+        formData.append("comment", JSON.stringify($scope.canvas.toJSON('id', 'index')));
 
         $http({
             method: "POST",
@@ -73,29 +81,32 @@ function initTools($scope, $http, $timeout) {
 
 
     $scope.loadFile = function () {
-        formData = new FormData();
-        formData.append("action", "query");
-        formData.append("format", "json");
-        formData.append("prop", "imageinfo");
-        formData.append("titles", $scope.filename);
-        formData.append("iiprop", "url|uploadwarning|comment|dimensions|mediatype|mime|parsedcomment");
-        $http({
-            method: "POST",
-            url:$scope.mw.util.wikiScript('api'),
-            data:formData,
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        }).then(
-            function (value) {
-                console.log(value)
-            },
-            function (reason) {
-                console.log(reason);
-            }
-        );
+        // formData = new FormData();
+        // formData.append("action", "query");
+        // formData.append("format", "json");
+        // formData.append("prop", "imageinfo");
+        // formData.append("titles", $scope.filename);
+        // formData.append("iiprop", "url|dimensions|metadata");
+        // $http({
+        //     method: "POST",
+        //     url:$scope.mw.util.wikiScript('api'),
+        //     data:formData,
+        //     transformRequest: angular.identity,
+        //     headers: {'Content-Type': undefined}
+        // }).then(
+        //     function (value) {
+        //         console.log(value);
+        //         var pageId = Object.keys(value.data.query.pages)[0];
+        //         if(pageId < 0) return; // page doesn't exists (new page is created with editor save)
+        //         var imageInfo = value.data.query.pages[pageId].imageInfo[0];
+        //
+        //     },
+        //     function (reason) {
+        //         console.log(reason);
+        //     }
+        // );
     };
     $scope.loadFile();
-
 
     $scope.setFreeDrawingBrush = function (type) {
         $scope.brushType = type;
@@ -545,6 +556,7 @@ function initTools($scope, $http, $timeout) {
                     obj.moveTo(obj.index);
                     return obj;
                 });
+
                 return;
             case 'group':
                 console.log(object);

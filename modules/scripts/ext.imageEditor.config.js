@@ -13,8 +13,7 @@ fabric.Object.prototype.isSelected = function () {
 };
 
 var canvas = new fabric.Canvas('ie__canvas', {preserveObjectStacking: true});
-
-
+window.canvas = canvas;
 var app = angular.module('ImageEditor', [
     'colorpicker.module'
 ]);

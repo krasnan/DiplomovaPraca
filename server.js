@@ -1,8 +1,11 @@
 // Setup basic express server
+
+var request = require('request');
 var server = require('http').createServer();
 var io = require('socket.io')(server);
 server.listen(3000);
 
+var ENDPOINT = "http://wiki.localhost/api.php";
 var rm = new RoomManager();
 
 io.on('connection', function (socket) {
@@ -12,10 +15,8 @@ io.on('connection', function (socket) {
 
     socket.join(room.name);
 
-    socket.emit('init', {room: room, user: user});
-
-    room.createUser(user);
-
+    // socket.emit('init', {room: room, user: user});
+    room.createUser(user, socket);
 
     socket.on('message-created', function (message) {
         room.createMessage(message.text, user.id, '*');
@@ -59,6 +60,14 @@ function User(name, socket) {
     this.getSocket = function () {
         return io.sockets.connected[this.id];
     };
+
+    this.setEditToken = function (token) {
+        _token = token;
+    };
+
+    this.getEditToken = function () {
+        return _token;
+    }
 }
 
 function Message(text, from, to, type) {
@@ -71,23 +80,82 @@ function Message(text, from, to, type) {
 }
 
 function Room(name) {
+    var self = this;
     this.name = name;
     this.users = {};
     this.messages = [];
     this.objects = {};
-    this.canvas = {};
+    this.canvas = {width: 1280, height: 720};
     this.loaded = false;
-    this.file = {};
+    this.loadFromUrl = false;
 
     this.isEmpty = function () {
         return Object.keys(this.users).length <= 0;
     };
 
-    this.createUser = function (user) {
+    this.loadFromWiki = function () {
+        request.post(
+            {
+                url: ENDPOINT,
+                form: {
+                    action: 'query',
+                    format: 'json',
+                    prop: 'imageinfo',
+                    titles: this.name,
+                    iiprop: 'url|dimensions|metadata'
+                }
+            },
+            function (error, response, body) {
+                if (error) console.log("Unable to connect to: " + ENDPOINT);
+                body = JSON.parse(body);
+                var pageId = Object.keys(body.query.pages)[0];
+                if (pageId >= 0) {
+                    var imageinfo = body.query.pages[pageId].imageinfo[0];
+                    self.canvas.width = imageinfo.width;
+                    self.canvas.height = imageinfo.height;
+
+                    var jsonLoaded = false;
+
+                    for (var i in imageinfo.metadata) {
+                        // console.log(meta);
+
+                        if (imageinfo.metadata[i].name === 'imageEditorContent') {
+                            var content = JSON.parse(imageinfo.metadata[i].value);
+                            self.objects = content.objects;
+                            if (content.background !== undefined)
+                                self.canvas.backgroundColor = content.background;
+
+                            jsonLoaded = true;
+                        }
+                    }
+                    if (!jsonLoaded) {
+                        self.loadObjectImageFromUrl(imageinfo.url);
+                    }
+                    self.loaded = true;
+                    self.deselectAll();
+
+                }
+
+                io.in(self.name).emit('init', {
+                    room: self,
+                    users: user
+                });
+            }
+        );
+    };
+
+    this.createUser = function (user, socket) {
         this.users[user.id] = user;
         console.log("+ user " + user.name + "(" + user.id + ") added");
         this.createMessage('User ' + user.name + ' connected', 'SYSTEM', '*', 'system');
         io.in(this.name).emit('user-created', this.users[user.id]);
+
+        if (this.loaded) {
+            socket.emit('init', {
+                room: this,
+                users: user
+            });
+        }
     };
 
     this.removeUser = function (id) {
@@ -111,15 +179,28 @@ function Room(name) {
     };
 
     this.modifyCanvas = function (properties, socket) {
-        this.$scope.canvas.height = properties.height;
-        this.$scope.canvas.width = properties.width;
-        this.$scope.canvas.backgroundColor = properties.backgroundColor;
+        this.canvas.height = properties.height;
+        this.canvas.width = properties.width;
+        this.canvas.backgroundColor = properties.backgroundColor;
         socket.broadcast.to(room.name).emit('canvas-modified', this.canvas);
     };
 
     this.createObject = function (obj, socket) {
         this.objects[obj.id] = obj;
         socket.broadcast.to(room.name).emit('object-created', this.objects[obj.id]);
+    };
+
+    this.loadObjectImageFromUrl = function(url){
+        this.objects['loaded_image'] = {
+            id: 'loaded_image',
+            type: 'image',
+            src: url,
+            left: 0,
+            top: 0,
+            width: this.canvas.width,
+            height: this.canvas.height,
+            index: 0
+        }
     };
 
     this.removeObject = function (id, socket) {
@@ -193,18 +274,10 @@ function Room(name) {
         else
             socket.emit('selection-deny', id);
     };
-
-    this.loadFileInfo = function () {
-        //TODO: load file info from api
-        this.file = {
-            "size": 1556,
-            "width": 512,
-            "height": 512,
-            "url": "http://wiki.localhost/images/2/25/SVG_Test.svg",
-            "descriptionurl": "http://wiki.localhost/index.php/File:SVG_Test.svg",
-            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=1895005"
-        };
-        return this.file;
+    this.deselectAll = function () {
+        for (var id in this.objects) {
+            this.objects[id].selectable = true;
+        }
     }
 }
 
@@ -225,7 +298,7 @@ function RoomManager() {
             room = new Room(name);
             this.rooms[name] = room;
             console.log("+ room " + name + " added");
-            room.loadFileInfo();
+            room.loadFromWiki();
         }
         return room;
     };
