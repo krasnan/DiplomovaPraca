@@ -21,6 +21,18 @@
   }
   &__container {
     position: relative;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    &:extend(.blur all);
+    &:extend(.transition all);
+
+    .ie__loaded &{
+      opacity: 1;
+      visibility: visible !important;
+      pointer-events: auto;
+      &:extend(.sharp all);
+    }
   }
 
   &__info, &__tools, &__options {
@@ -58,7 +70,7 @@
       }
     }
   }
-  &__playground, &__preloader {
+  &__playground {
     position: relative;
     width: 100%;
     height: calc(~"100vh - 250px");
@@ -395,6 +407,62 @@
       }
     }
   }
+  &__preloader{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    &:extend(.transition all);
+    visibility: visible;
+    opacity: 1;
+    &__container{
+      &:extend(.shadow-box all);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      background-color: @white;
+      padding: @offset-lg @offset-xxl;
+      display: inline-block;
+
+    }
+    &__body{
+      .fs(16);
+
+      i{
+        color: @blue;
+        padding: @offset;
+        .fs(70);
+        display: block;
+        -webkit-animation: spin 1s infinite linear;
+        -o-animation: spin 1s infinite linear;
+        animation: spin 1s infinite linear;
+      }
+      @-moz-keyframes spin {
+        from { -moz-transform: rotate(0deg); }
+        to { -moz-transform: rotate(360deg); }
+      }
+      @-webkit-keyframes spin {
+        from { -webkit-transform: rotate(0deg); }
+        to { -webkit-transform: rotate(360deg); }
+      }
+      @keyframes spin {
+        from {transform:rotate(0deg);}
+        to {transform:rotate(360deg);}
+      }
+    }
+    
+    .ie__loaded &{
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
   &__modal {
     position: absolute;
     left: 50%;
@@ -429,7 +497,6 @@
       text-align: right;
       padding: @offset-sm @offset;
     }
-
   }
   .pull-right {
     float: right;

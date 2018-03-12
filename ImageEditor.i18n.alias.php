@@ -10,6 +10,5 @@ $specialPageAliases = [];
 
 /** English (English) */
 $specialPageAliases['en'] = [
-    'HelloWorld' => [ 'HelloWorld' ],
     'ImageEditor' => [ 'ImageEditor' ],
 ];

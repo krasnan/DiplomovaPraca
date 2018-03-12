@@ -2,9 +2,90 @@
 	"@metadata": {
 		"authors": []
 	},
-	"boilerplate-desc": "This is an example extension",
-	"boilerplate-i18n-welcome": "Welcome to the localization file of the BoilerPlate extension.",
-	"boilerplate-helloworld": "Hello world!",
-	"boilerplate-helloworld-intro": "Welcome to the \"Hello world\" special page of the BoilerPlate extension.",
-	"helloworld": "Hello world"
+	"image-editor-desc": "Vector Graphics image editor.",
+	"open-in-image-editor" : "Open in Image Editor",
+
+	"file" : "File",
+	"export-as" : "Export as ",
+	"save" : "Save",
+	"close" : "Close",
+
+	"edit" : "Edit",
+	"cut" : "Cut",
+	"copy" : "Copy",
+	"paste" : "Paste",
+	"duplicate" : "Duplicate",
+	"delete" : "Delete",
+
+	"object" : "Object",
+	"bring-to-front" : "Bring To Front",
+	"send-to-back" : "Send To Back",
+	"bring-forward" : "Bring Forward",
+	"send-backward" : "Send Backward",
+
+	"users" : "Users",
+	"toggle-fullscreen" : "Toggle fullscreen",
+	"toggle-messenger" : "Toggle messenger",
+	"message" : "Message...",
+	"send" : "Send",
+
+	"select-tool" : "Select Tool",
+	"brush-tool" : "Brush Tool",
+	"image-tool" : "Insert Image",
+	"line-tool" : "Line Tool",
+	"rectangle-tool" : "Rectangle Tool",
+	"ellipse-tool" : "Ellipse Tool",
+	"triangle-tool" : "Triangle Tool",
+	"polygon-tool" : "Ploygon Tool",
+	"textbox-tool" : "Textbox Tool",
+	"snap-to-grid" : "Snap objects to grid",
+	"background-color" : "Background",
+	"stroke-color" : "Stroke color",
+
+	"toggle-panel" : "Toggle panel",
+
+	"layers" : "Layers",
+	"delete-layer" : "Delete layer",
+	"select-layer" : "Select layer",
+	"bring-layer-forward" : "Bring layer forward",
+	"send-layer-backward" : "Send layer backward",
+	"select-all" : "Select all",
+	"deselect-all" : "Deselect all",
+
+	"canvas" : "Canvas",
+
+	"options" : "Options",
+	"x-coords" : "X coords",
+	"y-coords" : "Y coords",
+	"height" : "Height",
+	"width" : "Width",
+	"angle" : "Angle",
+	"opacity" : "Opacity",
+	"reference-point" : "Reference point",
+	"stroke" : "Stroke",
+	"align-objects" : "Align Objects",
+
+	"font" : "Font",
+	"bold" : "Bold",
+	"italic" : "Italic",
+	"underline" : "Underline",
+	"line-through" : "Line through",
+	"line-height" : "Line height",
+	"font-size" : "Font size",
+
+	"brush" : "Brush",
+	"pencil" : "Pencil",
+	"spray" : "Spray",
+	"circles" : "Circle brush",
+	"brush-size" : "Brush size",
+	"shadow" : "Shadow",
+	"blur" : "Blur",
+	"color" : "Color",
+
+	"image" : "Image",
+
+	"upload-image" : "Upload Image",
+	"insert" : "Insert",
+
+	"loading" : "LOADING"
 }

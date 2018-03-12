@@ -102,7 +102,7 @@ function Room(name) {
                     format: 'json',
                     prop: 'imageinfo',
                     titles: this.name,
-                    iiprop: 'url|dimensions|metadata'
+                    iiprop: 'url|dimensions|metadata|mime'
                 }
             },
             function (error, response, body) {

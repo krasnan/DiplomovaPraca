@@ -1,11 +1,11 @@
 {
-	"name": "ImageEditor",
+	"name": "image-editor",
 	"version": "0.1.0",
 	"author": [
 		"Martin Krasňan"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:ImageEditor",
-	"descriptionmsg": "boilerplate-desc",
+	"descriptionmsg": "image-editor-desc",
 	"license-name": "MIT",
 	"type": "other",
 	"AutoloadClasses": {
