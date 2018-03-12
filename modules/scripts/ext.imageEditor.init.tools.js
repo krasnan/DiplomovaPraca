@@ -79,34 +79,25 @@ function initTools($scope, $http, $timeout) {
         return new Blob([ab], {type: mimeString});
     }
 
-
-    $scope.loadFile = function () {
-        // formData = new FormData();
-        // formData.append("action", "query");
-        // formData.append("format", "json");
-        // formData.append("prop", "imageinfo");
-        // formData.append("titles", $scope.filename);
-        // formData.append("iiprop", "url|dimensions|metadata");
-        // $http({
-        //     method: "POST",
-        //     url:$scope.mw.util.wikiScript('api'),
-        //     data:formData,
-        //     transformRequest: angular.identity,
-        //     headers: {'Content-Type': undefined}
-        // }).then(
-        //     function (value) {
-        //         console.log(value);
-        //         var pageId = Object.keys(value.data.query.pages)[0];
-        //         if(pageId < 0) return; // page doesn't exists (new page is created with editor save)
-        //         var imageInfo = value.data.query.pages[pageId].imageInfo[0];
-        //
-        //     },
-        //     function (reason) {
-        //         console.log(reason);
-        //     }
-        // );
+    $scope.closeEditor = function (e) {
+        $scope.panels.modal = {
+            opened: true,
+            header: "Close Image Editor?",
+            text: "Do you want to close Image Editor? If you want to save your settings, click to Save and Close.",
+            successText: "Save and Close",
+            optionalText: "Close",
+            cancelText: "No",
+            success: function () {
+                $scope.saveRevision();
+                window.location = $scope.mw.util.wikiScript() + '?title=' + $scope.filename;
+            },
+            optional: function () {
+                window.location = $scope.mw.util.wikiScript() + '?title=' + $scope.filename;
+            },
+            cancel: function () {
+            }
+        };
     };
-    $scope.loadFile();
 
     $scope.setFreeDrawingBrush = function (type) {
         $scope.brushType = type;
@@ -116,11 +107,15 @@ function initTools($scope, $http, $timeout) {
 
     $scope.selectAllObjects = function () {
         $scope.canvas.discardActiveObject();
-        var sel = new fabric.ActiveSelection($scope.canvas.getObjects(), {
+        var sel = new fabric.ActiveSelection($scope.getSelectableObjects(), {
             canvas: $scope.canvas
         });
         $scope.canvas.setActiveObject(sel);
         $scope.canvas.requestRenderAll();
+    };
+
+    $scope.getSelectableObjects = function () {
+        return $scope.canvas.getObjects().filter(obj => obj.selectable);
     };
 
     $scope.setActiveTool = function (tool) {
@@ -552,6 +547,8 @@ function initTools($scope, $http, $timeout) {
                     obj.set(object);
                     obj.top = object.top;
                     obj.left = object.left;
+                    obj.selectable = object.selectable;
+                    obj.selectedBy = object.selectedBy;
                     $scope.canvas.add(obj);
                     obj.moveTo(obj.index);
                     return obj;
@@ -565,6 +562,8 @@ function initTools($scope, $http, $timeout) {
                     obj.set(object);
                     obj.top = object.top;
                     obj.left = object.left;
+                    obj.selectable = object.selectable;
+                    obj.selectedBy = object.selectedBy;
                     $scope.canvas.add(obj);
                     obj.moveTo(obj.index);
                     return obj;

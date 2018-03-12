@@ -24,9 +24,8 @@
 		"ImageEditorAlias": "ImageEditor.i18n.alias.php"
 	},
 	"Hooks": {
-		"FileUpload": [
-			"ImageEditorHooks::onFileUpload"
-		]
+		"FileUpload": "ImageEditorHooks::onFileUpload",
+		"ImagePageShowTOC": "ImageEditorHooks::onImagePageShowTOC"
 	},
 	"MessagesDirs": {
 		"ImageEditor": [

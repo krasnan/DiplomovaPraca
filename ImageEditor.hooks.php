@@ -26,4 +26,10 @@ class ImageEditorHooks
             __METHOD__);
         return true;
     }
+    public static function onImagePageShowTOC( $page, &$toc){
+        global $wgScript;
+
+        array_push($toc, '<li><a href="'. $wgScript .'?title=Special:ImageEditor&file='.$_GET["title"].'">' . $page->getContext()->msg( 'open-in-editor' )->escaped() . '</a></li>');
+        return true;
+    }
 }

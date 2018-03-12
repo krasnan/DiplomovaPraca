@@ -187,5 +187,10 @@ function initEvents($scope) {
         }
     });
 
+    $scope.canvas.on('mouse:wheel', function (event) {
+        if(!$scope.ctrlPressed) return;
+
+        console.log(event);
+    })
     // ------------ Canvas event listeners - END ------------
 }

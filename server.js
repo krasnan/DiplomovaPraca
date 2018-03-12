@@ -131,11 +131,10 @@ function Room(name) {
                     if (!jsonLoaded) {
                         self.loadObjectImageFromUrl(imageinfo.url);
                     }
-                    self.loaded = true;
                     self.deselectAll();
 
                 }
-
+                self.loaded = true;
                 io.in(self.name).emit('init', {
                     room: self,
                     users: user

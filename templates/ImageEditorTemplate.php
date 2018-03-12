@@ -50,7 +50,7 @@ class ImageEditorTemplate extends QuickTemplate {
                                 <a title="" class="btn" ng-click="rasterizeSVG($event,'export.svg')">Export as SVG</a>
 
                                 <a title="" class="btn" ng-click="saveRevision()">Save</a>
-                                <a title="" class="btn" ng-click="">Close</a>
+                                <a title="" class="btn" ng-click="closeEditor()">Close</a>
                             </div>
                         </div>
                         <div class="ie__dropdown">
@@ -138,12 +138,12 @@ class ImageEditorTemplate extends QuickTemplate {
 
                             </div>
 
-                            <div class="ie__tile__11">
-                                <a title="Group selected objects" ng-class="canvas.getActiveObject().type === 'activeSelection' ? 'text-primary' : 'disabled' " ng-click="groupSelection();" ><i class="icon-group"></i></a>
-                            </div>
-                            <div class="ie__tile__11">
-                                <a title="Ungroup selected objects" ng-class="canvas.getActiveObject().type === 'group' ? 'text-primary' : 'disabled' " ng-click="ungroupSelection();" ><i class="icon-ungroup"></i></a>
-                            </div>
+<!--                            <div class="ie__tile__11">-->
+<!--                                <a title="Group selected objects" ng-class="canvas.getActiveObject().type === 'activeSelection' ? 'text-primary' : 'disabled' " ng-click="groupSelection();" ><i class="icon-group"></i></a>-->
+<!--                            </div>-->
+<!--                            <div class="ie__tile__11">-->
+<!--                                <a title="Ungroup selected objects" ng-class="canvas.getActiveObject().type === 'group' ? 'text-primary' : 'disabled' " ng-click="ungroupSelection();" ><i class="icon-ungroup"></i></a>-->
+<!--                            </div>-->
                             <div class="ie__tile__11">
                                 <a title="Select all objects" ng-class="canvas.getObjects().length>0 ? 'text-primary' : 'disabled' "  ng-click="selectAllObjects();"><i class="icon-checkbox-checked"></i></a>
                             </div>
@@ -386,6 +386,7 @@ class ImageEditorTemplate extends QuickTemplate {
                         </div>
                         <div class="ie__modal__footer">
                             <a class="btn-danger" ng-show="panels.modal.cancelText != undefined" ng-click="panels.modal.cancel();panels.modal.opened = false">{[panels.modal.cancelText]}</a>
+                            <a class="btn-primary" ng-show="panels.modal.optionalText != undefined" ng-click="panels.modal.optional();panels.modal.opened = false">{[panels.modal.optionalText]}</a>
                             <a class="btn-primary" ng-show="panels.modal.successText != undefined" ng-click="panels.modal.success();panels.modal.opened = false">{[panels.modal.successText]}</a>
                         </div>
                     </div>
