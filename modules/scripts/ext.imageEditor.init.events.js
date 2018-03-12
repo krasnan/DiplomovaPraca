@@ -1,10 +1,13 @@
 function initEvents($scope) {
 
     // ------------ Socket event listeners - END ------------
+    $scope.socket.on('connect', function (user) {
+        $scope.user = user;
+    });
+
     $scope.socket.on('init', function (data) {
         console.log('SOCKET: init', data);
         $scope.room = data.room;
-        $scope.user = data.user;
         $scope.canvas.setWidth(data.room.canvas.width);
         $scope.canvas.setHeight(data.room.canvas.height);
         $scope.canvas.setBackgroundColor(data.room.canvas.backgroundColor);

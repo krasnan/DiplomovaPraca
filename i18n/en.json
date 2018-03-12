@@ -55,6 +55,7 @@
 	"canvas" : "Canvas",
 
 	"options" : "Options",
+	"zoom": "Zoom",
 	"x-coords" : "X coords",
 	"y-coords" : "Y coords",
 	"height" : "Height",

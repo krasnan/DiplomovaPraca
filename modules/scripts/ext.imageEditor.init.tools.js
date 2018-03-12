@@ -110,6 +110,7 @@ function initTools($scope, $http, $timeout) {
         var sel = new fabric.ActiveSelection($scope.getSelectableObjects(), {
             canvas: $scope.canvas
         });
+        if(sel.getObjects().length === 0 ) return;
         $scope.canvas.setActiveObject(sel);
         $scope.canvas.requestRenderAll();
     };

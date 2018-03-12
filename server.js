@@ -15,7 +15,7 @@ io.on('connection', function (socket) {
 
     socket.join(room.name);
 
-    // socket.emit('init', {room: room, user: user});
+    // socket.emit('connection-created', {room: room, user: user});
     room.createUser(user, socket);
 
     socket.on('message-created', function (message) {
@@ -106,7 +106,11 @@ function Room(name) {
                 }
             },
             function (error, response, body) {
-                if (error) console.log("Unable to connect to: " + ENDPOINT);
+                if (error){
+                    console.log("Unable to connect to: " + ENDPOINT);
+                    console.log(error);
+                    return;
+                }
                 body = JSON.parse(body);
                 var pageId = Object.keys(body.query.pages)[0];
                 if (pageId >= 0) {
@@ -117,11 +121,13 @@ function Room(name) {
                     var jsonLoaded = false;
 
                     for (var i in imageinfo.metadata) {
-                        // console.log(meta);
-
                         if (imageinfo.metadata[i].name === 'imageEditorContent') {
                             var content = JSON.parse(imageinfo.metadata[i].value);
-                            self.objects = content.objects;
+
+                            content.objects.forEach(function (obj) {
+                                self.objects[obj.id] = obj;
+                            });
+
                             if (content.background !== undefined)
                                 self.canvas.backgroundColor = content.background;
 
@@ -136,8 +142,7 @@ function Room(name) {
                 }
                 self.loaded = true;
                 io.in(self.name).emit('init', {
-                    room: self,
-                    users: user
+                    room: self
                 });
             }
         );
@@ -149,10 +154,11 @@ function Room(name) {
         this.createMessage('User ' + user.name + ' connected', 'SYSTEM', '*', 'system');
         io.in(this.name).emit('user-created', this.users[user.id]);
 
+        socket.emit('connected', user);
+
         if (this.loaded) {
             socket.emit('init', {
                 room: this,
-                users: user
             });
         }
     };
@@ -258,6 +264,8 @@ function Room(name) {
         }
     };
     this.setSelectable = function (id, selectable, user, socket) {
+        // console.log('selection-changed: ', id, selectable, user);
+        // console.log(this.objects);
         var result = false;
         if (selectable)
             result = this.deselectObject(id, user);
@@ -276,6 +284,7 @@ function Room(name) {
     this.deselectAll = function () {
         for (var id in this.objects) {
             this.objects[id].selectable = true;
+            this.objects[id].selectedBy = undefined;
         }
     }
 }

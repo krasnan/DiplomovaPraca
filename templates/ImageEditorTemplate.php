@@ -157,6 +157,12 @@ class ImageEditorTemplate extends QuickTemplate {
                         <div class="ie__options__header"><?= $this->msg('options') ?> <a class="ie__options__toggle" ng-click="panels.properties.opened = !panels.properties.opened"><i class="icon-circle-up"></i></a></div>
                         <div class="ie__options__body">
                             <!-- canvas properties-->
+                            <div>
+<!--                                <div class="ie__tile__24">-->
+<!--                                    <label>--><?//= $this->msg('zoom') ?><!-- {[zoom*100]}%</label>-->
+<!--                                    <input title="" type="range" ng-init="zoom = 1" ng-model="zoom" ng-change="setZoom()" min="0.01" max="3" step="0.01">-->
+<!--                                </div>-->
+                            </div>
                             <div class="ie__options__canvas" ng-show="canvas.getActiveObject() == undefined">
                                 <div class="ie__options__title"><?= $this->msg('canvas') ?> </div>
                                 <div class="ie__tile__22">
