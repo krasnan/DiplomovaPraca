@@ -76,8 +76,8 @@
     height: calc(~"100vh - 250px");
     overflow: auto;
     &__container {
-      width: 100%;
-      padding: 30rem;
+      width: fit-content;
+      padding: 2000px;
       box-sizing: content-box !important;
       #ie__canvas {
         background-image: url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wgARCAAUABQDAREAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAABQcEBgn/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAADZgZYZAxWSGMsWgGP/xAAnEAAAAgYLAQAAAAAAAAAAAAABAgADBAUGEAcSExchNlWDo7PSQf/aAAgBAQABPwBKPsoMm52Gld/COk86z0j+iB7ws91zhcLZYMqirZKrMpqtYoGHEwCI4iP1LwIu1fgV+ZR/m5s2+ssv/8QAFBEBAAAAAAAAAAAAAAAAAAAAMP/aAAgBAgEBPwAf/8QAFBEBAAAAAAAAAAAAAAAAAAAAMP/aAAgBAwEBPwAf/9k=);
@@ -229,10 +229,19 @@
         background: darken(@white, 6%);
       }
       label {
-        padding: @offset @offset-sm 0 @offset-sm;
+        position: absolute;
+        top: @offset-xs;
+        left: @offset-xs;
+        //padding: @offset @offset-sm 0 @offset-sm;
         font-size: 10px;
         color: @grey;
-
+        input{
+          width: 40%;
+          float: unset;
+          position: unset;
+          .fs(10);
+          height: 15px;
+        }
       }
       input[type="range" ] {
         &:extend(.input-range all);
@@ -254,9 +263,14 @@
         }
       }
       .ie__colorpicker {
-        display: block;
-        width: 100%;
-        height: 40%;
+        position: absolute;
+        top: 50%;
+        left: @offset-xs;
+        right: @offset-xs;
+        bottom: @offset-xs;
+        z-index: @offset-xs;
+        border-radius: @radius;
+        border: 1px solid @grey;
         cursor: pointer;
       }
     }

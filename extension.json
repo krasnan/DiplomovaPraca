@@ -25,7 +25,7 @@
 	},
 	"Hooks": {
 		"FileUpload": "ImageEditorHooks::onFileUpload",
-		"ImagePageShowTOC": "ImageEditorHooks::onImagePageShowTOC"
+		"SkinTemplateNavigation": "ImageEditorHooks::onSkinTemplateNavigation"
 	},
 	"MessagesDirs": {
 		"ImageEditor": [
@@ -69,12 +69,29 @@
 			"styles": [
 				"styles/ext.imageEditor.less"
 			],
-			"messages": [],
+			"messages": [
+				"success",
+				"warning",
+				"error",
+				"cancel",
+				"close",
+				"ok",
+				"yes",
+				"no",
+				"close-editor-header",
+				"close-editor-description",
+				"save-and-close",
+				"insert-your-text...",
+				"file-saved-successfully",
+				"file-save-error",
+				"file-save-warning"
+			],
 			"dependencies": [
 				"angular",
 				"angular-bootstrap-colorpicker",
 				"socket.io-client",
-				"fabric"
+				"fabric",
+				"mediawiki.jqueryMsg"
 			]
 		}
 	},

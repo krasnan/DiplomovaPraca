@@ -112,8 +112,8 @@ class ImageEditorTemplate extends QuickTemplate {
                         <a title="<?= $this->msg('textbox-tool') ?>" ng-class="activeTool == tools.text ? 'active' : '' " ng-click="setActiveTool(tools.text)" class="btn"><bib><b>T</b></bib></a>
                         <a title="<?= $this->msg('snap-to-grid') ?>" ng-class="snapToGrid ? 'active' : '' " ng-click="snapToGrid = !snapToGrid" class="btn"><big>▦</big></a>
                         <div class="ie__container__picker btn">
-                            <div title="<?= $this->msg('background-color') ?>" colorpicker="rgba" colorpicker-position="right" colorpicker-with-input="true" ng-model="fillColor" ng-change="setFillColor(fillColor)" class="ie__container__picker__background" style="background:{[getFillColor()]}"></div>
-                            <div title="<?= $this->msg('stroke-color') ?>" colorpicker="rgba" colorpicker-position="right" colorpicker-with-input="true" ng-model="strokeColor" ng-change="setStrokeColor(strokeColor)" class="ie__container__picker__stroke" style="background:{[getStrokeColor();]}">
+                            <div title="<?= $this->msg('background-color') ?>" colorpicker="rgba" colorpicker-position="right" colorpicker-with-input="true" ng-model="fillColor" ng-change="setFillColor(fillColor)" class="ie__container__picker__background" style="background-color:{[getFillColor()]}"></div>
+                            <div title="<?= $this->msg('stroke-color') ?>" colorpicker="rgba" colorpicker-position="right" colorpicker-with-input="true" ng-model="strokeColor" ng-change="setStrokeColor(strokeColor)" class="ie__container__picker__stroke" style="background-color:{[getStrokeColor();]}">
                                 <div class="ie__container__picker__stroke__inner"></div>
                             </div>
                         </div>
@@ -158,25 +158,25 @@ class ImageEditorTemplate extends QuickTemplate {
                         <div class="ie__options__body">
                             <!-- canvas properties-->
                             <div>
-<!--                                <div class="ie__tile__24">-->
-<!--                                    <label>--><?//= $this->msg('zoom') ?><!-- {[zoom*100]}%</label>-->
-<!--                                    <input title="" type="range" ng-init="zoom = 1" ng-model="zoom" ng-change="setZoom()" min="0.01" max="3" step="0.01">-->
-<!--                                </div>-->
+                                <div class="ie__tile__24">
+                                    <label><?= $this->msg('zoom') ?> <input type="number" ng-model="canvasZoom" ng-change="updateCanvasZoom()" min="1" max="300" step="0.1">%</label>
+                                    <input title="" type="range" ng-model="canvasZoom" ng-change="updateCanvasZoom()" min="1" max="300" step="0.1">
+                                </div>
                             </div>
                             <div class="ie__options__canvas" ng-show="canvas.getActiveObject() == undefined">
                                 <div class="ie__options__title"><?= $this->msg('canvas') ?> </div>
                                 <div class="ie__tile__22">
                                     <label><?= $this->msg('width') ?></label>
-                                    <input title="" type="number" bind-value-to="canvasWidth">
+                                    <input title="" type="number" ng-model="canvasWidth" ng-change="updateCanvasWidth()">
                                 </div>
                                 <div class="ie__tile__22">
                                     <label><?= $this->msg('height') ?></label>
-                                    <input title="" type="number" bind-value-to="canvasHeight">
+                                    <input title="" type="number" ng-model="canvasHeight" ng-change="updateCanvasHeight()">
                                 </div>
 
                                 <div class="ie__tile__22">
                                     <label><?= $this->msg('background-color') ?></label>
-                                    <div title="" colorpicker="rgba" colorpicker-position="left" colorpicker-with-input="true" ng-model="canvasBgColor" ng-change="setCanvasBgColor(canvasBgColor)" class="ie__colorpicker" style="background:{[getCanvasBgColor()]}"></div>
+                                    <div title="" colorpicker="rgba" colorpicker-position="left" colorpicker-with-input="true" ng-model="canvasBgColor" ng-change="setCanvasBgColor(canvasBgColor)" class="ie__colorpicker" style="background-color:{[getCanvasBgColor()]}"></div>
 
                                     <!--                            <input type="color" bind-value-to="canvasBgColor">-->
                                 </div>
@@ -349,7 +349,7 @@ class ImageEditorTemplate extends QuickTemplate {
                                 </div>
                                 <div class="ie__tile__22">
                                     <label><?= $this->msg('color') ?></label>
-                                    <div title="" colorpicker="rgba" colorpicker-position="left" colorpicker-with-input="true" ng-model="canvas.freeDrawingBrush.shadow.color" class="ie__colorpicker" style="background:{[canvas.freeDrawingBrush.shadow.color]}"></div>
+                                    <div title="" colorpicker="rgba" colorpicker-position="left" colorpicker-with-input="true" ng-model="canvas.freeDrawingBrush.shadow.color" class="ie__colorpicker" style="background-color:{[canvas.freeDrawingBrush.shadow.color]}"></div>
 
                                     <!--                            <input type="color" bind-value-to="canvasBgColor">-->
                                 </div>

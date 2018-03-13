@@ -3,7 +3,9 @@
 		"authors": []
 	},
 	"image-editor-desc": "Vector Graphics image editor.",
-	"open-in-image-editor" : "Open in Image Editor",
+	"open-image-editor" : "Open Image Editor",
+	"image-editor" : "Image Editor",
+	"edit-image" : "Edit Image",
 
 	"file" : "File",
 	"export-as" : "Export as ",
@@ -88,5 +90,20 @@
 	"upload-image" : "Upload Image",
 	"insert" : "Insert",
 
-	"loading" : "LOADING"
+	"loading" : "LOADING",
+
+	"close-editor-header" : "Close Image Editor?",
+	"close-editor-description" : "Do you want to close Image Editor? If you want to save your settings, click to Save and Close.",
+	"save-and-close" : "Save and Close",
+	"success" : "Success",
+	"error" : "Error",
+	"warning" : "Warning",
+	"cancel" : "Cancel",
+	"ok" : "Ok",
+	"yes" : "Yes",
+	"no" : "No",
+	"insert-your-text..." : "Insert your text...",
+	"file-saved-successfully" : "File was saved successfully.",
+	"file-save-error" : "File was not saved.",
+	"file-save-warning" : "File was saved with warnings."
 }

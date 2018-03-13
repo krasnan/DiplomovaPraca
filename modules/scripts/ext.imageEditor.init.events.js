@@ -8,8 +8,9 @@ function initEvents($scope) {
     $scope.socket.on('init', function (data) {
         console.log('SOCKET: init', data);
         $scope.room = data.room;
-        $scope.canvas.setWidth(data.room.canvas.width);
-        $scope.canvas.setHeight(data.room.canvas.height);
+        $scope.canvasWidth = data.room.canvas.width;
+        $scope.canvasHeight = data.room.canvas.height;
+        $scope.updateCanvasZoom();
         $scope.canvas.setBackgroundColor(data.room.canvas.backgroundColor);
         // $scope.canvas.setHeight(data.canvas.height);
         if (!$scope.room.loaded) {
@@ -99,8 +100,9 @@ function initEvents($scope) {
 
     $scope.socket.on('canvas-modified', function (properties) {
         console.log('SOCKET: canvas-modified');
-        $scope.canvas.setHeight(parseInt(properties.height, 10));
-        $scope.canvas.setWidth(parseInt(properties.width, 10));
+        $scope.canvasWidth = parseInt(properties.width, 10);
+        $scope.canvasHeight = parseInt(properties.height, 10);
+        $scope.updateCanvasZoom();
         $scope.canvas.backgroundColor = properties.backgroundColor;
         $scope.canvas.renderAll();
     });
@@ -167,8 +169,8 @@ function initEvents($scope) {
 
     $scope.canvas.on('canvas:modified', function (event) {
         $scope.socket.emit('canvas-modified', {
-            width: $scope.canvas.width,
-            height: $scope.canvas.height,
+            width:  $scope.getCanvasWidth(),
+            height:  $scope.getCanvasHeight(),
             backgroundColor: $scope.canvas.backgroundColor
         })
     });

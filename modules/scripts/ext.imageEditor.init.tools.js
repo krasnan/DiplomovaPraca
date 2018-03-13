@@ -34,12 +34,19 @@ function initTools($scope, $http, $timeout) {
     $scope.message = "";
     $scope.grid = 5;
     $scope.snapToGrid = false;
+    $scope.canvasZoom = 50;
 
     $scope.saveRevision = function () {
         //TODO ukladat vo formate podla urlky
+        $scope.room.loaded = false;
         var token = $scope.mw.user.tokens.get('editToken');
+        var dataUrl;
+        if($scope.room.format === "svg+xml")
+            dataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent($scope.canvas.toSVG());
+        else
+            dataUrl = $scope.canvas.toDataURL({format:$scope.room.format, multiplier:100/$scope.canvasZoom});
 
-        var file = dataURItoBlob($scope.canvas.toDataURL({format:"png"}));
+        var file = dataURItoBlob(dataUrl);
 
         formData = new FormData();
         formData.append("action", "upload");
@@ -58,10 +65,33 @@ function initTools($scope, $http, $timeout) {
             headers: {'Content-Type': undefined}
         }).then(
             function (value) {
-                console.log(value)
+                console.log(value);
+                if(value.data.error !== undefined){
+                    $scope.panels.modal = {
+                        opened: true,
+                        header: $scope.mw.msg("error"),
+                        text: $scope.mw.msg("file-save-error") + " " + value.data.error.info,
+                        successText: $scope.mw.msg("ok")
+                    }
+                }
+                else{
+                    $scope.panels.modal = {
+                        opened: true,
+                        header: $scope.mw.msg("success"),
+                        text: $scope.mw.msg("file-saved-successfully"),
+                        successText: $scope.mw.msg("ok")
+                    }
+                }
+                $scope.room.loaded = true;
             },
             function (reason) {
-                console.log(reason);
+                $scope.panels.modal = {
+                    opened: true,
+                    header: $scope.mw.msg("error"),
+                    text: $scope.mw.msg("file-save-error"),
+                    successText: $scope.mw.msg("ok")
+                };
+                $scope.room.loaded = true;
             }
         );
     };
@@ -82,19 +112,21 @@ function initTools($scope, $http, $timeout) {
     $scope.closeEditor = function (e) {
         $scope.panels.modal = {
             opened: true,
-            header: "Close Image Editor?",
-            text: "Do you want to close Image Editor? If you want to save your settings, click to Save and Close.",
-            successText: "Save and Close",
-            optionalText: "Close",
-            cancelText: "No",
+            header: $scope.mw.msg("close-editor-header"),
+            text: $scope.mw.msg("close-editor-description"),
+            successText: $scope.mw.msg("save-and-close"),
+            optionalText: $scope.mw.msg("cancel"),
+            cancelText: $scope.mw.msg("close"),
             success: function () {
+                $scope.room.loaded = false;
                 $scope.saveRevision();
                 window.location = $scope.mw.util.wikiScript() + '?title=' + $scope.filename;
             },
             optional: function () {
-                window.location = $scope.mw.util.wikiScript() + '?title=' + $scope.filename;
             },
             cancel: function () {
+                $scope.room.loaded = false;
+                window.location = $scope.mw.util.wikiScript() + '?title=' + $scope.filename;
             }
         };
     };
@@ -204,8 +236,9 @@ function initTools($scope, $http, $timeout) {
         }
         else {
             var elem = angular.element(e.currentTarget)[0];
-            elem.href = $scope.canvas.toDataURL();
+            elem.href = $scope.canvas.toDataURL({format:"png", multiplier:100/$scope.canvasZoom});
             elem.download = filename;
+
         }
     };
 
@@ -314,7 +347,7 @@ function initTools($scope, $http, $timeout) {
                 break;
 
             case $scope.tools.text:
-                obj = new fabric.Textbox('Insert your text...', {
+                obj = new fabric.Textbox($scope.mw.msg('insert-your-text...'), {
                     id: uniqueId(),
                     strokeWidth: 0,
                     left: origX,

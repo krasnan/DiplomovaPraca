@@ -86,6 +86,7 @@ function Room(name) {
     this.messages = [];
     this.objects = {};
     this.canvas = {width: 1280, height: 720};
+    this.format = "png";
     this.loaded = false;
     this.loadFromUrl = false;
 
@@ -112,11 +113,13 @@ function Room(name) {
                     return;
                 }
                 body = JSON.parse(body);
+
                 var pageId = Object.keys(body.query.pages)[0];
                 if (pageId >= 0) {
                     var imageinfo = body.query.pages[pageId].imageinfo[0];
                     self.canvas.width = imageinfo.width;
                     self.canvas.height = imageinfo.height;
+                    self.format = imageinfo.mime.split('/')[1];
 
                     var jsonLoaded = false;
 

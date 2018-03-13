@@ -42,19 +42,33 @@ function initAccessors($scope) {
 
     // -------------------- canvas ---------------------
     $scope.getCanvasHeight = function () {
-        return $scope.canvas.height;
+        return $scope.canvasHeight
     };
-    $scope.setCanvasHeight = function (value) {
-        $scope.canvas.setHeight(parseInt(value, 10));
+    $scope.updateCanvasHeight = function () {
+        $scope.canvas.setHeight($scope.canvasHeight * $scope.canvas.getZoom());
         $scope.canvas.trigger('canvas:modified', {target: $scope.canvas});
     };
+
     $scope.getCanvasWidth = function () {
-        return $scope.canvas.width;
+        return $scope.canvasWidth;
     };
-    $scope.setCanvasWidth = function (value) {
-        $scope.canvas.setWidth(parseInt(value, 10));
+    $scope.updateCanvasWidth = function () {
+        $scope.canvas.setWidth($scope.canvasWidth * $scope.canvas.getZoom());
         $scope.canvas.trigger('canvas:modified', {target: $scope.canvas});
     };
+
+    $scope.updateCanvasZoom = function () {
+        $scope.canvas.setZoom($scope.canvasZoom/100);
+        $scope.updateCanvasDimensions();
+    };
+    $scope.updateCanvasDimensions = function(){
+        $scope.canvas.setDimensions({
+            width: $scope.canvasWidth * $scope.canvas.getZoom(),
+            height: $scope.canvasHeight * $scope.canvas.getZoom()
+        })
+    };
+    
+    
     $scope.getCanvasBgColor = function () {
         return $scope.canvas.backgroundColor;
     };
@@ -66,27 +80,27 @@ function initAccessors($scope) {
 
     // -------------------- object ---------------------
     $scope.getHeight = function () {
-        return $scope.getActiveStyle('height') * $scope.getActiveStyle('scaleY');
+        return $scope.getActiveStyle('height') * $scope.getActiveStyle('scaleY')+0;
     };
     $scope.setHeight = function (value) {
         $scope.setActiveStyle('scaleY', parseInt(value, 10) / $scope.getActiveStyle('height'));
     };
 
     $scope.getAngle = function () {
-        return ($scope.getActiveStyle('angle') === 0) ? "0" : $scope.getActiveStyle('angle');
+        return ($scope.getActiveStyle('angle') === 0) ? "0" : $scope.getActiveStyle('angle')+0;
     };
     $scope.setAngle = function (value) {
         $scope.setActiveProp('angle', parseInt(value, 10))
     };
 
     $scope.getWidth = function () {
-        return $scope.getActiveStyle('width') * $scope.getActiveStyle('scaleX');
+        return $scope.getActiveStyle('width') * $scope.getActiveStyle('scaleX')+0;
     };
     $scope.setWidth = function (value) {
         $scope.setActiveStyle('scaleX', parseInt(value, 10) / $scope.getActiveStyle('width'));
     };
     $scope.getTop = function () {
-        return $scope.getActiveStyle('top');
+        return $scope.getActiveStyle('top')+0;
     };
     $scope.setTop = function (value) {
         $scope.setActiveStyle('top', parseInt(value, 10));
@@ -119,7 +133,7 @@ function initAccessors($scope) {
     };
 
     $scope.getStrokeWidth = function () {
-        return $scope.getActiveStyle('strokeWidth');
+        return $scope.getActiveStyle('strokeWidth')+0;
     };
     $scope.setStrokeWidth = function (value) {
         $scope.setActiveStyle('strokeWidth', parseInt(value, 10));
