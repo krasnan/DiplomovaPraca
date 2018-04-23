@@ -18,66 +18,18 @@
 \usepackage{tabularx}
 \usepackage{textcomp}
 \usepackage{caption}
-\usepackage{subcaption}
 \usepackage{natbib}
+\usepackage{nomencl}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{placeins}
 \usepackage[avantgarde]{quotchap}
 
-%obrazok
-\newcommand{\obrazok}[1]{(Obr.  \ref{#1})}
-\newcommand{\tabulka}[1]{(Tabuľka  \ref{#1})}
-
-\usepackage{listings}
-\usepackage{color}
-\definecolor{lightgray}{gray}{0.9}
-
-\lstset{
-    showstringspaces=false,
-    basicstyle=\ttfamily,
-    keywordstyle=\color{blue},
-    commentstyle=\color[grey]{0.6},
-    stringstyle=\color[RGB]{0,150,0},
-    literate=%
-    {á}{{\'a}}1
-    {ä}{{\"a}}1
-    {č}{{\v{c}}}1
-    {ď}{{\v{d}}}1
-    {é}{{\'e}}1
-    {ě}{{\v{e}}}1
-    {í}{{\'i}}1
-    {ľ}{{\v{l}}}1
-    {ĺ}{{\'{l}}}1
-    {ň}{{\v{n}}}1
-    {ó}{{\'o}}1
-    {ř}{{\v{r}}}1
-    {š}{{\v{s}}}1
-    {ť}{{\v{t}}}1
-    {ú}{{\'u}}1
-    {ů}{{\r{u}}}1
-    {ý}{{\'y}}1
-    {ž}{{\v{z}}}1
-    {Á}{{\'A}}1
-    {Ä}{{\"A}}1
-    {Č}{{\v{C}}}1
-    {Ď}{{\v{D}}}1
-    {É}{{\'E}}1
-    {Ě}{{\v{E}}}1
-    {Í}{{\'I}}1
-    {Ľ}{{\v{L}}}1
-    {Ĺ}{{\'{L}}}1
-    {Ň}{{\v{N}}}1
-    {Ó}{{\'O}}1
-    {Ř}{{\v{R}}}1
-    {Š}{{\v{S}}}1
-    {Ť}{{\v{T}}}1
-    {Ú}{{\'U}}1
-    {Ů}{{\r{U}}}1
-    {Ý}{{\'Y}}1
-    {Ž}{{\v{Z}}}1
-}
-\newcommand{\inlinecode}[2]{\colorbox{lightgray}{\lstinline[language=#1]$#2$}}
-\newcommand{\inlinecodebase}[1]{\colorbox{lightgray}{\texttt{#1}}}
 \setstretch{1.5}
 %\renewcommand\baselinestretch{1.5} % riadkovanie jeden a pol
+
+\input 00listings.tex
+
 
 % pekne pokope definujeme potrebne udaje
 \newcommand\mftitle{Klaboratívny grafický editor pre MediaWiki}
@@ -85,6 +37,7 @@
 \newcommand\mfthesistype{Diplomová práca}
 \newcommand\enmfthesistype{Master thesis}
 \newcommand\mfauthor{Bc. Martin Krasňan}
+\newcommand\mfconsultant{Mgr. Ján Kľuka, PhD.}
 \newcommand\mfadvisor{doc. RNDr. Zuzana Kubincová, PhD.}
 \newcommand\mfplacedate{Bratislava, 2018}
 \newcommand\mfuniversity{UNIVERZITA KOMENSKÉHO V BRATISLAVE}
@@ -92,8 +45,16 @@
 \newcommand\mfpracovisko{Katedra aplikovanej informatiky}
 \newcommand\enmfpracovisko{Department of Applied Informatics}
 
+
 \newcommand{\sub}[1]{$_{\text{#1}}$}
-\newcommand{\reference}[1]{č.~\ref{#1}}
+%referencie
+\newcommand{\refimg}[1]{(Obrázok  \ref{#1})}
+\newcommand{\reftab}[1]{(Tabuľka  \ref{#1})}
+\newcommand{\reflst}[1]{(Zdrojový kód  \ref{#1})}
+
+\newcommand{\p}[1]{\paragraph{#1}\mbox{}\\}
+
+
 \newcommand{\imageHeight}{150px}
 
 \ifx\pdfoutput\undefined\relax\else\pdfinfo{ /Title (\mftitle) /Author (\mfauthor) /Creator (PDFLaTeX) } \fi
@@ -101,6 +62,8 @@
 \begin{document}
 
 \frontmatter
+\setcounter{page}{3}
+\setcounter{secnumdepth}{2}
 
 \thispagestyle{empty}
 
@@ -115,7 +78,7 @@
 \vfill
 \begin{figure}[!hbt]
 	\begin{center}
-		\includegraphics{images/logo_fmph}
+		\includegraphics{images/base/logo_fmph}
 		\label{img:logo}
 	\end{center}
 \end{figure}
@@ -137,15 +100,14 @@
 \noindent
 \begin{minipage}{\textwidth}
 \begin{center}
-\textbf{\mfuniversity \\
-\mffaculty}
+\textbf{\mfuniversity \\\mffaculty}
 \end{center}
 \end{minipage}
 
 \vfill
 \begin{figure}[!hbt]
 \begin{center}
-\includegraphics{images/logo_fmph_dark}
+\includegraphics{images/base/logo_fmph_dark}
 \label{img:logo_dark}
 \end{center}
 \end{figure}
@@ -162,7 +124,8 @@
 Študijný program: & Aplikovaná informatika\\
 Študijný odbor: & 2511 Aplikovaná informatika\\
 Školiace pracovisko: & Katedra aplikovanej informatiky\\
-Školiteľ: & \mfadvisor
+Školiteľ: & \mfadvisor\\
+Konzultant: & \mfconsultant
 \end{tabular}
 \vfill
 \noindent
@@ -172,7 +135,7 @@
 % koniec titulneho listu
 
 %\thispagestyle{empty}
-%\includegraphics[width=\textwidth]{images/zadanie}
+%\includegraphics[width=\textwidth]{images/base/zadanie}
 %\vfill
 %\eject
 % koniec zadania
@@ -182,7 +145,7 @@
 
 \begin{figure}[H]
 \begin{center}
-\makebox[\textwidth]{\includegraphics[width=\paperwidth]{images/zadaniedp}}
+\makebox[\textwidth]{\includegraphics[width=\paperwidth]{images/base/zadaniedp}}
 \label{img:zadanie}
 \end{center}
 \end{figure}
@@ -225,11 +188,13 @@ Keywords: keywords, en, ...
 \vfill\eject 
 % koniec abstraktov
 
-\tableofcontents
+
+
+% treba este prejst dokument ci je kod spravne formatovany
+\input 00base.tex
 
 \mainmatter
 
-% treba este prejst dokument ci je kod spravne formatovany
 \input 01intro.tex
 \input 02motivation.tex
 \input 03issues_overview.tex
@@ -244,7 +209,5 @@ Keywords: keywords, en, ...
 \nocite{*}
 \bibliographystyle{alpha}
 \bibliography{references}
-
-\listoffigures
 
 \end{document}

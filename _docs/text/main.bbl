@@ -1,6 +1,11 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
 \begin{thebibliography}{KAW{\etalchar{+}}14}
 
+\bibitem[CGM{\etalchar{+}}14]{cabanier2014html}
+Rik Cabanier, Eliot Graff, Jay Munro, Tom Wiltzius, and I~Hickson.
+\newblock Html canvas 2d context.
+\newblock {\em W3C Candidate Recommendation (work in progress)}, 21, 2014.
+
 \bibitem[CS16]{7550838}
 W.~Chansuwath and T.~Senivongse.
 \newblock A model-driven development of web applications using angularjs
@@ -18,6 +23,12 @@ Inc. Google.
 \newblock Angularjs api docs [online], Máj 2017.
 \newblock \\\url{https://docs.angularjs.org/api}.
 
+\bibitem[JBM15]{jain2015angularjs}
+Nilesh Jain, Ashok Bhansali, and Deepak Mehta.
+\newblock Angularjs: A modern mvc framework in javascript.
+\newblock {\em International Journal of Global Research in Computer Science
+  (UGC Approved Journal)}, 5(12):17--23, 2015.
+
 \bibitem[KAW{\etalchar{+}}14]{7011937}
 M.~Kuhara, N.~Amano, K.~Watanabe, Y.~Nogami, and M.~Fukushi.
 \newblock A peer-to-peer communication function among web browsers for
@@ -32,12 +43,30 @@ S.~Kode, K.~Nagaraju, L.~Gollapudi, and S.~K. Reddy.
 \newblock In {\em 2013 IEEE Fifth International Conference on Technology for
   Education (t4e 2013)}, pages 204--205, Dec 2013.
 
-\bibitem[Med17a]{MediaWikiExtension}
+\bibitem[KVV06]{krotzsch2006semantic}
+Markus Kr{\"o}tzsch, Denny Vrande{\v{c}}i{\'c}, and Max V{\"o}lkel.
+\newblock Semantic mediawiki.
+\newblock In {\em International semantic web conference}, pages 935--942.
+  Springer, 2006.
+
+\bibitem[LCL04]{doi:10.1177/0021943603259363}
+Paul~Benjamin Lowry, Aaron Curtis, and Michelle~René Lowry.
+\newblock Building a taxonomy and nomenclature of collaborative writing to
+  improve interdisciplinary research and practice.
+\newblock {\em The Journal of Business Communication (1973)}, 41(1):66--99,
+  2004.
+
+\bibitem[Med17a]{MediaWikiConventions}
+MediaWiki.org.
+\newblock Manual:coding conventions - mediawiki [online], Máj 2017.
+\newblock \\\url{https://www.mediawiki.org/wiki/Manual:Coding_conventions}.
+
+\bibitem[Med17b]{MediaWikiExtension}
 MediaWiki.org.
 \newblock Manual:developing extensions [online], Máj 2017.
 \newblock \\\url{https://www.mediawiki.org/wiki/Manual:Developing_extensions}.
 
-\bibitem[Med17b]{MediaWikiDoc}
+\bibitem[Med17c]{MediaWikiDoc}
 MediaWiki.org.
 \newblock Mediawiki docs [online], Máj 2017.
 \newblock \\\url{https://doc.wikimedia.org/mediawiki-core/master/php/}.
@@ -47,10 +76,20 @@ Peerjs.com.
 \newblock Peerjs documentation [online], Máj 2017.
 \newblock \\\url{http://peerjs.com/docs/#api}.
 
+\bibitem[Rai13]{rai2013socket}
+Rohit Rai.
+\newblock {\em Socket. IO Real-time Web Application Development}.
+\newblock Packt Publishing Ltd, 2013.
+
 \bibitem[tea17]{FabricApiDoc}
 Fabric.js team.
 \newblock Fabricjs doc [online], Máj 2017.
 \newblock \\\url{http://fabricjs.com/docs}.
+
+\bibitem[TV10]{doi:10.1109/MIC.2010.145}
+S.~Tilkov and S.~Vinoski.
+\newblock Node.js: Using javascript to build high-performance network programs.
+\newblock {\em IEEE Internet Computing}, 14:80--83, 11 2010.
 
 \bibitem[VSB16]{7474178}
 S.~Vashishth, Y.~Sinha, and K.~H. Babu.
