@@ -56,17 +56,22 @@ Paul~Benjamin Lowry, Aaron Curtis, and Michelle~René Lowry.
 \newblock {\em The Journal of Business Communication (1973)}, 41(1):66--99,
   2004.
 
-\bibitem[Med17a]{MediaWikiConventions}
+\bibitem[Med17a]{MediaWikiHelpFormating}
+MediaWiki.org.
+\newblock Help:formatting mediawiki - mediawiki [online], Máj 2017.
+\newblock \\\url{https://www.mediawiki.org/wiki/Help:Formatting}.
+
+\bibitem[Med17b]{MediaWikiConventions}
 MediaWiki.org.
 \newblock Manual:coding conventions - mediawiki [online], Máj 2017.
 \newblock \\\url{https://www.mediawiki.org/wiki/Manual:Coding_conventions}.
 
-\bibitem[Med17b]{MediaWikiExtension}
+\bibitem[Med17c]{MediaWikiExtension}
 MediaWiki.org.
-\newblock Manual:developing extensions [online], Máj 2017.
+\newblock Manual:developing extensions - mediawiki [online], Máj 2017.
 \newblock \\\url{https://www.mediawiki.org/wiki/Manual:Developing_extensions}.
 
-\bibitem[Med17c]{MediaWikiDoc}
+\bibitem[Med17d]{MediaWikiDoc}
 MediaWiki.org.
 \newblock Mediawiki docs [online], Máj 2017.
 \newblock \\\url{https://doc.wikimedia.org/mediawiki-core/master/php/}.
