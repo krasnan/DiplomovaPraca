@@ -99,7 +99,7 @@ NodeJS obsahuje sadu API umožňujúcu vykonávanie serverových operácií do k
 	\item bezproblémová integrácia do existujúcich aplikácií 
 	\item možnosť pracovať s Angular-om priamo v HTML dokumente bez nutnosti spúšťania webservera alebo kompilovania
 	\item jednoduchá rozšíriteľnosť pomocou direktív, ktoré určujú ako sa majú jednotlivé elementy vykresľovať v internetovom prehliadači a akú funkcionalitu majú poskytovať
-\end{itemize}}
+\end{itemize}
 
 Dynamickosť aplikácií naprogramovaných pomocou knižnice AngularJS zabezpečuje taktiež mapovanie (angl.: dat-binding) dát na jednotlivé elementy HTML šablóny. To znamená, že pri zmene hodnôt modelu, sa tieto zmeny automaticky odzrkadľujú vo výstupnom vzhľade šablóny aplikácie. Okrem toho je tento proces obojsmerný, takže je možné zmenou hodnôt v šablóne aplikácie taktiež ovplyvňovať samotný model. \textit{AngularJS} sa tým pádom stará o synchronizáciu modelu a šablóny bez potreby programovania setter alebo getter funkcií.
 
@@ -118,7 +118,7 @@ Táto knižnica začleňuje základné princípy programovania pomocou návrhov�
 
 V jazyku HTML existuje element \code{canvas}, do ktorého je možné dynamicky vykresľovať grafické objekty vo webovej aplikácií pomocou jazyka JavaScript. Funkcionalita vstavaného API je žiaľ veľmi obmedzená \cite{cabanier2014html}. Pokiaľ máme záujem o vykreslenie jednoduchých tvarov a následne s nimi nepotrebujeme nič viac robiť, tak funkcionalita API bude postačovať. Avšak, akonáhle je potrebná ďalšia interakcia s vykresleným objektom, prípadne vykreslenie zložitejšieho objektu, nastáva tu problém.
 
-\textit{FabricJS} je nadstavba nad toto natívne API, poskytujúce jednoduchý avšak veľmi efektívny a výkonný model objektu. Stará sa o udržiavanie stavu \code{canvas}-u, prekresľovanie grafickej plochy a dovoľuje nám pracovať s objektami priamo.
+\textit{Fabric} je nadstavba nad toto natívne API, poskytujúce jednoduchý avšak veľmi efektívny a výkonný model objektu. Stará sa o udržiavanie stavu \code{canvas}-u, prekresľovanie grafickej plochy a dovoľuje nám pracovať s objektami priamo.
 
 \subsubsection{Objekty}
 
@@ -155,7 +155,7 @@ rect.set({ width: 10, height: 20, fill: '#f55', opacity: 0.7 });
 
 \subsubsection{Canvas}
 
-Inicializácia Fabric knižnice pozostáva z vytvorenia \code{fabric.Canvas} objektu zaobaľujúceho grafickú plochu editora. Je zodpovedný za spravovanie všetkých fabric objektov konkrétneho canvs-u. Vstupom objektu je parameter s hodnotou \code{id} pre HTML element typu \code{<canvas>}. Výstupom je inštancia \code{fabric.Canvas} objektu. Do konštruktora však môžeme vložiť taktiež parameter typu JSON, pozostávajúci z konfiguračných nastavení pre vytváranú inštanciu \reflst{lst:fabric.init}. 
+Inicializácia Fabric knižnice pozostáva z vytvorenia \code{fabric.Canvas} objektu zaobaľujúceho grafickú plochu editora. Ten je zodpovedný za spravovanie všetkých fabric objektov konkrétneho canvs-u. Vstupom objektu je parameter s hodnotou \code{id} pre HTML element typu \code{<canvas>}. Výstupom je inštancia \code{fabric.Canvas} objektu. Do konštruktora však môžeme vložiť taktiež parameter typu JSON, pozostávajúci z konfiguračných nastavení pre vytváranú inštanciu \reflst{lst:fabric.init}. 
 \begin{lstlisting}[style=web,caption={Inicializácia Fabric canvas wrappera},captionpos=b, label={lst:fabric.init}]
 var canvas = new fabric.Canvas('c', {
 	backgroundColor: 'rgb(100,100,200)',
@@ -170,7 +170,7 @@ canvas.setBackgroundColor('rgb(100,100,200)');
 canvas.setSelectionColor('blue');
 // ...
 \end{lstlisting}
-Jednou z unikátnych vstavaných vlastností knižnice Fabric je interakčná vrstva nad grafickou plochou canvas elementu obsahujúceho objektový model. Objektový model existuje aby umožnil programový prístup a manipuláciu s objektami canvas-u. Z pohľadu používateľa je však možné manipulovať s objektami pomocou počítačovej myši, prípadne dotykov pri zariadeniach s dotykovou obrazovkou \refimg{img:fabric-object-selection}. Ihneď po inicializácií pomocou \code{new fabric.Canvas('...')}, je možné vybrať objekt, posúvať ho ťahaním, skálovať, rotovať alebo zoskupiť s viacerími objektami a manipulovať so všetkými súčasne \refimg{img:fabric-group-selection}.  
+Jednou z unikátnych vstavaných vlastností knižnice Fabric je interakčná vrstva nad grafickou plochou canvas elementu, obsahujúceho objektový model. Objektový model existuje aby umožnil programový prístup a manipuláciu s objektami canvas-u. Z pohľadu používateľa je však možné manipulovať s objektami pomocou počítačovej myši, prípadne dotykov pri zariadeniach s dotykovou obrazovkou \refimg{img:fabric-object-selection}. Ihneď po inicializácií pomocou \code{new fabric.Canvas('...')}, je možné vybrať objekt, posúvať ho ťahaním, skálovať, rotovať alebo zoskupiť viacero objektov do skupiny a manipulovať so všetkými súčasne \refimg{img:fabric-group-selection}.  
 
 \begin{figure}
 	\centering
@@ -185,13 +185,13 @@ Jednou z unikátnych vstavaných vlastností knižnice Fabric je interakčná vr
 		\caption{Manipulácia skupiny objektov}
 		\label{img:fabric-group-selection}
 	\end{subfigure}
-	\caption[FabricJS - ukážka manipulácie s objektami]{Manipulácia s objektami pomocou vstupných zariadení s použitím knižnice FabricJS}
+	\caption[Fabric - ukážka manipulácie s objektami]{Manipulácia s objektami pomocou vstupných zariadení s použitím knižnice Fabric}
 \end{figure}
 \FloatBarrier
 
 \subsubsection{Event}
 
-Aplikácie a frameworky postavené na architektúre riadenej udalosťami poskytujú veľkú flexibilitu a výkonnosť. Knižnica FabricJS nie je výnimkou a poskytuje rozšíriteľný systém udalostí (\textit{event}-ov), začínajúc od jednoduchých (spúšťaných akciami počítačovej myši), až po zložité objektové udalosti. Dovoľujú nám odchytávať rôzne akcie odohrávajúce sa v \textit{canvas} grafickej ploche. API na prácu s udalosťami je veľmi jednoduché na obsluhu. Je podobné štandardom implementovaným v jQuery, Underscore.js alebo iných populárnych JavaScriptových knižniciach. Na inicializovanie event listener-u slúži metóda \code{on}\reflst{lst:fabric-events} a na prípadné odstránenie použijeme metódu \code{off}.
+Aplikácie a frameworky postavené na architektúre riadenej udalosťami poskytujú veľkú flexibilitu a výkonnosť. Knižnica Fabric nie je výnimkou a poskytuje rozšíriteľný systém udalostí (\textit{event}-ov), začínajúc od jednoduchých (spúšťaných akciami počítačovej myši), až po zložité objektové udalosti. Dovoľujú nám odchytávať rôzne akcie odohrávajúce sa v \textit{canvas} grafickej ploche. API na prácu s udalosťami je veľmi jednoduché na obsluhu. Je podobné štandardom implementovaným v jQuery, Underscore.js alebo iných populárnych JavaScriptových knižniciach. Na inicializovanie event listener-u slúži metóda \code{on}\reflst{lst:fabric-events} a na prípadné odstránenie použijeme metódu \code{off}.
 \begin{lstlisting}[style=web,caption={Ukážka programovej implementácie na prácu s eventami},captionpos=b, label={lst:fabric-events}]
 var canvas = new fabric.Canvas('...');
 canvas.on('mouse:down', function(options) {
@@ -213,9 +213,9 @@ Existuje viacero kategórií udalostí vyvolávaných nasledovnými akciami:
 	\item akcie objektu - \code{object:added}, \code{object:removed}, \code{object:modified}, \code{object:moving}, \code{object:scaling}, \code{object:rotating}, \code{object:skewing}
 	\item akcie grafickej plochy - \code{after:render}
 \end{itemize}
-Udalosti sú vyvolávané automaticky v rámci programového kódu knižnice FabricJS. V prípade že potrebujeme manuálne vyvolať niektorú z udalostí, docielime to pomocou metódy \code{canvas.trigger(...)} \reflst{lst:fabric-trigger}
+Udalosti sú vyvolávané automaticky v rámci programového kódu knižnice Fabric. V prípade že potrebujeme manuálne vyvolať niektorú z udalostí, docielime to pomocou metódy \code{canvas.trigger(...)} \reflst{lst:fabric-trigger}
 
-\begin{lstlisting}[style=web,caption={Manuálne vyvolanie udalosti v knižnici FabricJS},captionpos=b, label={lst:fabric-trigger}]
+\begin{lstlisting}[style=web,caption={Manuálne vyvolanie udalosti v knižnici Fabric},captionpos=b, label={lst:fabric-trigger}]
 canvas.trigger('object:modified', {target: object});
 \end{lstlisting}
 
@@ -263,14 +263,4 @@ Vytváraním rozšírení existujúcich systémov vzniká množstvo súborov, od
 	\item \textit{Minifikácia a spájanie} zdrojových súborov optimalizuje ich veľkosť a tým pádom aj redukuje čas ich načítania.
 	\item \textit{Dávkové načítavanie} viacerých modulov (rozšírení) súčasne s použitím predchádzajúceho procesu minifikácie a spájania redukuje počet dopytov na server.
 	\item \textit{Data URI embedovanie} zdrojových obrázkov v kaskádových štýloch taktiež redukuje počet potrebných dopytov na server a tým aj jeho čas odozvy.
-\end{itemize}
-
-\newpage
-\section{Cieľ práce}
-\begin{itemize}
-	\item Navrhnúť prostredie grafického editora
-	\item Implementovať grafický editor do prostredia MediaWiki pomocou rozšírenia
-	\item Navrhnúť a implementovať spôsob ukladania verzií výstupných súborov grafického editora
-	\item Navrhnúť a implementovat komunikačný protokol na synchronizáciu grafického editora pre viacero nezávislých používateľov
-	\item Integrovať rozšírenie s webovou stránkou fakulty http://wiki.matfyz.sk
 \end{itemize}
