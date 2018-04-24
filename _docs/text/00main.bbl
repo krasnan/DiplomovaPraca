@@ -108,4 +108,9 @@ W3Schools.com.
 \newblock Angularjs tutorial [online], Máj 2017.
 \newblock \\\url{https://www.w3schools.com/angular/}.
 
+\bibitem[WSM13]{Wang2013}
+Vanessa Wang, Frank Salim, and Peter Moskovits.
+\newblock {\em The WebSocket Protocol}, pages 33--60.
+\newblock Apress, Berkeley, CA, 2013.
+
 \end{thebibliography}
