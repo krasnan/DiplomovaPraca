@@ -24,12 +24,17 @@
 \usepackage{subcaption}
 \usepackage{placeins}
 \usepackage[avantgarde]{quotchap}
+\usepackage{titlesec}
 
 \setstretch{1.5}
 %\renewcommand\baselinestretch{1.5} % riadkovanie jeden a pol
 
 \input listings.tex
 
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 % pekne pokope definujeme potrebne udaje
 \newcommand\mftitle{Klaboratívny grafický editor pre MediaWiki}
