@@ -92,7 +92,7 @@ NodeJS obsahuje sadu API umožňujúcu vykonávanie serverových operácií do k
 \end{itemize}
 
 
-\subsection{JavaScriptový framework Angular.js}
+\subsection{JavaScriptový framework Angular.js}\label{sec:angular}
 
 \textit{AngularJS} je JavaScriptový framework, ktorý sa zameriava na rozšírenie HTML jazyka do čitateľnejšej a dynamickejšej podoby \cite{jain2015angularjs}. Umožňuje pridávať do zdrojového HTML kódu vlastné tagy a atribúty, ktoré sú synchronizované s funkcionalitou napísanou v jazyku JavaScript. Tie sú vyhodnocované až po načítaní obsahu stránky do DOM, čo má nasledujúce výhody:
 \begin{itemize}
@@ -114,7 +114,7 @@ Táto knižnica začleňuje základné princípy programovania pomocou návrhov�
 \subsubsection{View}
 \textit{View} je HTML, ktoré je vyprodukované po tom, ako AngularJS rozparsoval a skompiloval pôvodnú šablónu, v ktorej boli definované jednotlivé mapovania, atribúty a elementy.
 
-\subsection{JavaScriptová knižnica Fabric.js}
+\subsection{JavaScriptová knižnica Fabric.js}\label{sec:fabric}
 
 V jazyku HTML existuje element \code{canvas}, do ktorého je možné dynamicky vykresľovať grafické objekty vo webovej aplikácií pomocou jazyka JavaScript. Funkcionalita vstavaného API je žiaľ veľmi obmedzená \cite{cabanier2014html}. Pokiaľ máme záujem o vykreslenie jednoduchých tvarov a následne s nimi nepotrebujeme nič viac robiť, tak funkcionalita API bude postačovať. Avšak, akonáhle je potrebná ďalšia interakcia s vykresleným objektom, prípadne vykreslenie zložitejšieho objektu, nastáva tu problém.
 
@@ -220,7 +220,7 @@ canvas.trigger('object:modified', {target: object});
 \end{lstlisting}
 
 
-\subsection{JavaScriptová knižnica Socket.io}
+\subsection{JavaScriptová knižnica Socket.io}\label{sec:socketio}
 Socket.IO je JavaScriptová knižnica vytvorená pre realtime webové aplikácie. Socket.IO umožňuje real-time obojstrannú komunikáciu medzi webovým klientom a servermi. Socket.IO má dve časti:
 \begin{itemize}
 	\item \textit{klientská strana} bežiaca vo webovom prehliadači používateľa
@@ -230,7 +230,7 @@ Obe časti majú takmer identické API. Podobne ako node.js je socket.io "\texti
 
 
 
-\section{Rozšírenia MediaWiki (Extensions)}
+\section{Rozšírenia MediaWiki (Extensions)}\label{sec:mediaWiki_extensions}
 MediaWiki, tak ako aj množstvo ďalších systémov na správu obsahu stránok, poskytuje spôsob, pomocou ktorého je možné zmeniť správanie aj vzhľad MediaWiki aplikácie. V závislosti od potreby existuje niekoľko kategórií rozšírení (angl.: \textit{extension}):
 \begin{itemize}
 	\item \textit{Parser extension}: rozšírenie wiki-textu o vlastné značky a príkazy.
