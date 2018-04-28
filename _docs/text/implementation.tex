@@ -137,9 +137,23 @@ Trieda menežéra miestností \code{RoomManager} slúži na spravovanie existuj�
 
 \subsection{Pripojenie klienta}
 
-Pri vytvorení inštancie Socket.IO objektu s názvom \code{io}, vkladáme do jeho konštruktora inštanciu vytvoreného HTTP servera. Po jej vytvorení je server pripravený prijímať správy s udalosťami takzvané \textit{socket}-y. Príchod pripájacej správy s popisom udalosti  \code{\'connection\'} je odchytený event-listenerom  \code{io.on(\'connection\', function(socket)\{...\})}, v ktorom sa volá funkcia spracujúca túto udalosť. Informácie o pripájanom klientovi je do nej poslaná parametrom socket. Pomocou tohoto parametra sú následne server odchytáva správy ďalšie správy odosielané zo strany klienta. Parameter v sebe taktiež nesie objekt \code{socket.handshake}. V tomto objekte sú uložené informácie o nadviazanom spojení, medzi ktorými je aj premenná query. V tejto premennej sú uložené informácie o názve editovaného súboru, bezpečnostný token a meno pripájaného používateľa.
+Pri vytvorení inštancie Socket.IO objektu s názvom \code{io}, vkladáme do jeho konštruktora inštanciu vytvoreného HTTP servera. Po jej vytvorení je server pripravený prijímať správy s udalosťami takzvané \textit{socket}-y. Príchod pripájacej správy s názvom udalosti  \code{\'connection\'} je odchytený event-listenerom  \code{io.on(\'connection\', function(socket)\{...\})}, v ktorom sa volá funkcia spracujúca túto udalosť. Informácie o pripájanom klientovi je do nej poslaná parametrom socket. Pomocou tohoto parametra následne server odchytáva správy ďalšie správy, odosielané zo strany klienta. Parameter v sebe taktiež nesie objekt \code{socket.handshake}. V tomto objekte sú uložené informácie o nadviazanom spojení, medzi ktorými je aj premenná query. V tejto premennej sú uložené informácie o názve editovaného súboru, bezpečnostný token a meno pripájaného používateľa. 
+
+Po úspešnom nadviazaní spojenia vytvoríme nový objekt používateľa typu \code{User} s menom získaným z premennej \\\code{socket.handshake.query[\'name\']} a nastavíme mu bezpečnostný token funkciou \code{setToken(socket.handshake.query[\'secret\'])}. Pri nastavení tokenu sa aplikuje jeho automatická validácia a nastavenie premennej \code{verified}.
 
 
+\subsubsection{Inicializácia miestnosti}
+Ak je je používateľský token vyhodnotený ako správny, nasleduje inicializácia miestnosti. Táto operácia sa vykonáva pomocou metódy \\\code{createRoom(socket.handshake.query[\'file\'])} triedy \code{RoomManager}. V prípade že miestnosť s požadovaným názvom neexistuje, vytvorí sa jej nová inštancia. Používateľ sa zaradí do zoznamu používateľov miestnosti a je mu odoslaná notifikácia o tejto udalosti spolu s objektom používateľa.
+
+Súčasne sa vykoná načítanie editovaného súboru pomocou asynchrónneho HTTP dopytu na koncový bod API systému MediaWiki. V prípade že API nájde zadaný súbor, odpoveďou je objekt tohoto súboru, s informáciami o jeho rozmeroch, MIME formáte. 
+
+Ak sa jedná o súbor, ktorý už bol editovaný pomocou nášho rozšírenia, vnútorná reprezentácia editora je uložená vo forme textového reťazca v metadátach súboru. Tento reťazec obsahujúci vlastnosti grafickej plochy a objektov v nej umiesnených dekódujeme do formátu JSON a nastavíme potrebné vlastnosti triednych premenných miestnosti. 
+
+Ak načítavaný súbor ešte nebol upravovaný našim editorom, vytvoríme nový grafický objekt editora typu obrázok a pridáme ho do zoznamu objektov grafickej plochy miestnosti. Pri neexistujúcom súbore sú ponechané pôvodné vlastnosti miestnosti.
+
+Po inicializovaní vlastností miestnosti je odoslaná používateľovi notifikácia s jej inicializovanými dátami, na základe ktorých sa mu nastaví prostredie editora \refimg{obr:sequence-diagram-server-connect}.
+
+Pripojením používateľa do existujúcej miestnosti, proces pripojenia pozostáva iba zo zaradenia používateľa do zoznamu používateľov, odoslania notifikácie o úspešnom pripojení spolu s odoslaním notifikácie všetkým ostatným používateľom. Pripájanému používateľovi sa taktiež odosiela inicializačná notifikácia s aktuálnym stavom grafického editora, vytvorenými objektami a pripojenými používateľmi.
 
 \begin{figure}[h]
 	\centerline{\includegraphics[width=1\textwidth]{images/diagrams/sequence-diagram-server-connect}}
@@ -148,28 +162,41 @@ Pri vytvorení inštancie Socket.IO objektu s názvom \code{io}, vkladáme do je
 \end{figure}
 \FloatBarrier
 
-\subsubsection{Vytvorenie používateľa}
-
-\subsubsection{Overenie používateľa}
-
-\subsubsection{Inicializácia miestnosti}
-
-
-\subsection{Spracovanie operácií grafického editora}
-
-\subsubsection{Zmeny grafickej plochy}
-
-\subsubsection{Vytvorenie objektu}
-
-\subsubsection{Zmena uzamknutia objektu}
-
-\subsubsection{Modifikácia objektu}
-
-\subsubsection{Odstránenie objektu}
-
-\subsubsection{Textová správa}
-
+\subsection{Spracovanie udalostí grafického editora}
+S pripojením používateľa do miestnosti získava možnosť odosielať a prijímať synchronizačné správy. Synchronizačný server prijíma nasledujúce názvy udalostí:
+\begin{itemize}
+	
+	\item \code{\'canvas-modified\'} - \textit{Zmeny grafickej plochy} spracováva triedna metóda \code{room.modifyCanvas(properties, socket);}, ktorá ej parametrami sú objekt \code{properties} obsahujúce vlastnosti zmenenej grafickej plochy editora a \code{socket} objekt odosielateľa. Po zmene vlastností plochy v rámci servera je odoslaná udalosť so zmenami všetkým ostatným používateľom.
+	
+	\item \code{\'object-created\'} - \textit{Vytvorenie objektu} je spracované metódou \\\code{room.createObject(object, socket);}. Tá vytvorí nový záznam v zozname objektov editora, indexovaný podľa jedinečného identifikátora objektu a odošle udalosť na vytvorenie objektu všetkým ostatným používateľom.
+	
+	\item \code{\'selection-changed\'} - \textit{Zmena uzamknutia objektu} sa vyhodnotí metódou \code{room.setSelectable(data.id, data.selectable, user, socket);}. Parametrami sú jedinečný identifikátor objektu, stav či má byť objekt uzamknutý alebo odomknutý a používateľ ktorý vykonáva túto zmenu. V prípade že objekt nemôže byť uzamknutý z dôvodu že už je uzamknutý iným používateľom, odosielateľ obdrží udalosť o zakázaní označenia daného objektu. Inak sa nastaví hodnota uzamknutia a odošle sa ostatným používateľom.
+	
+	\item \code{\'object-modified\'} - \textit{Modifikácia objektu} je spracovaná pomocou metódy \code{room.modifyObject(object, socket);}, ktorá vyhľadá objekt na základe jedinečného identifikátora v zozname objektov a nastaví jeho nové vlastnosti podľa vstupného parametra \code{object}. V prípade že objekt v zozname neexistuje, vytvorí ho. Funkcia ďalej odošle udalosť na modifikáciu objektu všetkým ostatným používateľom.
+	
+	\item \code{\'object-removed\'} - \textit{Odstránenie objektu} zabezpečuje triedna metóda \code{room.removeObject(id, socket);}. Tá odstráni objekt s jedinečným identifikátorom podľa vstupného parametra zo zoznamu objektov miestnosti a odošle udalosť na odstránenie objektu ostatným používateľom.
+	
+	\item \code{\'message-created\'} - \textit{Vytvorenie textovej správy} v chate editora je spracovaná metódou \\ \code{room.createMessage(message.text, message.from, message.to);}. Parameterami sú údaje prijaté v požiadavke, nesúce informácie o obsahu, odosielateľovi a prijímateľovi správy. Táto správa sa následne rozdistribuuje medzi všetkých používateľov pripojených do miestnosti.
+	
+\end{itemize}
 
 \subsection{Odpojenie klienta}
+Proces odpojenia používateľa pozostáva z jeho odstránenia zo zoznamu používateľov v miestnosti, zrušenia príznaku uzamknutého objektu všetkých objektov, ktoré mal používateľ pri odchode uzamknuté, a odoslania udalosti všetkým zvyšným používateľom. Trieda \code{RoomManager} overí počet používateľov v miestnosti a pokiaľ zostala miestnosť prázdna, vymaže ju zo svojho zoznamu pomocou metódy \code{removeRoom(name);}.
 
-\subsubsection{Odstránenie miestnosti}
+
+
+
+
+\section{Grafický editor obrázkov}
+Druhou časťou implementácie tejto diplomovej práce je naprogramovanie grafického editora obrázkov. Editor je implementovaný formou \textit{special page} rozšírenia integrovaného do systému MediaWiki. 
+%TODO: popisat ako je naprogramovany technologie kniznice
+
+\subsection{MediaWiki rozšírenie}
+%TODO: popisat ako som to integroval do mediawiki, extension.json, strukturu fileov, webhooky, special page, template page, preklady, ukladanie revizii,....
+
+\subsection{Riadenie udalostí (Event-handler)}
+
+\subsection{Funkcie editora}
+
+\subsection{Klávesové skratky}
+

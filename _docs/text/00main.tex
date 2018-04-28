@@ -63,6 +63,10 @@
 
 
 \newcommand{\imageHeight}{150px}
+%zrusenie indentu pre paragraph a nastavenie medzery nad novym riadkom
+\def\spaceafterpar{1em}
+\setlength{\parskip}{\spaceafterpar}
+\setlength\parindent{0pt}
 
 \ifx\pdfoutput\undefined\relax\else\pdfinfo{ /Title (\mftitle) /Author (\mfauthor) /Creator (PDFLaTeX) } \fi
 
