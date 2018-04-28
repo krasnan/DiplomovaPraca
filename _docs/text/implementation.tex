@@ -1,4 +1,175 @@
 \chapter{Implementácia}\label{chap:implementation}
+V tejto kapitole sa zameriame na riešenie popísanej problematiky, implementácii algoritmov a funkcií potrebných na správnu funkčnosť a dosiahnutie cieľov zadania diplomovej práce. Implementácia pozostáva z dvoch hlavných častí. Vytvorenie synchronizačného servera a klientskej aplikácie grafického editora formou rozšírenia systému MediaWiki. Popíšeme si ich dátové modely a ich funkcionalitu. 
 
-...
+Pri implementácií využívame verziovací systém git. Obe hlavné časti sú umiestnené vo vlastných repozitároch na serveri GitHub. 
 
+\section{Synchronizačný server}
+Synchronizačný server pozostáva z JavaScriptovej aplikácie naprogramovanej v jazyku JavaScript. Aplikácia je spúšťaná v runtime prostredí NodeJS servera, konkrétne vo verzii 7.6 a vyššej. Ten je nainštalovaný formou kontajnerového systému docker. Aplikácia pracuje pomocou inštancie HTTP servera, využívajúceho port s číslom \code{8080} a lokálnu adresou servera \code{0.0.0.0}. 
+
+Knižnice servera sú inštalované pomocou balíčkovacieho manažéra NPM (\textbf{N}ode \textbf{P}ackage \textbf{M}anager). Ich potrebné verzie sú zapísané v súbore \code{package.json}. Nachádzajú sa tu taktiež konfiguračné premenné prostredia:
+
+\begin{itemize}
+	\item \code{api_endpoint} - adresa API koncového bodu systému MediaWiki, v ktorom je nainštalované naše rozšírenie. V našom prípade má hodnotu \code{\"https://wiki.matfyz.sk/api.php\"}.
+	
+	\item \code{api_token} - tajný token slúžiaci na overenie pripájaných klintov. Jeho hodnota sa musí zhodovať s hodnotou na strane rozšírenia.
+\end{itemize}
+
+\subsection{Dátový model}
+Pre implementáciu serverovej časti aplikácie využívame dátovú štruktúru JavaScriptových objektov.
+
+\subsubsection{User}
+Trieda \code{User} reprezentuje používateľa pripojeného na synchronizačný server. Jej vlastnosti určujú triedne premenné a metódy opísané v tabuľkách \ref{tab:server-prop-user} a \ref{tab:server-func-user}.
+
+\begin{table}
+	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
+		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline
+		
+		name & string & Meno používateľa prijaté v dopyte pri pripojení klienta na server \\\hline
+		color & string & Automaticky generovaná farba pomocou funkcie \code{getRandomColor()} v HEX formáte {\code{\"#ffff00\"}} \\\hline
+		verified & boolean & Príznak, či bol korektne overený bezpečnostný token \\\hline
+		token & string & Privátna premenná s hodnotou bezpečnostného tokenu \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam triednych premenných objektu User}
+	\label{tab:server-prop-user}
+\end{table}
+
+
+\begin{table}
+	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline
+		
+		setToken(token) & Nastavenie bezpečnostného tokenu  \\\hline
+		getToken() & Vráti hodnotu bezpečnostného tokenu \\\hline
+		verifyUser() & Overí hodnotu bezpečnostného tokenu a nastaví triednu premennú \code{verified} \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam metód objektu User}
+	\label{tab:server-func-user}
+\end{table}
+
+
+\subsubsection{Message}
+Objekt \code{Message} reprezentuje správu odoslané používateľmi pomocou chatu v editore. Popis vnútornej reprezentácie vlastností objektu môžeme vidieť v tabuľke \ref{tab:server-prop-message}
+
+\begin{table}
+	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
+		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline
+		
+		from & User & Odosielateľ správy \\\hline
+		to & User & Prijímateľ správy \\\hline
+		text & string & Textový obsah správy \\\hline
+		type & string & Typ správy nastavovaný ak ide o systémovú správu \\\hline
+		time & string & Dátum a čas odoslania správy \\	\hline
+	
+		\hline
+	\end{tabular}
+	\caption{Zoznam triednych premenných objektu Message}
+	\label{tab:server-prop-message}
+\end{table}
+
+
+
+\subsubsection{Room}
+Trieda \code{Room} slúži na udržiavanie stavu miestnosti pripojených používateľov, spracovanie požiadaviek odosielaných zo strany editora, udržiavanie štruktúry objektov, odoslaných správ a funkcionality na načítanie informácií o súbore. Popis jej vnútornej štruktúry a poskytovanej funkcionality môžeme vidieť v tabuľkách \ref{tab:server-prop-room} a \ref{tab:server-func-room}.
+
+\begin{table}
+	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
+		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline
+	
+		users & array<User> & Zoznam používateľov \\\hline
+		messages & array<Message> & Zoznam správ \\\hline
+		objects & array<object> & Zoznam objektov grafickej plochy \\\hline
+		canvas & object & Dynamický objekt s nastaveniami grafickej plochy \\\hline
+		format & string & Formát editovaného súboru (jpg, png, svg)\\\hline
+		loaded & boolean & Príznak či je miestnosť plne vyinicializovaná \\\hline
+		file & string & Názov editovaného súboru \\\hline
+	
+		\hline
+	\end{tabular}
+	\caption{Zoznam triednych premenných objektu Room}
+	\label{tab:server-prop-room}
+\end{table}
+
+
+\begin{table}
+	\begin{tabular}{ | m{6cm} | m{6.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline
+		
+		loadFromWiki() & Načíťanie obsahu editora pri inicializácii miestnosti. Načítanie prebieha pomocou HTTP dopytu na koncový bod API systému MediaWiki, v ktorom je rozšírenie nainštalované. \\\hline
+		createUser(user, socket) & Pripojí používateľa do zvolenej miestnosti na základe editovaného súboru. \\\hline
+		removeUser(user, socket) & Odstáni používateľa zo zoznamu používateľov a odpojí ho z miestnosti.  \\\hline
+		createMessage(text, from, to, type) & Spracováva požiadavku odoslania novej správy pomocou chatu. \\\hline
+		modifyCanvas(properties, socket) & Spracováva požiadavku na zmenu grafickej plochy editora. \\\hline
+		createObject(object, socket) & Spracovanie požiadavky na vytvorenie objektu grafického editora. \\\hline
+		modifyObject(object, socket) & Spracovanie požiadavky na zmenu objektu grafického editora. \\\hline
+		removeObject(id, socket) & Spracovanie požiadavky na odstránenie objektu grafického editora. \\\hline
+		setSelectable(id, selectable, user, socket) & Spracovanie požiadavky na zmenu uzamknutia objektu grafickej plochy. \\\hline
+		deselectAll() & Metóda nastaví všetky objekty grafickej plochy na neuzamknuté. \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam metód objektu Room}
+	\label{tab:server-func-room}
+\end{table}
+
+
+\subsubsection{RoomManager}
+Trieda menežéra miestností \code{RoomManager} slúži na spravovanie existujúcich miestností, ich dynamické vytváranie a vymazávanie. Obsahuje triednu premennú \code{rooms}. Je to premenná typu asociatívne pole, obsahujúca objekty typu \code{Room}. Poskytuje funkcie na prácu s miestnosťami popísané v tabuľke \ref{tab:server-func-roommanager}.
+
+\begin{table}
+	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline
+		
+		isEmpty() & Metóda vracajúca true/false hodnotu v závislosti od toho, či je v danej miestnosti pripojený nejaký používateľ. \\\hline
+		createRoom(name) & Metóda overí či existuje miestnosť s daným názvom a v prípade že neexistuje, vytvorí ju. Návratovou hodnotou je objekt typu \code{Room} zodpovedajúci danému názvu miestnosti. \\\hline
+		getRoom(name) & Metóda vráti objekt typu \code{Room} v prípade že existuje miestnosť s daným názvom v zozname miestností. \\\hline
+		removeRoom(name) & Metóda vymaže miestnosť so zadaným názvom zo zoznamu miestností. \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam metód objektu RoomManager}
+	\label{tab:server-func-roommanager}
+\end{table}
+\FloatBarrier
+
+\subsection{Pripojenie klienta}
+
+Pri vytvorení inštancie Socket.IO objektu s názvom \code{io}, vkladáme do jeho konštruktora inštanciu vytvoreného HTTP servera. Po jej vytvorení je server pripravený prijímať správy s udalosťami takzvané \textit{socket}-y. Príchod pripájacej správy s popisom udalosti  \code{\'connection\'} je odchytený event-listenerom  \code{io.on(\'connection\', function(socket)\{...\})}, v ktorom sa volá funkcia spracujúca túto udalosť. Informácie o pripájanom klientovi je do nej poslaná parametrom socket. Pomocou tohoto parametra sú následne server odchytáva správy ďalšie správy odosielané zo strany klienta. Parameter v sebe taktiež nesie objekt \code{socket.handshake}. V tomto objekte sú uložené informácie o nadviazanom spojení, medzi ktorými je aj premenná query. V tejto premennej sú uložené informácie o názve editovaného súboru, bezpečnostný token a meno pripájaného používateľa.
+
+
+
+\begin{figure}[h]
+	\centerline{\includegraphics[width=1\textwidth]{images/diagrams/sequence-diagram-server-connect}}
+	\caption[Sekvenčný diagram pripojenia používateľa]{Sekvenčný diagram úspešného pripojenia používateľa na synchronizačný server}
+	\label{obr:sequence-diagram-server-connect}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Vytvorenie používateľa}
+
+\subsubsection{Overenie používateľa}
+
+\subsubsection{Inicializácia miestnosti}
+
+
+\subsection{Spracovanie operácií grafického editora}
+
+\subsubsection{Zmeny grafickej plochy}
+
+\subsubsection{Vytvorenie objektu}
+
+\subsubsection{Zmena uzamknutia objektu}
+
+\subsubsection{Modifikácia objektu}
+
+\subsubsection{Odstránenie objektu}
+
+\subsubsection{Textová správa}
+
+
+\subsection{Odpojenie klienta}
+
+\subsubsection{Odstránenie miestnosti}
