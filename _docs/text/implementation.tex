@@ -269,26 +269,79 @@ Aplikácia grafického editora je naprogramovaná v jazyku JavaScript pomocou fr
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
 		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
 		
-		bindValueTo & Direktíva na dynamické mapovanie get/set funkcií nastavujúcich hodnoty modelu Fabric objektov. Zabezpečuje zmenu modelu pri zmene hodnoty HTML vstupných elementov vykreslených šablónou editora. \\\hline
-		onEnter & Direktíva, ktorá pridaním svojho atribútu do HTML vstupného elementu zabezpečuje volanie funkcií pri stlačení klávesy enter. \\\hline
-		filesInput & Direktíva poskytuje funkciu načítania obrazového súboru, a následné mapovanie jeho hodnoty v textovom dataURI formáte do zvolenej premennej modelu aplikácie. \\\hline
-		socket & Direktíva poskytujúca prístup k službám knižnice Socket.IO pomocou funkcie \code{$ \$ $scope.socket.on(\'event-name\', callback)}, odchytávajúce udalosti prichádzajúce zo synchronizačného servera, a funkcie \code{$ \$ $scope.socket.emit(\'event-name\', \{...\})}, odosielajúcej udalosti na synchronizačný server. \\\hline
+		\code{bindValueTo} & Direktíva na dynamické mapovanie get/set funkcií nastavujúcich hodnoty modelu Fabric objektov. Zabezpečuje zmenu modelu pri zmene hodnoty HTML vstupných elementov vykreslených šablónou editora. \\\hline
+		\code{onEnter} & Direktíva, ktorá pridaním svojho atribútu do HTML vstupného elementu zabezpečuje volanie funkcií pri stlačení klávesy enter. \\\hline
+		\code{filesInput} & Direktíva poskytuje funkciu načítania obrazového súboru, a následné mapovanie jeho hodnoty v textovom dataURI formáte do zvolenej premennej modelu aplikácie. \\\hline
+		\code{socket} & Direktíva poskytujúca prístup k službám knižnice Socket.IO pomocou funkcie \code{$ \$ $scope.socket.on(\'event-name\', callback)}, odchytávajúce udalosti prichádzajúce zo synchronizačného servera, a funkcie \code{$ \$ $scope.socket.emit(\'event-name\', \{...\})}, odosielajúcej udalosti na synchronizačný server. \\\hline
 
 		\hline
 	\end{tabular}
 	\caption{Zoznam direktív AngularJS modulu ImageEditor}
 	\label{tab:image-editor-directives}
 \end{table}
-Okrem direktív modul obsahuje taktiež controller s názvom \code{ImageEditorController}, ktorý riadi funkcionalitu a správanie grafického editora. Kvôli dostupnosti funkcií priamo v šablóne, je potrebné všetky funkcie a premenné definovať do \code{$ \$ $scope} objektu. 
 
-\subsubsection{Poskytovaná funkcionalita}
+Okrem direktív modul obsahuje taktiež controller s názvom \code{ImageEditorController}, ktorý riadi funkcionalitu a správanie grafického editora. Kvôli dostupnosti funkcií priamo v šablóne, je potrebné všetky funkcie a premenné definovať do \code{$ \$ $scope} objektu. 
 
 \subsubsection{Mapovanie dát}
 
-%Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je schopný dynamického zobrazovania hodnôt modelu v šablóne aplikácie pomocou dátového mapovania. Aby sme boli schopný mapovať dátový model Fabric canvas objektu
+Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby dokázal dynamicky zobrazovať hodnoty modelu v šablóne aplikácie pomocou dátového mapovania. Aby sme boli schopný mapovať dátový model Fabric canvas objektu, je však potrebné naprogramovať metódy na prístup k jeho hodnotám. Musíme tak učiniť z dôvodu, že hodnoty modelu nie vždy zodpovedajú hodnotám, ktoré potrebujeme zobrazovať v používateľskom prostredí. Zdrojový súbor \code{ext.imageEditor.init.databinding.js} obsahuje funkcie určené na túto činnosť. Okrem funkcií popísaných v tabuľke \reftab{tab:editor-func-databinding}, sú v tomto súbore taktiež \code{get} a \code{set} funkcie definované pre každú premennú Fabric objektov \cite{FabricApiDoc}, ku ktorej je potrebné pristupovať z používateľského prostredia.
 
+\begin{table}
+	\begin{tabular}{ | m{7.5cm} | m{5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
+		
+		\code{getActiveStyle(styleName, object)} & Funkcia na prístup k hodnote premennej štýlov \code{styleName} objektu \code{object} alebo aktívneho objektu.\\\hline
+		\code{setActiveStyle(styleName, value, object)} & Funkcia na nastavenie premennej štýlu \code{styleName} hodnotou \code{value} objektu \code{objekt} alebo aktívneho objektu.\\\hline
+		\code{getActiveProp(name)}  & Funkcia na prístup k hodnote \code{name} premennej aktívneho objektu. \\\hline
+		\code{setActiveProp(name, value)}  & Funkcia na nastavenie premennej \code{name} hodnotou \code{value} aktívneho objektu. \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam základných funkcií nastavujúcich hodnoty modelu Fabric objektov}
+	\label{tab:editor-func-databinding}
+\end{table}
 
 \subsubsection{Riadenie udalostí (Event-handler)}
+Naša aplikácia využíva princípy programovania riadeného udalosťami (event-driven). Dokáže dynamicky vyhodnocovať niektoré z udalostí, ktoré sa v nej vykonávajú, bez potreby volania funkcií spracovávajúcich danú akciu do častí kódu, kde je daná akcia vykonávaná. Namiesto toho sa použije funkcia \code{$\$$scope.canvas.trigger(\'event-name\', {...})}, pomocou ktorej sa vyvolá udalosť s názvom podľa prvého parametra a dátami uloženými v druhom parametri tejto funkcie. Následne je možné tieto udalosti jednoducho zachytiť. V našej aplikácií. 
+Okrem akcií nad grafickou plochou, spracovávame taktiež udalosti vyvolávané synchronizačnými správami servera, poskytované službami knižnice Socket.IO. Zoznam a popis udalostí, ktoré naša aplikácia dokáže spracovať môžeme vidieť v tabuľkách \reftab{tab:editor-events} a \reftab{tab:server-events}.
 
-\subsubsection{Klávesové skratky}
+\begin{table}
+	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
+		
+		object:created & Vytvorenie nového grafického objektu. Odosiela sa požiadavka synchronizačnému serveru na vytvorenie nového objektu. \\\hline
+		object:modified & Zmena grafického objektu. Odosiela sa požiadavka synchronizačnému serveru na modifikáciu objektu. \\\hline
+		object:removed & Odstránenie grafického objektu. Odosiela sa požiadavka synchronizačnému serveru na vymazanie objektu.  \\\hline
+		object:moving & Pohyb objektu pomocou kurzora použivateľa. Ak je zapnuté prichytávanie k mriežke, hodnoty pozície pohybovaného objektu sa nastavia na zaokrúhlené číslo v závislosti od veľkosti priblíženia grafickej plochy.  \\\hline
+		path:created & Vytvorenie nového grafického objektu počas voľného kreslenia. Odosiela sa požiadavka synchronizačnému serveru na vytvorenie nového objektu. \\\hline
+		canvas:modified & Zmena vlastností grafickej plochy. Odosiela sa požiadavka synchronizačnému serveru na zmenu grafickej plochy. \\\hline
+		selection:created, selection:updated, selection:cleared & Zmena označenia aktívneho objektu. Odosielajú sa požiadavky synchronizačnému serveru na zmenu uzamknutia objektov, ktorých sa zmena týka. \\\hline
+		mouse:over & Nadídenie kurzorom nad objekt. Ak je objekt uzamknutý, zobrazí sa v grafickej ploche meno používateľa, ktorý ho uzamkol. \\\hline
+		mouse:out & Odídenie kurzorom z objektu grafickej plochy. Ak je zobrazené meno používateľa nad objektom, skryje sa. \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam udalostí grafickej plochy}
+	\label{tab:editor-events}
+\end{table}
 
+\begin{table}
+	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
+		
+		connected & Pripojenie na synchronizačný server. Nastaví sa objekt pripojeného používateľa a skryje sa správa o pripájaní v loaderi. \\\hline
+		init & Inicializačná správa s informáciami, podľa ktorých sa nastavuje editor. Pridajú sa všetky objekty do grafickej plochy, vytvorí sa zoznam pripojených používateľov, načíta sa zoznam správ a nastavia sa vlastnosti grafickej plochy. \\\hline
+		user-created & Pripojenie nového používateľa do miestnosti. Používateľ je pridaný do zoznamu všetkých používateľov. \\\hline
+		user-removed & Odpojenie používateľa do miestnosti. Používateľ je odstránený zo zoznamu všetkých používateľov. \\\hline
+		message-created & Prijatá nová správa. Nastaví sa príznak na zobrazenie notifikácie o novej správe a obsah správy sa zaradí do zoznamu správ. \\\hline
+		selection-changed & Zmena uzamknutia objektu. Nastaví sa hodnota \code{selectable} a \code{selectedBy} podľa prijatej správy, čím sa zamedzí možnosti označiť daný objekt. \\\hline
+		object-created & Vytvorenie objektu. Objekt prijatý v správe sa pridá do grafickej plochy. Ak objekt s daným identifikátorom existuje, proces sa ukončí. \\\hline
+		object-modified & Modifikácia objektu. Na základe vlastností objekt prijatého v správe sa nastavia vlastnosti objektu s relevantným identifikátorom v grafickej ploche editora. Ak objekt s daným identifikátorom neexistuje, vytvorí sa. \\\hline
+		object-removed & Odstránenie objektu. Na základe prijatého identifikátora sa odstráni objekt z grafickej plochy. \\\hline
+ 		canvas-modified & Zmena vlastností grafickej plochy. Nastavia sa vlastnosti na základe prijatých informácií. \\\hline
+		   
+		\hline
+	\end{tabular}
+	\caption{Zoznam udalostí synchronizačného servera}
+\label{tab:server-events}
+\end{table}
