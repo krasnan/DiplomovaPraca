@@ -22,7 +22,7 @@ Trieda \code{User} reprezentuje používateľa pripojeného na synchronizačný 
 
 \begin{table}
 	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
-		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline
+		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline \hline
 		
 		name & string & Meno používateľa prijaté v dopyte pri pripojení klienta na server \\\hline
 		color & string & Automaticky generovaná farba pomocou funkcie \code{getRandomColor()} v HEX formáte {\code{\"#ffff00\"}} \\\hline
@@ -38,7 +38,7 @@ Trieda \code{User} reprezentuje používateľa pripojeného na synchronizačný 
 
 \begin{table}
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
-		\textbf{Názov} & \textbf{Popis} \\ \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
 		
 		setToken(token) & Nastavenie bezpečnostného tokenu  \\\hline
 		getToken() & Vráti hodnotu bezpečnostného tokenu \\\hline
@@ -56,7 +56,7 @@ Objekt \code{Message} reprezentuje správu odoslané používateľmi pomocou cha
 
 \begin{table}
 	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
-		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline
+		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline \hline
 		
 		from & User & Odosielateľ správy \\\hline
 		to & User & Prijímateľ správy \\\hline
@@ -77,7 +77,7 @@ Trieda \code{Room} slúži na udržiavanie stavu miestnosti pripojených použí
 
 \begin{table}
 	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
-		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline
+		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline \hline
 	
 		users & array<User> & Zoznam používateľov \\\hline
 		messages & array<Message> & Zoznam správ \\\hline
@@ -96,7 +96,7 @@ Trieda \code{Room} slúži na udržiavanie stavu miestnosti pripojených použí
 
 \begin{table}
 	\begin{tabular}{ | m{6cm} | m{6.5cm} | } \hline
-		\textbf{Názov} & \textbf{Popis} \\ \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
 		
 		loadFromWiki() & Načíťanie obsahu editora pri inicializácii miestnosti. Načítanie prebieha pomocou HTTP dopytu na koncový bod API systému MediaWiki, v ktorom je rozšírenie nainštalované. \\\hline
 		createUser(user, socket) & Pripojí používateľa do zvolenej miestnosti na základe editovaného súboru. \\\hline
@@ -121,7 +121,7 @@ Trieda menežéra miestností \code{RoomManager} slúži na spravovanie existuj�
 
 \begin{table}
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
-		\textbf{Názov} & \textbf{Popis} \\ \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
 		
 		isEmpty() & Metóda vracajúca true/false hodnotu v závislosti od toho, či je v danej miestnosti pripojený nejaký používateľ. \\\hline
 		createRoom(name) & Metóda overí či existuje miestnosť s daným názvom a v prípade že neexistuje, vytvorí ju. Návratovou hodnotou je objekt typu \code{Room} zodpovedajúci danému názvu miestnosti. \\\hline
@@ -188,15 +188,107 @@ Proces odpojenia používateľa pozostáva z jeho odstránenia zo zoznamu použ�
 
 
 \section{Grafický editor obrázkov}
-Druhou časťou implementácie tejto diplomovej práce je naprogramovanie grafického editora obrázkov. Editor je implementovaný formou \textit{special page} rozšírenia integrovaného do systému MediaWiki. 
-%TODO: popisat ako je naprogramovany technologie kniznice
+Druhou časťou implementácie tejto diplomovej práce je naprogramovanie grafického editora obrázkov. Editor je implementovaný formou \textit{special page} rozšírenia, integrovaného do systému MediaWiki. Na vykresľovanie objektov grafickej plochy a udržiavanie jej stavu využívame knižnicu Fabric. Dátový model aplikácie je preto z veľkej časti závislý od dátového modelu tejto knižnice. Kolaboratívna funkcionalita je docielená použitím klientskej verzie Socket.IO knižnice, pomocou ktorej zabezpečujeme komunikáciu so synchronizačným serverom. Na riadenie klientského rozhrania používame knižnicu AngularJS. Komponenty používateľského prostredia sú naprogramované v šablónovacom jazyku HTML a ich vzhľad je naprogramovaný pomocou štýlovacieho jazyka LESS.
 
 \subsection{MediaWiki rozšírenie}
-%TODO: popisat ako som to integroval do mediawiki, extension.json, strukturu fileov, webhooky, special page, template page, preklady, ukladanie revizii,....
+Pri tvorbe rozšírení pre MediaWiky je potrebné dodržať základné návrhové konvencie stanovené tvorcami tohoto systému. Prvoradou vlastnosťou je jednoduchá inštalácia a nastavenie rozšírenia. To je docielené pomocou viacerých faktorov. Prvoradé je používanie správnej súborovej štruktúry. 
 
-\subsection{Riadenie udalostí (Event-handler)}
+Rozšírenie musí byť umiestnené vo vlastnom priečinku medzi ostatnými MediaWiki rozšíreniami. V našom prípade je to priečinok \code{/extensions/ImageEditor}, kde sa nachádzajú zdrojové súbory a priečinky kategorizované podľa ich obsahu. V priečinku i18n sa nachádzajú php súbory s prekladmi textov použitých v prostredí rozšírenia, nazvané skratkou jazyka v ktorom sú preložené. Pre slovenčinu je to \code{sk.php}.
 
-\subsection{Funkcie editora}
+Zdrojový súbor \code{ImageEditor.php} zabezpečuje možnosť načítania rozšírenia pomocou príkazu \code{wfLoadExtension( \'ImageEditor\' );} v konfiguračnom súbore \code{LocalSettings.php}.
 
-\subsection{Klávesové skratky}
+Súbor \code{ImageEditor.hooks.php} obsahuje funkcie, pomocou ktorých vieme odchytiť niektoré akcie, vykonávané jadrom systému, a ovplyvniť tak jeho základnú funkcionalitu. V tomto súbore sa nachádza trieda \code{ImageEditorHooks} poskytujúca nasledujúce statické metódy:
+
+\begin{itemize}
+	\item \code{onFileUpload} - funkcia odchytávajúca nahrávanie nového multimediálneho súboru alebo jeho novej revízie, pomocou ktorej uložíme obsah editora do metadát súboru. Metadáta sú uchovávané v databáze pomocou blob databázového dátového typu, ktorého obsahom je serializované pole jazyka php. Naše rozšírenie pri ukladaní revízie zapíše do tohoto poľa svoju dátovú štruktúru serializovanú do JSON textového formátu, ktorá je odosielaná pri ukladaní súboru pomocou HTTP POST dotazu, pod indexom \code{imageEditorContent}.
+	
+	\item \code{onSkinTemplateNavigation} - metóda odchytáva proces vykreslenia navigačných tlačidiel pri vykreslení šablóny stránok. Na základe overenia práv používateľa a typu vykresľovanej stránky sa pridá tlačidlo na otvorenie súboru v našom editore obrázkov.
+	
+	\item \code{onSkinTemplateNavigation_SpecialPage} - podobná metóda ako \\
+	\code{onSkinTemplateNavigation} s výnimkou že táto udalosť je volaná pri vykresľovaní šablóny špeciálnych stránok.
+	
+	\item \code{onResourceLoaderGetConfigVars} - metóda slúži na pridanie konfiguračných premenných posielaných do JavaScriptového rozhrania systému MediaWiki. Vďaka tomu môžeme pristupovať k premenným definujúcim bezpečnostný token, port a adresu synchronizačného servera z klientskej aplikácie naprogramovanej v jazyku JavaScript pomocou premenných 
+	\begin{itemize}
+		\item \code{mw.config.values.wgImageEditor.secret}
+		\item \code{mw.config.values.wgImageEditor.host}
+		\item \code{mw.config.values.wgImageEditor.port}
+	\end{itemize}
+\end{itemize}
+
+V súbore \code{templates/ImageEditorTemplate.php} sa nachádza php trieda \\
+\code{ImageEditorTemplate} dedená od triedy \code{QuickTemplate}, obsahujúca jednu metódu s názvom \code{execute()}. Volaním tejto metódy sa vykreslí HTML šablóna nášho rozšírenia.
+
+Hlavná logika načítania rozšírenia sa však odohráva v triede \code{SpecialImageEditor} rozširujúcej triedu \code{SpecialPage}, umiestnenej v súbore \\
+\code{specials/SpecialImageEditor.php}. V metóde \code{execute()} sa vykoná overenie práv na upravovanie stránok a overí sa či je vybraný súbor ktorý chceme upravovať. Ak používateľ nemá práva na úpravu, je presmerovaný buď na prihlásenie (neprihlásený používateľ) alebo chybovú stránku.
+
+Ak používateľ vytvára nový súbor pomocou adresy \\
+\code{https://wiki.matfyz.sk/Special:ImageEditor} zobrazí sa mu formulár so výzvou na zadanie názvu súboru. Po jeho zadaní je presmerovaný do prostredia editora.
+
+Zdrojové kódy editora jazyka JavaScript sú umiestnené v priečinku \\
+\code{resources/scripts}. Pre ich lepšiu prehľadnosť sme ich rozdelili do súborov podľa zamerania funkcií ktoré obsahujú \reftab{tab:editor-scripts-files}. Kaskádové štýly používateľského prostredia editora sa nachádzajú v priečinku \code{resources/styles} a taktiež sú rozdelené podľa funkcionality \reftab{tab:editor-styles-files}. Použité knižnice sa nachádzajú v priečinku \code{resources/vendor} a zdrojové obrázky spolu s písmami v priečinku \code{resources/assets}.
+
+\begin{table}
+	\begin{tabular}{ | m{6cm} | m{6.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
+		
+		ext.imageEditor.utils.js & Definície globálnych funkcií a prototypovanie vlastných funkcií do pre knižnicu Fabric \\\hline
+		ext.imageEditor.init.databinding.js & Definície funkcií na prístup k premenným objektov knižnice Fabric pomocou Angular controllera \\\hline
+		ext.imageEditor.init.tools.js & Definície funkcií na prácu s používateľským prostredím editora \\\hline
+		ext.imageEditor.init.events.js & Definície funkcií na riadenie udalostí (event-handlers) grafickej plochy a synchronizačných správ \\\hline
+		ext.imageEditor.init.keybindings.js & Definícia funkcie na spracovanie klávesových skratiek \\\hline
+		ext.imageEditor.init.history.js & Príprava pre funkcionalitu ukladania histórie zmien (undo, redo) \\\hline
+		ext.imageEditor.init.app.js & Inicializácia Angular controllera, služby poskytujúcej prístup k funkciám knižnice Socket.IO a definícia direktív Angular modulu pre vytvorenie vlastných HTML elementov a atribútov. \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam JavaScriptových zdrojových súborov editora}
+	\label{tab:editor-scripts-files}
+\end{table}
+
+\begin{table}
+	\begin{tabular}{ | m{6cm} | m{6.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
+		
+		ext.imageEditor.vars & Definície premenných a mixinov a dedičných tried \\\hline
+		ext.imageEditor.colorpicker & Štýly pre komponent vyberača farieb \\\hline
+		ext.imageEditor.icons & Definície premenných a tried pre ikony používateľského prostredia \\\hline
+		ext.imageEditor.less & Definície štýlov používateľského prostredia editora \\\hline
+		
+		\hline
+	\end{tabular}
+	\caption{Zoznam LESS zdrojových súborov kaskádových štýlov}
+	\label{tab:editor-styles-files}
+\end{table}
+
+Pri tvorbe rozšírenia pre systém MediaWiki je veľmi dôležitý súbor \\
+\code{extension.json} nachádzajúci sa v jeho koreňovom priečinku. Slúži na definovanie umiestnenia súborov, závislostí na iných rozšíreniach a ich automatického načítavania pomocou \textit{resource loadera}.
+
+\subsection{Aplikácia grafického editora}
+Aplikácia grafického editora je naprogramovaná v jazyku JavaScript pomocou frameworku AngularJS. Všetky jej funkcie sú naprogramované formou modulu s názvom \code{ImageEditor}. Modul poskytuje direktívy pre šablónu, ktoré zabezpečujú dynamické vykresľovanie niektorých používateľských komponentov, pridávajú im dodatočnú funkcionalitu, upravujú spôsob mapovania dát alebo poskytujú prístup k službám knižnice Socket.IO \reftab{tab:image-editor-directives}.
+\begin{table}
+	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
+		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
+		
+		bindValueTo & Direktíva na dynamické mapovanie get/set funkcií nastavujúcich hodnoty modelu Fabric objektov. Zabezpečuje zmenu modelu pri zmene hodnoty HTML vstupných elementov vykreslených šablónou editora. \\\hline
+		onEnter & Direktíva, ktorá pridaním svojho atribútu do HTML vstupného elementu zabezpečuje volanie funkcií pri stlačení klávesy enter. \\\hline
+		filesInput & Direktíva poskytuje funkciu načítania obrazového súboru, a následné mapovanie jeho hodnoty v textovom dataURI formáte do zvolenej premennej modelu aplikácie. \\\hline
+		socket & Direktíva poskytujúca prístup k službám knižnice Socket.IO pomocou funkcie \code{$ \$ $scope.socket.on(\'event-name\', callback)}, odchytávajúce udalosti prichádzajúce zo synchronizačného servera, a funkcie \code{$ \$ $scope.socket.emit(\'event-name\', \{...\})}, odosielajúcej udalosti na synchronizačný server. \\\hline
+
+		\hline
+	\end{tabular}
+	\caption{Zoznam direktív AngularJS modulu ImageEditor}
+	\label{tab:image-editor-directives}
+\end{table}
+Okrem direktív modul obsahuje taktiež controller s názvom \code{ImageEditorController}, ktorý riadi funkcionalitu a správanie grafického editora. Kvôli dostupnosti funkcií priamo v šablóne, je potrebné všetky funkcie a premenné definovať do \code{$ \$ $scope} objektu. 
+
+\subsubsection{Poskytovaná funkcionalita}
+
+\subsubsection{Mapovanie dát}
+
+%Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je schopný dynamického zobrazovania hodnôt modelu v šablóne aplikácie pomocou dátového mapovania. Aby sme boli schopný mapovať dátový model Fabric canvas objektu
+
+
+\subsubsection{Riadenie udalostí (Event-handler)}
+
+\subsubsection{Klávesové skratky}
 
