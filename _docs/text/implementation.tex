@@ -1,7 +1,7 @@
 \chapter{Implementácia}\label{chap:implementation}
-V tejto kapitole sa zameriame na riešenie popísanej problematiky, implementácii algoritmov a funkcií potrebných na správnu funkčnosť a dosiahnutie cieľov zadania diplomovej práce. Implementácia pozostáva z dvoch hlavných častí. Vytvorenie synchronizačného servera a klientskej aplikácie grafického editora formou rozšírenia systému MediaWiki. Popíšeme si ich dátové modely a ich funkcionalitu. 
+V tejto kapitole sa zameriame na riešenie popísanej problematiky, implementáciu algoritmov a funkcií potrebných na správnu funkčnosť a dosiahnutie cieľov zadania diplomovej práce. Implementácia pozostáva z dvoch hlavných častí. Vytvorenie synchronizačného servera a klientskej aplikácie grafického editora formou rozšírenia systému MediaWiki. Popíšeme si ich dátové modely a funkcionalitu. 
 
-Pri implementácií využívame verziovací systém git. Obe hlavné časti sú umiestnené vo vlastných repozitároch na serveri GitHub. 
+Pri implementácií využívame verziovací systém GIT. Obe hlavné časti sú umiestnené vo vlastných repozitároch na serveri GitHub. 
 
 \section{Synchronizačný server}
 Synchronizačný server pozostáva z JavaScriptovej aplikácie naprogramovanej v jazyku JavaScript. Aplikácia je spúšťaná v runtime prostredí NodeJS servera, konkrétne vo verzii 7.6 a vyššej. Ten je nainštalovaný formou kontajnerového systému docker. Aplikácia pracuje pomocou inštancie HTTP servera, využívajúceho port s číslom \code{8080} a lokálnu adresou servera \code{0.0.0.0}. 
@@ -9,9 +9,9 @@ Synchronizačný server pozostáva z JavaScriptovej aplikácie naprogramovanej v
 Knižnice servera sú inštalované pomocou balíčkovacieho manažéra NPM (\textbf{N}ode \textbf{P}ackage \textbf{M}anager). Ich potrebné verzie sú zapísané v súbore \code{package.json}. Nachádzajú sa tu taktiež konfiguračné premenné prostredia:
 
 \begin{itemize}
-	\item \code{api_endpoint} - adresa API koncového bodu systému MediaWiki, v ktorom je nainštalované naše rozšírenie. V našom prípade má hodnotu \code{\"https://wiki.matfyz.sk/api.php\"}.
+	\item \code{api_endpoint} -- adresa API koncového bodu systému MediaWiki, v ktorom je nainštalované naše rozšírenie. V našom prípade má hodnotu \code{\"https://wiki.matfyz.sk/api.php\"}.
 	
-	\item \code{api_token} - tajný token slúžiaci na overenie pripájaných klintov. Jeho hodnota sa musí zhodovať s hodnotou na strane rozšírenia.
+	\item \code{api_token} -- tajný token slúžiaci na overenie pripájaných klintov. Jeho hodnota sa musí zhodovať s hodnotou na strane rozšírenia.
 \end{itemize}
 
 \subsection{Dátový model}
@@ -20,14 +20,22 @@ Pre implementáciu serverovej časti aplikácie využívame dátovú štruktúru
 \subsubsection{User}
 Trieda \code{User} reprezentuje používateľa pripojeného na synchronizačný server. Jej vlastnosti určujú triedne premenné a metódy opísané v tabuľkách \ref{tab:server-prop-user} a \ref{tab:server-func-user}.
 
+%\begin{description}[style=nextline]
+%	\item[name] Meno používateľa prijaté v dopyte pri pripojení klienta na server.
+%	\item[color] Automaticky generovaná farba pomocou funkcie \code{getRandomColor()} v hexadecimálnom formáte {\code{\"#ffff00\"}}.
+%	\item[verified] Príznak, či bol korektne overený bezpečnostný token.
+%	\item[token] Privátna premenná s hodnotou bezpečnostného tokenu.
+%\end{description}
+%
+
 \begin{table}
 	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
 		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline \hline
 		
-		name & string & Meno používateľa prijaté v dopyte pri pripojení klienta na server \\\hline
-		color & string & Automaticky generovaná farba pomocou funkcie \code{getRandomColor()} v HEX formáte {\code{\"#ffff00\"}} \\\hline
-		verified & boolean & Príznak, či bol korektne overený bezpečnostný token \\\hline
-		token & string & Privátna premenná s hodnotou bezpečnostného tokenu \\\hline
+		name & string & Meno používateľa prijaté v dopyte pri pripojení klienta na server. \\\hline
+		color & string & Automaticky generovaná farba pomocou funkcie \code{getRandomColor()} v HEX formáte {\code{\"#ffff00\"}}. \\\hline
+		verified & boolean & Príznak, či bol korektne overený bezpečnostný token. \\\hline
+		token & string & Privátna premenná s hodnotou bezpečnostného tokenu. \\\hline
 		
 		\hline
 	\end{tabular}
@@ -40,9 +48,9 @@ Trieda \code{User} reprezentuje používateľa pripojeného na synchronizačný 
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
 		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
 		
-		setToken(token) & Nastavenie bezpečnostného tokenu  \\\hline
-		getToken() & Vráti hodnotu bezpečnostného tokenu \\\hline
-		verifyUser() & Overí hodnotu bezpečnostného tokenu a nastaví triednu premennú \code{verified} \\\hline
+		setToken(token) & Nastavenie bezpečnostného tokenu.  \\\hline
+		getToken() & Vráti hodnotu bezpečnostného tokenu. \\\hline
+		verifyUser() & Overí hodnotu bezpečnostného tokenu a nastaví triednu premennú \code{verified}. \\\hline
 		
 		\hline
 	\end{tabular}
@@ -52,17 +60,17 @@ Trieda \code{User} reprezentuje používateľa pripojeného na synchronizačný 
 
 
 \subsubsection{Message}
-Objekt \code{Message} reprezentuje správu odoslané používateľmi pomocou chatu v editore. Popis vnútornej reprezentácie vlastností objektu môžeme vidieť v tabuľke \ref{tab:server-prop-message}
+Objekt \code{Message} reprezentuje správu odoslané používateľmi pomocou chatu v editore. Popis vnútornej reprezentácie vlastností objektu môžeme vidieť v tabuľke \ref{tab:server-prop-message}.
 
 \begin{table}
 	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
 		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline \hline
 		
-		from & User & Odosielateľ správy \\\hline
-		to & User & Prijímateľ správy \\\hline
-		text & string & Textový obsah správy \\\hline
-		type & string & Typ správy nastavovaný ak ide o systémovú správu \\\hline
-		time & string & Dátum a čas odoslania správy \\	\hline
+		from & User & Odosielateľ správy. \\\hline
+		to & User & Prijímateľ správy. \\\hline
+		text & string & Textový obsah správy. \\\hline
+		type & string & Typ správy nastavovaný ak ide o systémovú správu. \\\hline
+		time & string & Dátum a čas odoslania správy. \\	\hline
 	
 		\hline
 	\end{tabular}
@@ -79,13 +87,13 @@ Trieda \code{Room} slúži na udržiavanie stavu miestnosti pripojených použí
 	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
 		\textbf{Názov} & \textbf{Typ} & \textbf{Popis} \\ \hline \hline
 	
-		users & array<User> & Zoznam používateľov \\\hline
-		messages & array<Message> & Zoznam správ \\\hline
-		objects & array<object> & Zoznam objektov grafickej plochy \\\hline
-		canvas & object & Dynamický objekt s nastaveniami grafickej plochy \\\hline
-		format & string & Formát editovaného súboru (jpg, png, svg)\\\hline
-		loaded & boolean & Príznak či je miestnosť plne vyinicializovaná \\\hline
-		file & string & Názov editovaného súboru \\\hline
+		users & array<User> & Zoznam používateľov. \\\hline
+		messages & array<Message> & Zoznam správ. \\\hline
+		objects & array<object> & Zoznam objektov grafickej plochy. \\\hline
+		canvas & object & Dynamický objekt s nastaveniami grafickej plochy. \\\hline
+		format & string & Formát editovaného súboru (jpg, png, svg).\\\hline
+		loaded & boolean & Príznak, či je miestnosť plne vyinicializovaná. \\\hline
+		file & string & Názov editovaného súboru. \\\hline
 	
 		\hline
 	\end{tabular}
@@ -137,9 +145,9 @@ Trieda menežéra miestností \code{RoomManager} slúži na spravovanie existuj�
 
 \subsection{Pripojenie klienta}
 
-Pri vytvorení inštancie Socket.IO objektu s názvom \code{io}, vkladáme do jeho konštruktora inštanciu vytvoreného HTTP servera. Po jej vytvorení je server pripravený prijímať správy s udalosťami takzvané \textit{socket}-y. Príchod pripájacej správy s názvom udalosti  \code{\'connection\'} je odchytený event-listenerom  \code{io.on(\'connection\', function(socket)\{...\})}, v ktorom sa volá funkcia spracujúca túto udalosť. Informácie o pripájanom klientovi je do nej poslaná parametrom socket. Pomocou tohoto parametra následne server odchytáva správy ďalšie správy, odosielané zo strany klienta. Parameter v sebe taktiež nesie objekt \code{socket.handshake}. V tomto objekte sú uložené informácie o nadviazanom spojení, medzi ktorými je aj premenná query. V tejto premennej sú uložené informácie o názve editovaného súboru, bezpečnostný token a meno pripájaného používateľa. 
+Pri vytvorení inštancie Socket.IO objektu s názvom \code{io}, vkladáme do jeho konštruktora inštanciu vytvoreného HTTP servera. Po jej vytvorení je server pripravený prijímať správy s udalosťami takzvané \textit{socket}-y. Príchod pripájacej správy s názvom udalosti  \code{\'connection\'} je odchytený event-listenerom  \code{io.on(\'connection\', function(socket)\{...\})}, v ktorom sa volá funkcia spracujúca túto udalosť. Informácia o pripájanom klientovi je do nej poslaná parametrom \code{socket}. Pomocou tohoto parametra následne server odchytáva ďalšie správy, odosielané zo strany klienta. Parameter v sebe taktiež nesie objekt \code{socket.handshake}. V tomto objekte sú uložené informácie o nadviazanom spojení, medzi ktorými je aj premenná \code{query}. V tejto premennej sú uložené informácie o názve editovaného súboru, bezpečnostný token a meno pripájaného používateľa. 
 
-Po úspešnom nadviazaní spojenia vytvoríme nový objekt používateľa typu \code{User} s menom získaným z premennej \\\code{socket.handshake.query[\'name\']} a nastavíme mu bezpečnostný token funkciou \code{setToken(socket.handshake.query[\'secret\'])}. Pri nastavení tokenu sa aplikuje jeho automatická validácia a nastavenie premennej \code{verified}.
+Po úspešnom nadviazaní spojenia vytvoríme nový objekt používateľa typu \code{User}, s menom získaným z premennej \\\code{socket.handshake.query[\'name\']} a nastavíme mu bezpečnostný token funkciou \code{setToken(socket.handshake.query[\'secret\'])}. Pri nastavení tokenu sa aplikuje jeho automatická validácia a nastavenie premennej \code{verified}.
 
 
 \subsubsection{Inicializácia miestnosti}
@@ -147,7 +155,7 @@ Ak je je používateľský token vyhodnotený ako správny, nasleduje inicializ�
 
 Súčasne sa vykoná načítanie editovaného súboru pomocou asynchrónneho HTTP dopytu na koncový bod API systému MediaWiki. V prípade že API nájde zadaný súbor, odpoveďou je objekt tohoto súboru, s informáciami o jeho rozmeroch, MIME formáte. 
 
-Ak sa jedná o súbor, ktorý už bol editovaný pomocou nášho rozšírenia, vnútorná reprezentácia editora je uložená vo forme textového reťazca v metadátach súboru. Tento reťazec obsahujúci vlastnosti grafickej plochy a objektov v nej umiesnených dekódujeme do formátu JSON a nastavíme potrebné vlastnosti triednych premenných miestnosti. 
+Ak sa jedná o súbor, ktorý už bol editovaný pomocou nášho rozšírenia, vnútorná reprezentácia editora je uložená vo forme textového reťazca v metadátach súboru. Tento reťazec obsahujúci vlastnosti grafickej plochy a objektov v nej umiestnených dekódujeme do formátu JSON a nastavíme potrebné vlastnosti triednych premenných miestnosti. 
 
 Ak načítavaný súbor ešte nebol upravovaný našim editorom, vytvoríme nový grafický objekt editora typu obrázok a pridáme ho do zoznamu objektov grafickej plochy miestnosti. Pri neexistujúcom súbore sú ponechané pôvodné vlastnosti miestnosti.
 
@@ -166,22 +174,22 @@ Pripojením používateľa do existujúcej miestnosti, proces pripojenia pozost�
 S pripojením používateľa do miestnosti získava možnosť odosielať a prijímať synchronizačné správy. Synchronizačný server prijíma nasledujúce názvy udalostí:
 \begin{itemize}
 	
-	\item \code{\'canvas-modified\'} - \textit{Zmeny grafickej plochy} spracováva triedna metóda \code{room.modifyCanvas(properties, socket);}, ktorá ej parametrami sú objekt \code{properties} obsahujúce vlastnosti zmenenej grafickej plochy editora a \code{socket} objekt odosielateľa. Po zmene vlastností plochy v rámci servera je odoslaná udalosť so zmenami všetkým ostatným používateľom.
+	\item \code{\'canvas-modified\'} -- \textit{Zmeny grafickej plochy} spracováva triedna metóda \code{room.modifyCanvas(properties, socket);}, ktorej parametrami sú objekt \code{properties}, obsahujúci vlastnosti zmenenej grafickej plochy editora a \code{socket} objekt odosielateľa. Po zmene vlastností plochy v rámci servera je odoslaná udalosť so zmenami všetkým ostatným používateľom.
 	
-	\item \code{\'object-created\'} - \textit{Vytvorenie objektu} je spracované metódou \\\code{room.createObject(object, socket);}. Tá vytvorí nový záznam v zozname objektov editora, indexovaný podľa jedinečného identifikátora objektu a odošle udalosť na vytvorenie objektu všetkým ostatným používateľom.
+	\item \code{\'object-created\'} -- \textit{Vytvorenie objektu} je spracované metódou \\\code{room.createObject(object, socket);}. Tá vytvorí nový záznam v zozname objektov editora, indexovaný podľa jedinečného identifikátora objektu a odošle udalosť na vytvorenie objektu všetkým ostatným používateľom.
 	
-	\item \code{\'selection-changed\'} - \textit{Zmena uzamknutia objektu} sa vyhodnotí metódou \code{room.setSelectable(data.id, data.selectable, user, socket);}. Parametrami sú jedinečný identifikátor objektu, stav či má byť objekt uzamknutý alebo odomknutý a používateľ ktorý vykonáva túto zmenu. V prípade že objekt nemôže byť uzamknutý z dôvodu že už je uzamknutý iným používateľom, odosielateľ obdrží udalosť o zakázaní označenia daného objektu. Inak sa nastaví hodnota uzamknutia a odošle sa ostatným používateľom.
+	\item \code{\'selection-changed\'} -- \textit{Zmena uzamknutia objektu} sa vyhodnotí metódou \code{room.setSelectable(data.id, data.selectable, user, socket);}. Parametrami sú jedinečný identifikátor objektu, stav či má byť objekt uzamknutý alebo odomknutý a používateľ ktorý vykonáva túto zmenu. V prípade že objekt nemôže byť uzamknutý z dôvodu, že už bol uzamknutý iným používateľom, odosielateľ obdrží udalosť o zakázaní označenia daného objektu. Inak sa nastaví hodnota uzamknutia a odošle sa ostatným používateľom.
 	
-	\item \code{\'object-modified\'} - \textit{Modifikácia objektu} je spracovaná pomocou metódy \code{room.modifyObject(object, socket);}, ktorá vyhľadá objekt na základe jedinečného identifikátora v zozname objektov a nastaví jeho nové vlastnosti podľa vstupného parametra \code{object}. V prípade že objekt v zozname neexistuje, vytvorí ho. Funkcia ďalej odošle udalosť na modifikáciu objektu všetkým ostatným používateľom.
+	\item \code{\'object-modified\'} -- \textit{Modifikácia objektu} je spracovaná pomocou metódy \code{room.modifyObject(object, socket);}, ktorá vyhľadá objekt na základe jedinečného identifikátora v zozname objektov a nastaví jeho nové vlastnosti podľa vstupného parametra \code{object}. V prípade že objekt v zozname neexistuje, vytvorí ho. Funkcia ďalej odošle udalosť na modifikáciu objektu všetkým ostatným používateľom.
 	
-	\item \code{\'object-removed\'} - \textit{Odstránenie objektu} zabezpečuje triedna metóda \code{room.removeObject(id, socket);}. Tá odstráni objekt s jedinečným identifikátorom podľa vstupného parametra zo zoznamu objektov miestnosti a odošle udalosť na odstránenie objektu ostatným používateľom.
+	\item \code{\'object-removed\'} -- \textit{Odstránenie objektu} zabezpečuje triedna metóda \code{room.removeObject(id, socket);}. Tá odstráni objekt s jedinečným identifikátorom podľa vstupného parametra zo zoznamu objektov miestnosti a odošle udalosť na odstránenie objektu ostatným používateľom.
 	
-	\item \code{\'message-created\'} - \textit{Vytvorenie textovej správy} v chate editora je spracovaná metódou \\ \code{room.createMessage(message.text, message.from, message.to);}. Parameterami sú údaje prijaté v požiadavke, nesúce informácie o obsahu, odosielateľovi a prijímateľovi správy. Táto správa sa následne rozdistribuuje medzi všetkých používateľov pripojených do miestnosti.
+	\item \code{\'message-created\'} -- \textit{Vytvorenie textovej správy} v chate editora je spracovaná metódou \\ \code{room.createMessage(message.text, message.from, message.to);}. Parameterami sú údaje prijaté v požiadavke, nesúce informácie o obsahu, odosielateľovi a prijímateľovi správy. Táto správa sa následne rozdistribuuje medzi všetkých používateľov pripojených do miestnosti.
 	
 \end{itemize}
 
 \subsection{Odpojenie klienta}
-Proces odpojenia používateľa pozostáva z jeho odstránenia zo zoznamu používateľov v miestnosti, zrušenia príznaku uzamknutého objektu všetkých objektov, ktoré mal používateľ pri odchode uzamknuté, a odoslania udalosti všetkým zvyšným používateľom. Trieda \code{RoomManager} overí počet používateľov v miestnosti a pokiaľ zostala miestnosť prázdna, vymaže ju zo svojho zoznamu pomocou metódy \code{removeRoom(name);}.
+Proces odpojenia používateľa pozostáva z jeho odstránenia zo zoznamu používateľov v miestnosti, zrušenia príznaku uzamknutého objektu všetkých objektov, ktoré mal používateľ pri odchode uzamknuté a odoslania udalosti všetkým zvyšným používateľom. Trieda \code{RoomManager} overí počet používateľov v miestnosti a pokiaľ zostala miestnosť prázdna, vymaže ju zo svojho zoznamu pomocou metódy \code{removeRoom(name);}.
 
 
 
@@ -191,23 +199,23 @@ Proces odpojenia používateľa pozostáva z jeho odstránenia zo zoznamu použ�
 Druhou časťou implementácie tejto diplomovej práce je naprogramovanie grafického editora obrázkov. Editor je implementovaný formou \textit{special page} rozšírenia, integrovaného do systému MediaWiki. Na vykresľovanie objektov grafickej plochy a udržiavanie jej stavu využívame knižnicu Fabric. Dátový model aplikácie je preto z veľkej časti závislý od dátového modelu tejto knižnice. Kolaboratívna funkcionalita je docielená použitím klientskej verzie Socket.IO knižnice, pomocou ktorej zabezpečujeme komunikáciu so synchronizačným serverom. Na riadenie klientského rozhrania používame knižnicu AngularJS. Komponenty používateľského prostredia sú naprogramované v šablónovacom jazyku HTML a ich vzhľad je naprogramovaný pomocou štýlovacieho jazyka LESS.
 
 \subsection{MediaWiki rozšírenie}
-Pri tvorbe rozšírení pre MediaWiky je potrebné dodržať základné návrhové konvencie stanovené tvorcami tohoto systému. Prvoradou vlastnosťou je jednoduchá inštalácia a nastavenie rozšírenia. To je docielené pomocou viacerých faktorov. Prvoradé je používanie správnej súborovej štruktúry. 
+Pri tvorbe rozšírení pre MediaWiky je potrebné dodržať základné návrhové konvencie stanovené tvorcami tohoto systému. Prvoradou vlastnosťou je jednoduchá inštalácia a nastavenie rozšírenia. To je docielené pomocou viacerých faktorov. Dôležité je používanie správnej súborovej štruktúry. 
 
-Rozšírenie musí byť umiestnené vo vlastnom priečinku medzi ostatnými MediaWiki rozšíreniami. V našom prípade je to priečinok \code{/extensions/ImageEditor}, kde sa nachádzajú zdrojové súbory a priečinky kategorizované podľa ich obsahu. V priečinku i18n sa nachádzajú php súbory s prekladmi textov použitých v prostredí rozšírenia, nazvané skratkou jazyka v ktorom sú preložené. Pre slovenčinu je to \code{sk.php}.
+Rozšírenie musí byť umiestnené vo vlastnom priečinku medzi ostatnými MediaWiki rozšíreniami. V našom prípade je to priečinok \code{/extensions/ImageEditor}, kde sa nachádzajú zdrojové súbory a priečinky kategorizované podľa ich obsahu. V priečinku \code{i18n} sa nachádzajú php súbory s prekladmi textov použitých v prostredí rozšírenia, nazvané skratkou jazyka, do ktorého sú preložené. Pre slovenčinu je to \code{sk.php}.
 
 Zdrojový súbor \code{ImageEditor.php} zabezpečuje možnosť načítania rozšírenia pomocou príkazu \code{wfLoadExtension( \'ImageEditor\' );} v konfiguračnom súbore \code{LocalSettings.php}.
 
-Súbor \code{ImageEditor.hooks.php} obsahuje funkcie, pomocou ktorých vieme odchytiť niektoré akcie, vykonávané jadrom systému, a ovplyvniť tak jeho základnú funkcionalitu. V tomto súbore sa nachádza trieda \code{ImageEditorHooks} poskytujúca nasledujúce statické metódy:
+Súbor \code{ImageEditor.hooks.php} obsahuje funkcie, pomocou ktorých vieme odchytiť akcie vykonávané jadrom systému, a ovplyvniť tak jeho základnú funkcionalitu. V tomto súbore sa nachádza trieda \code{ImageEditorHooks} poskytujúca nasledujúce statické metódy:
 
 \begin{itemize}
-	\item \code{onFileUpload} - funkcia odchytávajúca nahrávanie nového multimediálneho súboru alebo jeho novej revízie, pomocou ktorej uložíme obsah editora do metadát súboru. Metadáta sú uchovávané v databáze pomocou blob databázového dátového typu, ktorého obsahom je serializované pole jazyka php. Naše rozšírenie pri ukladaní revízie zapíše do tohoto poľa svoju dátovú štruktúru serializovanú do JSON textového formátu, ktorá je odosielaná pri ukladaní súboru pomocou HTTP POST dotazu, pod indexom \code{imageEditorContent}.
+	\item \code{onFileUpload} -- funkcia odchytávajúca nahrávanie nového multimediálneho súboru alebo jeho novej revízie, pomocou ktorej uložíme obsah editora do metadát súboru. Metadáta sú uchovávané v databáze formou blob databázového dátového typu. Obsahom je serializované pole jazyka php. Naše rozšírenie pri ukladaní revízie zapíše do tohoto poľa svoju dátovú štruktúru serializovanú do JSON textového formátu, ktorá je odosielaná pri ukladaní súboru pomocou POST premennej HTTP dotazu, pod indexom \code{imageEditorContent}.
 	
-	\item \code{onSkinTemplateNavigation} - metóda odchytáva proces vykreslenia navigačných tlačidiel pri vykreslení šablóny stránok. Na základe overenia práv používateľa a typu vykresľovanej stránky sa pridá tlačidlo na otvorenie súboru v našom editore obrázkov \refimg{obr:base-integration}.
+	\item \code{onSkinTemplateNavigation} -- metóda odchytáva proces vykreslenia navigačných tlačidiel pri vykreslení šablóny stránok. Na základe overenia práv používateľa a typu vykresľovanej stránky sa pridá tlačidlo na otvorenie súboru v našom editore obrázkov \refimg{obr:base-integration}.
 	
-	\item \code{onSkinTemplateNavigation_SpecialPage} - podobná metóda ako \\
-	\code{onSkinTemplateNavigation} s výnimkou že táto udalosť je volaná pri vykresľovaní šablóny špeciálnych stránok.
+	\item \code{onSkinTemplateNavigation_SpecialPage} -- podobná metóda ako \\
+	\code{onSkinTemplateNavigation} s výnimkou, že táto udalosť je volaná pri vykresľovaní šablóny špeciálnych stránok.
 	
-	\item \code{onResourceLoaderGetConfigVars} - metóda slúži na pridanie konfiguračných premenných posielaných do JavaScriptového rozhrania systému MediaWiki. Vďaka tomu môžeme pristupovať k premenným definujúcim bezpečnostný token, port a adresu synchronizačného servera z klientskej aplikácie naprogramovanej v jazyku JavaScript pomocou premenných 
+	\item \code{onResourceLoaderGetConfigVars} -- metóda slúži na pridanie konfiguračných premenných posielaných do JavaScriptového rozhrania systému MediaWiki. Vďaka tomu môžeme pristupovať k premenným definujúcim bezpečnostný token, port a adresu synchronizačného servera z klientskej aplikácie naprogramovanej v jazyku JavaScript pomocou premenných 
 	\begin{itemize}
 		\item \code{mw.config.values.wgImageEditor.secret}
 		\item \code{mw.config.values.wgImageEditor.host}
@@ -218,11 +226,11 @@ Súbor \code{ImageEditor.hooks.php} obsahuje funkcie, pomocou ktorých vieme odc
 V súbore \code{templates/ImageEditorTemplate.php} sa nachádza php trieda \\
 \code{ImageEditorTemplate} dedená od triedy \code{QuickTemplate}, obsahujúca jednu metódu s názvom \code{execute()}. Volaním tejto metódy sa vykreslí HTML šablóna nášho rozšírenia.
 
-Hlavná logika načítania rozšírenia sa však odohráva v triede \code{SpecialImageEditor} rozširujúcej triedu \code{SpecialPage}, umiestnenej v súbore \\
-\code{specials/SpecialImageEditor.php}. V metóde \code{execute()} sa vykoná overenie práv na upravovanie stránok a overí sa či je vybraný súbor ktorý chceme upravovať. Ak používateľ nemá práva na úpravu, je presmerovaný buď na prihlásenie (neprihlásený používateľ) alebo chybovú stránku.
+Hlavná logika načítania rozšírenia sa však odohráva v triede \code{SpecialImageEditor}, umiestnenej v súbore \\
+\code{specials/SpecialImageEditor.php}. V metóde \code{execute()} sa vykoná overenie práv na upravovanie stránok a overí sa či je vybraný súbor, ktorý chceme upravovať. Ak používateľ nemá práva na úpravu, je presmerovaný buď na prihlásenie (neprihlásený používateľ) alebo chybovú stránku.
 
 Ak používateľ vytvára nový súbor pomocou adresy \\
-\code{https://wiki.matfyz.sk/Special:ImageEditor} zobrazí sa mu formulár so výzvou na zadanie názvu súboru \refimg{obr:base-new}. Po jeho zadaní je presmerovaný do prostredia editora.
+\code{https://wiki.matfyz.sk/Special:ImageEditor} zobrazí sa mu formulár s výzvou na zadanie názvu súboru \refimg{obr:base-new}. Po jeho zadaní je presmerovaný do prostredia editora.
 
 \begin{figure}[h]
 	\centerline{\includegraphics[width=1\textwidth]{images/results/base-new}}
@@ -238,19 +246,18 @@ Ak používateľ vytvára nový súbor pomocou adresy \\
 \FloatBarrier
 
 
-Zdrojové kódy editora jazyka JavaScript sú umiestnené v priečinku \\
-\code{resources/scripts}. Pre ich lepšiu prehľadnosť sme ich rozdelili do súborov podľa zamerania funkcií ktoré obsahujú \reftab{tab:editor-scripts-files}. Kaskádové štýly používateľského prostredia editora sa nachádzajú v priečinku \code{resources/styles} a taktiež sú rozdelené podľa funkcionality \reftab{tab:editor-styles-files}. Použité knižnice sa nachádzajú v priečinku \code{resources/vendor} a zdrojové obrázky spolu s písmami v priečinku \code{resources/assets}.
+Zdrojové kódy editora naprogramované v jazyku JavaScript sú umiestnené v priečinku \code{resources/scripts}. Pre ich lepšiu prehľadnosť sme ich rozdelili do súborov podľa zamerania obsahujúcich funkcií \reftab{tab:editor-scripts-files}. Kaskádové štýly používateľského prostredia editora sa nachádzajú v priečinku \code{resources/styles} a taktiež sú rozdelené podľa funkcionality \reftab{tab:editor-styles-files}. Použité knižnice sa nachádzajú v priečinku \code{resources/vendor} a zdrojové obrázky spolu s písmami v priečinku \code{resources/assets}.
 
 \begin{table}
 	\begin{tabular}{ | m{6cm} | m{6.5cm} | } \hline
 		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
 		
-		ext.imageEditor.utils.js & Definície globálnych funkcií a prototypovanie vlastných funkcií do pre knižnicu Fabric \\\hline
-		ext.imageEditor.init.databinding.js & Definície funkcií na prístup k premenným objektov knižnice Fabric pomocou Angular controllera \\\hline
-		ext.imageEditor.init.tools.js & Definície funkcií na prácu s používateľským prostredím editora \\\hline
-		ext.imageEditor.init.events.js & Definície funkcií na riadenie udalostí (event-handlers) grafickej plochy a synchronizačných správ \\\hline
-		ext.imageEditor.init.keybindings.js & Definícia funkcie na spracovanie klávesových skratiek \\\hline
-		ext.imageEditor.init.history.js & Príprava pre funkcionalitu ukladania histórie zmien (undo, redo) \\\hline
+		ext.imageEditor.utils.js & Definície globálnych funkcií a prototypovanie vlastných metód knižnice Fabric. \\\hline
+		ext.imageEditor.init.databinding.js & Definície funkcií na prístup k premenným objektov knižnice Fabric pomocou Angular controlleru. \\\hline
+		ext.imageEditor.init.tools.js & Definície funkcií na prácu s používateľským prostredím editora. \\\hline
+		ext.imageEditor.init.events.js & Definície funkcií na riadenie udalostí (event-handlers) grafickej plochy a synchronizačných správ. \\\hline
+		ext.imageEditor.init.keybindings.js & Definícia funkcie na spracovanie klávesových skratiek. \\\hline
+		ext.imageEditor.init.history.js & Príprava pre funkcionalitu ukladania histórie zmien (undo, redo). \\\hline
 		ext.imageEditor.init.app.js & Inicializácia Angular controllera, služby poskytujúcej prístup k funkciám knižnice Socket.IO a definícia direktív Angular modulu pre vytvorenie vlastných HTML elementov a atribútov. \\\hline
 		
 		\hline
@@ -263,10 +270,10 @@ Zdrojové kódy editora jazyka JavaScript sú umiestnené v priečinku \\
 	\begin{tabular}{ | m{6cm} | m{6.5cm} | } \hline
 		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
 		
-		ext.imageEditor.vars & Definície premenných a mixinov a dedičných tried \\\hline
-		ext.imageEditor.colorpicker & Štýly pre komponent vyberača farieb \\\hline
-		ext.imageEditor.icons & Definície premenných a tried pre ikony používateľského prostredia \\\hline
-		ext.imageEditor.less & Definície štýlov používateľského prostredia editora \\\hline
+		ext.imageEditor.vars & Definície premenných, mixinov a dedičných tried. \\\hline
+		ext.imageEditor.colorpicker & Štýly pre komponent vyberača farieb. \\\hline
+		ext.imageEditor.icons & Definície premenných a tried pre ikony používateľského prostredia. \\\hline
+		ext.imageEditor.less & Definície štýlov používateľského prostredia editora. \\\hline
 		
 		\hline
 	\end{tabular}
@@ -275,7 +282,7 @@ Zdrojové kódy editora jazyka JavaScript sú umiestnené v priečinku \\
 \end{table}
 
 Pri tvorbe rozšírenia pre systém MediaWiki je veľmi dôležitý súbor \\
-\code{extension.json} nachádzajúci sa v jeho koreňovom priečinku. Slúži na definovanie umiestnenia súborov, závislostí na iných rozšíreniach a ich automatického načítavania pomocou \textit{resource loadera}.
+\code{extension.json}, nachádzajúci sa v jeho koreňovom priečinku. Slúži na definovanie umiestnenia súborov, závislostí na iných rozšíreniach a ich automatického načítavania pomocou \textit{resource loaderu}.
 
 
 
@@ -297,11 +304,11 @@ Aplikácia grafického editora je naprogramovaná v jazyku JavaScript pomocou fr
 	\label{tab:image-editor-directives}
 \end{table}
 
-Okrem direktív modul obsahuje taktiež controller s názvom \code{ImageEditorController}, ktorý riadi funkcionalitu a správanie grafického editora. Kvôli dostupnosti funkcií priamo v šablóne, je potrebné všetky funkcie a premenné definovať do \code{$ \$ $scope} objektu. 
+Okrem direktív modul obsahuje taktiež controller s názvom \code{ImageEditorController}, riadiaci funkcionalitu a správanie grafického editora. Kvôli dostupnosti funkcií priamo v šablóne je potrebné všetky funkcie a premenné definovať do \code{$ \$ $scope} objektu. 
 
 \subsubsection{Mapovanie dát}
 
-Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby dokázal dynamicky zobrazovať hodnoty modelu v šablóne aplikácie pomocou dátového mapovania. Aby sme boli schopný mapovať dátový model Fabric canvas objektu, je však potrebné naprogramovať metódy na prístup k jeho hodnotám. Musíme tak učiniť z dôvodu, že hodnoty modelu nie vždy zodpovedajú hodnotám, ktoré potrebujeme zobrazovať v používateľskom prostredí. Zdrojový súbor \code{ext.imageEditor.init.databinding.js} obsahuje funkcie určené na túto činnosť. Okrem funkcií popísaných v tabuľke \reftab{tab:editor-func-databinding}, sú v tomto súbore taktiež \code{get} a \code{set} funkcie definované pre každú premennú Fabric objektov \cite{FabricApiDoc}, ku ktorej je potrebné pristupovať z používateľského prostredia.
+Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby dokázal dynamicky zobrazovať hodnoty modelu v šablóne aplikácie pomocou dátového mapovania. Aby sme boli schopný mapovať dátový model Fabric canvas objektu, je potrebné naprogramovať metódy na prístup k jeho hodnotám. Musíme tak učiniť z dôvodu, že hodnoty modelu nie vždy zodpovedajú hodnotám, ktoré potrebujeme zobrazovať v používateľskom prostredí. Zdrojový súbor \code{ext.imageEditor.init.databinding.js} obsahuje funkcie určené na túto činnosť. Okrem funkcií popísaných v tabuľke \reftab{tab:editor-func-databinding}, sú v tomto súbore taktiež \code{get} a \code{set} funkcie definované pre každú premennú Fabric objektov \cite{FabricApiDoc}, ku ktorej je potrebné pristupovať z používateľského prostredia.
 
 \begin{table}
 	\begin{tabular}{ | m{7.5cm} | m{5cm} | } \hline
@@ -321,7 +328,7 @@ Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby
 \subsubsection{Riadenie udalostí (Event-handler)}
 Naša aplikácia využíva princípy programovania riadeného udalosťami (event-driven). Dokáže dynamicky vyhodnocovať niektoré z udalostí, ktoré sa v nej vykonávajú, bez potreby volania funkcií spracovávajúcich danú akciu do častí kódu, kde je daná akcia vykonávaná. Namiesto toho sa použije funkcia \code{$\$$scope.canvas.trigger(\'event-name\', {...})}, pomocou ktorej sa vyvolá udalosť s názvom podľa prvého parametra a dátami uloženými v druhom parametri tejto funkcie. Následne je možné tieto udalosti jednoducho zachytiť. V našej aplikácií. 
 
-Okrem akcií nad grafickou plochou, spracovávame taktiež udalosti vyvolávané synchronizačnými správami servera, poskytované službami knižnice Socket.IO. Zoznam a popis udalostí, ktoré naša aplikácia dokáže spracovať môžeme vidieť v tabuľkách \reftab{tab:editor-events} a \reftab{tab:server-events}.
+Okrem akcií grafickej plochy, spracovávame taktiež udalosti vyvolávané synchronizačnými správami servera, poskytované službami knižnice Socket.IO. Zoznam a popis udalostí, ktoré naša aplikácia dokáže spracovať môžeme vidieť v tabuľkách \reftab{tab:editor-events} a \reftab{tab:server-events}.
 
 \begin{table}
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
@@ -363,3 +370,5 @@ Okrem akcií nad grafickou plochou, spracovávame taktiež udalosti vyvolávané
 	\caption{Zoznam udalostí synchronizačného servera}
 \label{tab:server-events}
 \end{table}
+
+
