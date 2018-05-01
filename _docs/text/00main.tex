@@ -200,7 +200,12 @@ Keywords: keywords, en, ...
 
 
 % treba este prejst dokument ci je kod spravne formatovany
-\input base.tex
+\tableofcontents
+
+%zrusenie indentu pre paragraph a nastavenie medzery nad novym riadkom
+\def\spaceafterpar{1em}
+\setlength{\parskip}{\spaceafterpar}
+\setlength\parindent{0pt}
 
 \mainmatter
 
@@ -214,6 +219,13 @@ Keywords: keywords, en, ...
 \input conclusion.tex
 
 \backmatter
+\def\spaceafterpar{0em}
+\setlength{\parskip}{\spaceafterpar}
+\listoffigures
+
+\listoftables
+
+
 
 \nocite{*}
 \bibliographystyle{alpha}
