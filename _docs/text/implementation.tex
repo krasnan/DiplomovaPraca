@@ -202,7 +202,7 @@ Súbor \code{ImageEditor.hooks.php} obsahuje funkcie, pomocou ktorých vieme odc
 \begin{itemize}
 	\item \code{onFileUpload} - funkcia odchytávajúca nahrávanie nového multimediálneho súboru alebo jeho novej revízie, pomocou ktorej uložíme obsah editora do metadát súboru. Metadáta sú uchovávané v databáze pomocou blob databázového dátového typu, ktorého obsahom je serializované pole jazyka php. Naše rozšírenie pri ukladaní revízie zapíše do tohoto poľa svoju dátovú štruktúru serializovanú do JSON textového formátu, ktorá je odosielaná pri ukladaní súboru pomocou HTTP POST dotazu, pod indexom \code{imageEditorContent}.
 	
-	\item \code{onSkinTemplateNavigation} - metóda odchytáva proces vykreslenia navigačných tlačidiel pri vykreslení šablóny stránok. Na základe overenia práv používateľa a typu vykresľovanej stránky sa pridá tlačidlo na otvorenie súboru v našom editore obrázkov.
+	\item \code{onSkinTemplateNavigation} - metóda odchytáva proces vykreslenia navigačných tlačidiel pri vykreslení šablóny stránok. Na základe overenia práv používateľa a typu vykresľovanej stránky sa pridá tlačidlo na otvorenie súboru v našom editore obrázkov \refimg{obr:base-integration}.
 	
 	\item \code{onSkinTemplateNavigation_SpecialPage} - podobná metóda ako \\
 	\code{onSkinTemplateNavigation} s výnimkou že táto udalosť je volaná pri vykresľovaní šablóny špeciálnych stránok.
@@ -222,7 +222,21 @@ Hlavná logika načítania rozšírenia sa však odohráva v triede \code{Specia
 \code{specials/SpecialImageEditor.php}. V metóde \code{execute()} sa vykoná overenie práv na upravovanie stránok a overí sa či je vybraný súbor ktorý chceme upravovať. Ak používateľ nemá práva na úpravu, je presmerovaný buď na prihlásenie (neprihlásený používateľ) alebo chybovú stránku.
 
 Ak používateľ vytvára nový súbor pomocou adresy \\
-\code{https://wiki.matfyz.sk/Special:ImageEditor} zobrazí sa mu formulár so výzvou na zadanie názvu súboru. Po jeho zadaní je presmerovaný do prostredia editora.
+\code{https://wiki.matfyz.sk/Special:ImageEditor} zobrazí sa mu formulár so výzvou na zadanie názvu súboru \refimg{obr:base-new}. Po jeho zadaní je presmerovaný do prostredia editora.
+
+\begin{figure}[h]
+	\centerline{\includegraphics[width=1\textwidth]{images/results/base-new}}
+	\caption{Používateľské prostredie na zadanie názvu nového obrázku.}
+	\label{obr:base-new}
+\end{figure}
+\FloatBarrier
+\begin{figure}[h]
+	\centerline{\includegraphics[width=1\textwidth]{images/results/base-integration}}
+	\caption{Integrácia do natívneho prostredia systému MediaWiki}
+\label{obr:base-integration}
+\end{figure}
+\FloatBarrier
+
 
 Zdrojové kódy editora jazyka JavaScript sú umiestnené v priečinku \\
 \code{resources/scripts}. Pre ich lepšiu prehľadnosť sme ich rozdelili do súborov podľa zamerania funkcií ktoré obsahujú \reftab{tab:editor-scripts-files}. Kaskádové štýly používateľského prostredia editora sa nachádzajú v priečinku \code{resources/styles} a taktiež sú rozdelené podľa funkcionality \reftab{tab:editor-styles-files}. Použité knižnice sa nachádzajú v priečinku \code{resources/vendor} a zdrojové obrázky spolu s písmami v priečinku \code{resources/assets}.
@@ -262,6 +276,9 @@ Zdrojové kódy editora jazyka JavaScript sú umiestnené v priečinku \\
 
 Pri tvorbe rozšírenia pre systém MediaWiki je veľmi dôležitý súbor \\
 \code{extension.json} nachádzajúci sa v jeho koreňovom priečinku. Slúži na definovanie umiestnenia súborov, závislostí na iných rozšíreniach a ich automatického načítavania pomocou \textit{resource loadera}.
+
+
+
 
 \subsection{Aplikácia grafického editora}
 Aplikácia grafického editora je naprogramovaná v jazyku JavaScript pomocou frameworku AngularJS. Všetky jej funkcie sú naprogramované formou modulu s názvom \code{ImageEditor}. Modul poskytuje direktívy pre šablónu, ktoré zabezpečujú dynamické vykresľovanie niektorých používateľských komponentov, pridávajú im dodatočnú funkcionalitu, upravujú spôsob mapovania dát alebo poskytujú prístup k službám knižnice Socket.IO \reftab{tab:image-editor-directives}.
@@ -303,6 +320,7 @@ Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby
 
 \subsubsection{Riadenie udalostí (Event-handler)}
 Naša aplikácia využíva princípy programovania riadeného udalosťami (event-driven). Dokáže dynamicky vyhodnocovať niektoré z udalostí, ktoré sa v nej vykonávajú, bez potreby volania funkcií spracovávajúcich danú akciu do častí kódu, kde je daná akcia vykonávaná. Namiesto toho sa použije funkcia \code{$\$$scope.canvas.trigger(\'event-name\', {...})}, pomocou ktorej sa vyvolá udalosť s názvom podľa prvého parametra a dátami uloženými v druhom parametri tejto funkcie. Následne je možné tieto udalosti jednoducho zachytiť. V našej aplikácií. 
+
 Okrem akcií nad grafickou plochou, spracovávame taktiež udalosti vyvolávané synchronizačnými správami servera, poskytované službami knižnice Socket.IO. Zoznam a popis udalostí, ktoré naša aplikácia dokáže spracovať môžeme vidieť v tabuľkách \reftab{tab:editor-events} a \reftab{tab:server-events}.
 
 \begin{table}

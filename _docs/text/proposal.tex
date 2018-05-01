@@ -36,13 +36,13 @@ Aby sa predišlo zbytočnému udržiavaniu stavov miestností, v ktorých sa nen
 \subsection{Funkčné požiadavky synchronizačného servera}
 
 \begin{itemize}
-	\item \textbf{Pripojenie používateľa} - vytvorí sa entita typu \code{User} a nastavia sa mu vlastnosti na základe zaslaného dopytu. 
+	\item \textbf{Pripojenie používateľa} -- vytvorí sa entita typu \code{User} a nastavia sa mu vlastnosti na základe zaslaného dopytu. 
 	
-	\item \textbf{Overenie pripojeného používateľa} - po pripojení nového používateľa sa overuje správnosť bezpečnostného tokenu. Ak bezpečnostný token nie je správny, používateľ nebude mať umožnené pripojenie do zvolenej miestnosti.
+	\item \textbf{Overenie pripojeného používateľa} -- po pripojení nového používateľa sa overuje správnosť bezpečnostného tokenu. Ak bezpečnostný token nie je správny, používateľ nebude mať umožnené pripojenie do zvolenej miestnosti.
 	
-	\item \textbf{Vytvorenie miestnosti} - v prípade, ak sa pripojený používateľ má zaradiť do miestnosti, ktorá aktuálne neexistuje, takáto miestnosť je vytvorená a následne je do nej používateľ zaradený. V prípade, že daná miestnosť už vytvorená je, používateľ sa do nej zaradí automaticky a táto informácia sa odošle všetkým ostatným používateľom nachádzajúcim sa v miestnosti. S pripojením prvého používateľa je potrebné načítať informácie o editovanom obrazovom súbore. Docielime to HTTP dopytom na rozhranie API (\textbf{A}plication \textbf{P}rograming \textit{Interface}). Návratové hodnoty dopytu v prípade existujúceho súboru rozdelíme do príslušných vlastností aktuálnej miestnosti a následne ich odošleme formou odpovede pripájanému používateľovi.
+	\item \textbf{Vytvorenie miestnosti} -- v prípade, ak sa pripojený používateľ má zaradiť do miestnosti, ktorá aktuálne neexistuje, takáto miestnosť je vytvorená a následne je do nej používateľ zaradený. V prípade, že daná miestnosť už vytvorená je, používateľ sa do nej zaradí automaticky a táto informácia sa odošle všetkým ostatným používateľom nachádzajúcim sa v miestnosti. S pripojením prvého používateľa je potrebné načítať informácie o editovanom obrazovom súbore. Docielime to HTTP dopytom na rozhranie API (\textbf{A}plication \textbf{P}rograming \textit{Interface}). Návratové hodnoty dopytu v prípade existujúceho súboru rozdelíme do príslušných vlastností aktuálnej miestnosti a následne ich odošleme formou odpovede pripájanému používateľovi.
 	
-	\item \textbf{Synchronizácia editora} - po pripojení a zaradení používateľa do miestnosti zodpovedajúcej editovanému súboru, bude server schopný prijímať synchronizačné správy o zmenách vykonaných používateľom v prostredí editora. 
+	\item \textbf{Synchronizácia editora} -- po pripojení a zaradení používateľa do miestnosti zodpovedajúcej editovanému súboru, bude server schopný prijímať synchronizačné správy o zmenách vykonaných používateľom v prostredí editora. 
 	
 	Pri \textit{vytvorení nového grafického objektu} editora sa odosiela požiadavka s informáciami o tomto objekte na synchronizačný server. Ten požiadavku spracuje, pridá objekt do zoznamu objektov na základe jeho jedinečného identifikátora a odošle informáciu o novom objekte všetkým ostatným používateľom pripojeným do miestnosti.
 	
@@ -52,9 +52,9 @@ Aby sa predišlo zbytočnému udržiavaniu stavov miestností, v ktorých sa nen
 	
 	Aby sa predišlo konfliktom pri zmenách vlastností objektov, je potrebné navrhnúť proces ich automatického uzamykania. To zabezpečíme tak, že pri zvolení aktívneho objektu v grafickom editore bude odoslaná požiadavka na jeho uzamknutie daným používateľom na server. Táto akcia je znova synchronizovaná so zvyšnými editormi používateľov. V prípade že objekt už uzamknutý bol, odošle sa odpoveď o zamietnutí uzamknutia objektu.
 	
-	\item \textbf{Odpojenie používateľa} - pri tejto akcií je potrebné vykonať niekoľko úkonov. Najskôr musia byť odomknuté všetky objekty, ktoré boli uzamknuté odpájaným používateľom a následne sa odstráni z miestnosti. V prípade, že miestnosť zostane prázdna, vymaže sa. Inak je odoslaná informácia o odpojení používateľa všetkým zvyšným pripojeným klientom.
+	\item \textbf{Odpojenie používateľa} -- pri tejto akcií je potrebné vykonať niekoľko úkonov. Najskôr musia byť odomknuté všetky objekty, ktoré boli uzamknuté odpájaným používateľom a následne sa odstráni z miestnosti. V prípade, že miestnosť zostane prázdna, vymaže sa. Inak je odoslaná informácia o odpojení používateľa všetkým zvyšným pripojeným klientom.
 	
-	\item \textbf{Odstránenie miestnosti} - ako sme spomenuli vyššie, miestnosť je automaticky odstránená pri odchode posledného používateľa. Tento proces zabezpečí entita \code{RoomManager}.
+	\item \textbf{Odstránenie miestnosti} -- ako sme spomenuli vyššie, miestnosť je automaticky odstránená pri odchode posledného používateľa. Tento proces zabezpečí entita \code{RoomManager}.
 	
 \end{itemize}
 
@@ -65,9 +65,9 @@ Grafický editor implementujeme formou MediaWiki rozšírenia, naprogramovaného
 \begin{itemize}
 	\item \textbf{Otvorenie grafického editora} a v prípade upravovania existujúceho súboru jeho automatické načítanie.
 	
-	\item \textbf{Výber nástroja} - grafický editor poskytne viacero pracovných nástrojov, na vytváranie rôznych typov grafických objektov. Tie môžu byť zvolené kliknutím na tlačidlo reprezentujúce daný nástroj. 
+	\item \textbf{Výber nástroja} -- grafický editor poskytne viacero pracovných nástrojov, na vytváranie rôznych typov grafických objektov. Tie môžu byť zvolené kliknutím na tlačidlo reprezentujúce daný nástroj. 
 	
-	\item \textbf{Vytvorenie objektu} - po zvolení nástroja môžeme pridať do grafickej plochy nasledujúce objekty:
+	\item \textbf{Vytvorenie objektu} -- po zvolení nástroja môžeme pridať do grafickej plochy nasledujúce objekty:
 	\begin{itemize}
 		\item \textbf{Obdĺžnik}, \textbf{elipsu}, \textbf{trojuholník}, \textbf{úsečku} a \textbf{textové pole} pomocou kliknutia na grafickú plochu a  ťahaním kurzora sa bude nastavovať ich veľkosť.
 		\item \textbf{Polygón}, ktorého vrcholy sa budú pridávať postupným klikaním na grafickú plochu.
@@ -85,13 +85,13 @@ Grafický editor implementujeme formou MediaWiki rozšírenia, naprogramovaného
 	
 	\item \textbf{Lokálne uzamknutie} zamedzí používateľovi možnosť pohybu, rotácie, a zmeny veľkosti objektu.
 	
-	\item \textbf{Zmena viditeľnosti} - každý grafický objekt môže byť skrytý z grafickej plochy editora a následne znova zobrazený.
+	\item \textbf{Zmena viditeľnosti} -- každý grafický objekt môže byť skrytý z grafickej plochy editora a následne znova zobrazený.
 	
 	\item \textbf{Kopírovanie, vystrihnutie, vloženie a duplikovanie} objektu.
 	
-	\item \textbf{Priblíženie grafickej plochy} - používateľ môže proporcionálne zväčšiť alebo zmenšiť grafickú plochu zmenou hodnoty skálovania(zoom).
+	\item \textbf{Priblíženie grafickej plochy} -- používateľ môže proporcionálne zväčšiť alebo zmenšiť grafickú plochu zmenou hodnoty skálovania(zoom).
 	
-	\item \textbf{Zmena vlastností grafickej plochy} - okrem skálovania môže používateľ nastaviť aj jej rozmery, od čoho sa odvíja veľkosť výsledného súboru a tým aj jeho kvalita a taktiež farbu pozadia. 
+	\item \textbf{Zmena vlastností grafickej plochy} -- okrem skálovania môže používateľ nastaviť aj jej rozmery, od čoho sa odvíja veľkosť výsledného súboru a tým aj jeho kvalita a taktiež farbu pozadia. 
 	
 	\item \textbf{Zobrazenie zoznamu používateľov}
 	
@@ -99,7 +99,7 @@ Grafický editor implementujeme formou MediaWiki rozšírenia, naprogramovaného
 	
 	\item \textbf{Vycentrovanie grafickej plochy} na vertikálny a horizontálny stred okna grafického editora.
 	
-	\item \textbf{Chat} - používatelia si môžu vymieňať informácie formou krátkych textových správ. 
+	\item \textbf{Chat} -- používatelia si môžu vymieňať informácie formou krátkych textových správ. 
 	
 	\item \textbf{Uloženie revízie súboru} v systéme MediaWiki. 
 	

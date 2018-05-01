@@ -16,7 +16,6 @@ Vyššie opísané dva druhy počítačovej grafiky zaraďujeme medzi plošnú (
 
 Toto zobrazenie je definované podobne ako pri vektorovej grafike, ale je rozšírené o tretí rozmer, ktorým je hĺbka. Vďaka tomu vieme definovať objekty zobrazené v priestore ako guľa, kváder, ihlan a iné. Trojrozmerná počítačová grafika sa primárne využíva pri hernom a strojárenskom priemysle, alebo na tvorbu filmových efektov. Využíva sa na vytvorenie virtuálneho modelu, ktorý sa snaží čo najdôvernejšie priblížiť objektu v reálnom svete. 
 
-Priestor, v ktorom zobrazujeme objekty 3D počítačovej grafiky sa nazýva scéna. Je to virtuálna reprezentácia sveta, definovaná tromi rozmermi, ktoré tvoria globálny súradnicový systém. Objekty zobrazované v scéne sú zdroj svetla, pozícia kamery a samotné 3D modely. 3D model je objekt zložený zo vzájomne susediacich polygónov. Tieto polygóny sú tvorené vrcholmi a hranami medzi nimi a tak tvoria sieť výsledného objektu. Jednotlivé vrcholy sú v rámci objektu, do ktorého patria, definované v lokálnom súradnicovom systéme. Pre prevod súradníc vrcholov z lokálneho súradnicového systému do globálneho súradnicového systému scény využívame transformačnú maticu, ktorou sú násobené všetky vrcholy daného modelu. Tvorí ju súčin matice posunutia, rotácie a skálovania. 
 
 \subsection{Kolaboratívna práca vo webových aplikáciách}
 
@@ -24,8 +23,8 @@ Kolaboratívna práca \cite{doi:10.1177/0021943603259363} je proces, pri ktorom 
 
 Pri synchrónnej kolaborácií pracujú používatelia na zadanej úlohe súčasne, pričom každá akcia vykonaná jedným používateľom sa v tom istom čase prejaví všetkým ostatným spolupracovníkom. Výhodami synchrónnej kolaborácie sú:
 \begin{itemize}
-	\item \textbf{Rýchlosť} - vďaka akciám prejavovaným v reálnom čase je pre účastníkov umožnená ich okamžitá reakcia,
-	\item \textbf{Kvalita} - práca viacerých používateľov na jednej téme spoločne prináša širší uhol pohľadu a tým pádom aj lepšiu informovanosť.
+	\item \textbf{Rýchlosť} -- vďaka akciám prejavovaným v reálnom čase je účastníkom umožnená ich okamžitá reakcia,
+	\item \textbf{Kvalita} -- práca viacerých používateľov na jednej téme spoločne prináša širší uhol pohľadu a tým pádom aj lepšiu informačnú hodnotu.
 \end{itemize}
 
 Asynchrónne vytváranie obsahu môže byť organizované čiastkovými podúlohami, ktoré jednotliví používatelia riešia samostatne a po dokončení sa tieto podúlohy spoja do jedného celku. Najčastejšie využitie je pri tvorbe textových dokumentov alebo programovaní zdrojových súborov aplikácií. Tento prístup sa uplatňuje najmä vo verziovacích systémoch, akými sú napríklad GIT alebo SVN. Taktiež sa využíva v systéme MediaWiki.
@@ -63,15 +62,15 @@ Vyššie opísané technológie sú síce kľúčovými pre tvorbu interaktívny
 \subsection{JavaScriptová knižnica Less.js}
 LESS je dynamický štýlovací jazyk, ktorý môže byť skompilovaný do CSS kaskádových štýlov, upravujúcich základný vzhľad komponentov webových aplikácií. Na rozdiel od klasických kaskádových štýlov, tento jazyk umožňuje definovanie: 
 \begin{itemize}
-	\item premenných - špecifikovanie často používaných hodnôt na jednom mieste a následné referencovanie tejto hodnoty kdekoľvek v zdrojových súboroch,
-	\item mixinov - umožňujú vložiť všetky vlastnosti jednej triedy do inej,
+	\item premenných -- špecifikovanie často používaných hodnôt na jednom mieste a následné referencovanie tejto hodnoty kdekoľvek v zdrojových súboroch,
+	\item mixinov -- umožňujú vložiť všetky vlastnosti jednej triedy do inej,
 	\item vnorených pravidiel - namiesto vytvárania selektorov s dlhým názovm špecifikujúcich dedičnosť, používame vnorenie selektorov do iných, vďaka čomu je zápis prehľadnejší a kratší,
-	\item funkcií a výpočtov - hodnoty závislé od proporcií iných elementov je možné vypočítavať za pomoci základných aritmetických operácií sčítania, odčítania, násobenia alebo delenia.
+	\item funkcií a výpočtov -- hodnoty závislé od proporcií iných elementov je možné vypočítavať za pomoci základných aritmetických operácií sčítania, odčítania, násobenia alebo delenia.
 \end{itemize}
-Zdrojové súbory v jazyku Less sú kompilované pomocou viacerých možných spôsobov, napríklad priamo v prehliadači používateľa v prostredí Node, PHP, .Net a ďalších. Výsledkom kompilácie je vytvorenie súboru s kaskádovými štýlmi vo formáte css.
+Zdrojové súbory v jazyku Less sú kompilované viacerými možnými spôsobmi, napríklad priamo v prehliadači používateľa v prostredí Node, PHP, .Net a ďalších. Výsledkom kompilácie je vytvorenie súboru s kaskádovými štýlmi vo formáte css.
 
 \subsection{JavaScriptová knižnica Node.js}
-NodeJS je open-source multiplatformové JavaScriptové runtime prostredie, ktoré vykonáva funkcionalitu naprogramovanú jazykom JavaScript na strane servera. Toto prostredie beží na V8 JavaScript engine navrhnutom spolčnosťou Google. Je určené na tvorbu vysoko škálovateľných internetových aplikácií, s využitím asynchrónnych I/O operácií \cite{doi:10.1109/MIC.2010.145} pre minimalizáciu réžie a maximalizáciu výkonu. 
+NodeJS je open-source multiplatformové JavaScriptové runtime prostredie, ktoré vykonáva funkcionalitu naprogramovanú jazykom JavaScript na strane servera. Toto prostredie beží na V8 JavaScript engine navrhnutom spoločnosťou Google. Je určené na tvorbu vysoko škálovateľných internetových aplikácií, s využitím asynchrónnych I/O operácií \cite{doi:10.1109/MIC.2010.145} pre minimalizáciu réžie a maximalizáciu výkonu. 
 
 To znamená, že hlavný proces aplikácie spracováva požiadavky postupne, pričom každá časovo zložitejšia podúloha je vykonávaná asynchrónne. Hlavné vlákno nečaká na vykonanie pomalých operácií, ale vykoná svoju funkcionalitu, následne spustí pomalú operáciu a v zápätí začne spracovávať ďalšiu požiadavku. Po vykonaní pomalej asynchrónnej operácie, NodeJS vykoná funkcionalitu, ktorá je reakciou na jej ukončenie a ďalej sa venuje iným úlohám. Je to teda jedno vlákno, ktoré sa rýchlo a na krátku dobu prepína medzi rôznymi úlohami. 
 
@@ -83,12 +82,12 @@ Takýto spôsob spracovania dopytov má dve hlavné výhody:
 
 NodeJS obsahuje sadu API umožňujúcu vykonávanie serverových operácií, do ktorej patria:
 \begin{itemize}
-	\item HTTP - umožňuje spracovávať HTTP serverové dotazy,
-	\item I/O - práca so súbormi pomocou Streams a Buffers,
-	\item DNS/URL - pomocné API na prácu s DNS a URL,
-	\item Crypto - kryptografické operácie,
-	\item Processes - interakcia s operačným systémom,
-	\item Cluster - spúšťanie NodeJS v clustri, možnosť fungovania vo viacerých vláknach.
+	\item HTTP -- umožňuje spracovávať HTTP serverové dotazy,
+	\item I/O -- práca so súbormi pomocou Streams a Buffers,
+	\item DNS/URL -- pomocné API na prácu s DNS a URL,
+	\item Crypto -- kryptografické operácie,
+	\item Processes -- interakcia s operačným systémom,
+	\item Cluster -- spúšťanie NodeJS v clustri, možnosť fungovania vo viacerých vláknach.
 \end{itemize}
 
 
@@ -96,7 +95,7 @@ NodeJS obsahuje sadu API umožňujúcu vykonávanie serverových operácií, do 
 
 \textit{AngularJS} je JavaScriptový framework, ktorý sa zameriava na rozšírenie HTML jazyka do čitateľnejšej a dynamickejšej podoby \cite{jain2015angularjs}. Umožňuje pridávať do zdrojového HTML kódu vlastné tagy a atribúty, ktoré sú synchronizované s funkcionalitou napísanou v jazyku JavaScript. Tie sú vyhodnocované až po načítaní obsahu stránky do DOM, čo má nasledujúce výhody:
 \begin{itemize}
-	\item bezproblémová integrácia do existujúcich aplikácií ,
+	\item bezproblémová integrácia do existujúcich aplikácií,
 	\item možnosť pracovať s Angular-om priamo v HTML dokumente bez nutnosti spúšťania webservera alebo kompilovania,
 	\item jednoduchá rozšíriteľnosť pomocou direktív, ktoré určujú ako sa majú jednotlivé elementy vykresľovať v internetovom prehliadači a akú funkcionalitu majú poskytovať.
 \end{itemize}
@@ -138,12 +137,12 @@ Pri vytváraní základných geometrických útvarov pomocou tejto knižnice sa 
 \end{itemize}  
 Každý z nich má definované nasledovné premenné:
 \begin{itemize}
-	\item \code{left, top} - pozícia objektu v canvas elemente,
-	\item \code{width, height} - šírka a výška objektu,
-	\item \code{fill, opacity, stroke, strokeWidth} - fatba výplne, priehľadnosť, farba obtiahnutia a šírka obtiahnutia,
-	\item \code{scaleX, scaleY, angle} - skálovanie a uhol rotácie,
-	\item \code{flipX, flipY} - horizontálne a vertikálne prevrátenie,
-	\item \code{skewX, skewY} - horizontálne a vertikálne zošikmenie.
+	\item \code{left, top} -- pozícia objektu v canvas elemente,
+	\item \code{width, height} -- šírka a výška objektu,
+	\item \code{fill, opacity, stroke, strokeWidth} -- farba výplne, priehľadnosť, farba obtiahnutia a šírka obtiahnutia,
+	\item \code{scaleX, scaleY, angle} -- skálovanie a uhol rotácie,
+	\item \code{flipX, flipY} -- horizontálne a vertikálne prevrátenie,
+	\item \code{skewX, skewY} -- horizontálne a vertikálne zošikmenie.
 \end{itemize}
 V prípade, že potrebujeme zmeniť nejakú vlastnosť niektorého z objektov, využijeme metódu \code{set} s JSON parametrom premenných, ktoré chceme zmeniť \reflst{lst:fabric.set}.
 
@@ -170,7 +169,7 @@ canvas.setBackgroundColor('rgb(100,100,200)');
 canvas.setSelectionColor('blue');
 // ...
 \end{lstlisting}
-Jednou z unikátnych vstavaných vlastností knižnice Fabric je interakčná vrstva nad grafickou plochou canvas elementu, obsahujúceho objektový model. Objektový model existuje aby umožnil programový prístup a manipuláciu s objektami canvas-u. Z pohľadu používateľa je však možné manipulovať s objektami pomocou počítačovej myši, prípadne dotykov pri zariadeniach s dotykovou obrazovkou \refimg{img:fabric-object-selection}. Ihneď po inicializácií pomocou \code{new fabric.Canvas('...')}, je možné vybrať objekt, posúvať ho ťahaním, skálovať, rotovať alebo zoskupiť viacero objektov do skupiny a manipulovať so všetkými súčasne \refimg{img:fabric-group-selection}.  
+Jednou z unikátnych vstavaných vlastností knižnice Fabric je interakčná vrstva nad grafickou plochou canvas elementu, obsahujúceho objektový model. Objektový model existuje, aby umožnil programový prístup a manipuláciu s objektami canvas elementu. Z pohľadu používateľa je však možné manipulovať s objektami pomocou počítačovej myši, prípadne dotykov pri zariadeniach s dotykovou obrazovkou \refimg{img:fabric-object-selection}. Ihneď po inicializácií pomocou \code{new fabric.Canvas('...')}, je možné vybrať objekt, posúvať ho ťahaním, skálovať, rotovať alebo zoskupiť viacero objektov do skupiny a manipulovať so všetkými súčasne \refimg{img:fabric-group-selection}.  
 
 \begin{figure}
 	\centering
@@ -182,7 +181,7 @@ Jednou z unikátnych vstavaných vlastností knižnice Fabric je interakčná vr
 	\quad
 	\begin{subfigure}[b]{0.48\linewidth}	
 		\centering{\includegraphics[width=0.9\textwidth]{images/fabric-group-selection}}
-		\caption{Manipulácia skupiny objektov}
+		\caption{Manipulácia so skupinou objektov}
 		\label{img:fabric-group-selection}
 	\end{subfigure}
 	\caption[Fabric - ukážka manipulácie s objektami]{Manipulácia s objektami pomocou vstupných zariadení s použitím knižnice Fabric}
@@ -252,12 +251,12 @@ Pre správne fungovanie rozšírenia je potrebné zabezpečiť niekoľko kľúč
 	\item Pripraviť triedy použité vo vašom rozšírení pre autonačítanie.
 	\item Rozhodnúť, ktoré časti inštalačného nastavenia majú byť vykonané okamžite, a ktoré majú čakať pokiaľ sa inicializuje jadro MediaWiki.
 	\item Definovať dodatočné hooky potrebné pre rozšírenie.
-	\item Vytvoriť / skontroluje všetky nové databázové tabuľky nutné pre rozšírenie.
+	\item Vytvoriť / skontrolovať všetky nové databázové tabuľky nutné pre rozšírenie.
 	\item Nastaviť lokalizáciu rozšírenia.
 \end{itemize}
 
 \subsection{ResourceLoader}
-Vytváraním rozšírení existujúcich systémov vzniká množstvo súborov, odosielaných zo servera na jednotlivých klientov. Aby sa predišlo dlhému načítaniu stránky, je potrebné nejakým spôsobom riadiť kedy a komu sa majú odoslať zdrojové súbory. Systém MediaWiki na to využíva takzvaný \textit{delivery system} označovaný taktiež ako \textit{ResourceLoader}. Jeho úlohou je odosielať zdrojové súbory, ktoré klientská časť aplikácie aktuálne potrebuje, a ktoré podporuje internetový prehliadač klienta. Využíva pri tom nasledujúce procesy:
+Vytváraním rozšírení existujúcich systémov vzniká množstvo súborov, odosielaných zo servera na jednotlivých klientov. Aby sa predišlo dlhému načítaniu stránky, je potrebné nejakým spôsobom riadiť, kedy a komu sa majú odoslať zdrojové súbory. Systém MediaWiki na to využíva takzvaný \textit{delivery system} označovaný taktiež ako \textit{ResourceLoader}. Jeho úlohou je odosielať zdrojové súbory, ktoré klientská časť aplikácie aktuálne potrebuje, a ktoré podporuje internetový prehliadač klienta. Využíva pri tom nasledujúce procesy:
 
 \begin{itemize}
 	\item \textit{Minifikácia a spájanie} zdrojových súborov optimalizuje ich veľkosť, a tým pádom aj redukuje čas ich načítania.
