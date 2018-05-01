@@ -1,10 +1,10 @@
 \chapter{Predchádzajúce riešenia}\label{chap:previous_solutions}
 
-V nasledujúcej kapitole opíšeme existujúce riešenia, zameriame sa na ich výhody a prípadné nevýhody.
+V nasledujúcej kapitole opíšeme existujúce riešenia, v ktorých sa zameriame na ich výhody a nevýhody.
 
 \section{SVGEdit}
 
-SVGEdit je jediné oficiálne rozšírenie MediaWiki existujúce v dobe písania tejto diplomovej práce. Aktuálne ja v stave experimental, čo naznačuje, že nie všetka funkcionalita bude bezproblémová. Poskytuje možnosti vytvárania a editovania súborov vektorovej grafiky vo formáte svg. Využíva open source SVG-edit widget, ktorý poskytuje štandardnú funkcionalitu vektorového editora, s relatívne vysokou kvalitou spracovania. 
+SVGEdit je jediné oficiálne rozšírenie MediaWiki existujúce v dobe písania tejto diplomovej práce. Aktuálne je v stave experimental, čo naznačuje, že nie všetka funkcionalita bude bezproblémová. Poskytuje možnosti vytvárania a editovania súborov vektorovej grafiky vo formáte svg. Využíva open source SVG-edit widget, ktorý poskytuje štandardnú funkcionalitu vektorového editora s relatívne vysokou kvalitou spracovania. 
 
 Nevýhodou tohoto riešenia je, že samotný editor je vložený formou iframe widgetu zo stránok vývojárov tohoto widgetu. To spôsobuje nemožnosť upraviť vzhľad alebo funkcionalitu editora. Prepojenie s MediaWiki systémom je zabezpečené pomocou asynchrónnych ajax volaní. Editor taktiež nepodporuje kolaboratívnu úpravu jedného súboru viacerými používateľmi. Ďalšou nevýhodou je jeho zložité ovládanie nehodiace sa pre cieľovú skupinu finálnej aplikácie, ktorou sú študenti základných a stredných škôl.
 
@@ -40,9 +40,9 @@ Keďže sa však jedná o samostatnú webovú aplikáciu, nie je možné ju impl
 	\item \textit{Infografiky} na lepšiu zapamätateľnosť informácií.
 \end{itemize}
 Umožňuje bezplatné prepojenie s viacerými cloudovými riešeniami ako Google Drive, OneDrive alebo možnosť integrovať do vývojových kolaboratívnych softvérov Confluence a Jira. Aplikáciu je možné používať aj pomocou desktopových aplikácií na všetkých bežných operačných systémoch (Windows, macOS, Linux, Chrome OS). 
-Ďalšími výhodami sú jednoduché a intuitívne ovládanie, dobrá skálovateľnosť pre projekty s veľkým množstvom elementov, možnosť bezplatného používania a  voľná prístupnosť zdrojových súborov aplikácie pre vývojárov.
+Ďalšími výhodami sú jednoduché a intuitívne ovládanie, dobrá skálovateľnosť pre projekty s veľkým množstvom elementov, možnosť bezplatného používania a voľná prístupnosť zdrojových súborov aplikácie pre vývojárov.
 
-Nevýhodou je že aplikáciu nieje možné prepojiť so systémom MediaWiki a nepodporuje voľné kreslenie objektov. Tie môžu byť importované formou obrázka.
+Nevýhodou je, že aplikáciu nie je možné prepojiť so systémom MediaWiki a nepodporuje voľné kreslenie objektov. Tie môžu byť importované formou obrázka.
 
 \begin{figure}[h]
 	\centerline{\includegraphics[width=0.8\textwidth]{images/drawio}}
