@@ -163,7 +163,7 @@ Po inicializovaní vlastností miestnosti je odoslaná používateľovi notifik�
 
 Pripojením používateľa do existujúcej miestnosti, proces pripojenia pozostáva iba zo zaradenia používateľa do zoznamu používateľov, odoslania notifikácie o úspešnom pripojení spolu s odoslaním notifikácie všetkým ostatným používateľom. Pripájanému používateľovi sa taktiež odosiela inicializačná notifikácia s aktuálnym stavom grafického editora, vytvorenými objektami a pripojenými používateľmi.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centerline{\includegraphics[width=1\textwidth]{images/diagrams/sequence-diagram-server-connect}}
 	\caption[Sekvenčný diagram pripojenia používateľa]{Sekvenčný diagram úspešného pripojenia používateľa na synchronizačný server}
 	\label{obr:sequence-diagram-server-connect}
@@ -232,18 +232,17 @@ Hlavná logika načítania rozšírenia sa však odohráva v triede \code{Specia
 Ak používateľ vytvára nový súbor pomocou adresy \\
 \code{https://wiki.matfyz.sk/Special:ImageEditor} zobrazí sa mu formulár s výzvou na zadanie názvu súboru \refimg{obr:base-new}. Po jeho zadaní je presmerovaný do prostredia editora.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centerline{\includegraphics[width=1\textwidth]{images/results/base-new}}
 	\caption{Používateľské prostredie na zadanie názvu nového obrázku.}
 	\label{obr:base-new}
 \end{figure}
-\FloatBarrier
-\begin{figure}[h]
+
+\begin{figure}[H]
 	\centerline{\includegraphics[width=1\textwidth]{images/results/base-integration}}
-	\caption{Integrácia do natívneho prostredia systému MediaWiki}
-\label{obr:base-integration}
+	\caption{Integrácia do natívneho prostredia systému MediaWiki.}
+	\label{obr:base-integration}
 \end{figure}
-\FloatBarrier
 
 
 Zdrojové kódy editora naprogramované v jazyku JavaScript sú umiestnené v priečinku \code{resources/scripts}. Pre ich lepšiu prehľadnosť sme ich rozdelili do súborov podľa zamerania obsahujúcich funkcií \reftab{tab:editor-scripts-files}. Kaskádové štýly používateľského prostredia editora sa nachádzajú v priečinku \code{resources/styles} a taktiež sú rozdelené podľa funkcionality \reftab{tab:editor-styles-files}. Použité knižnice sa nachádzajú v priečinku \code{resources/vendor} a zdrojové obrázky spolu s písmami v priečinku \code{resources/assets}.
@@ -370,5 +369,135 @@ Okrem akcií grafickej plochy, spracovávame taktiež udalosti vyvolávané sync
 	\caption{Zoznam udalostí synchronizačného servera}
 \label{tab:server-events}
 \end{table}
+\FloatBarrier
+\subsubsection{Používateľské prostredie}
+Používateľské prostredie editora je nadizajnované tak, aby bola každá funkcionalita prístupná pokiaľ možno na jedno kliknutie používateľa. Pozostáva zo 4. hlavných komponentov.
+
+\begin{figure}[H]	
+	\centerline{\includegraphics[width=1\textwidth]{images/results/base-editor}}
+	\caption{Používateľské prostredie grafického editora obrázkov.}
+	\label{obr:base-user-interface}
+\end{figure}
+	
+\textbf{Grafická plocha}, v ktorej sú vykresľované jednotlivé grafické objekty. Ak je niektorý z objektov uzamknutý iným používateľom, prístup k tomuto objektu bude zamietnutý. Pri nadídení kurzora počítačovej myši sa zobrazí meno používateľa používajúceho daný objekt.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/canvas-selected}}
+		\caption{Označenie aktívnych objektov}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/canvas-locked}}
+		\caption{Zobrazenia používateľa, ktorý uzamkol objekt}
+	\end{subfigure}
+	
+	\caption{Grafická plocha edit}
+\end{figure}
+
+ \textbf{Panel nástrojov} s tlačidlom pre každý nástroj a tlačidlami pre výber farby výplne a obtiahnutia objektu. V paneli sa taktiež nachádza tlačidlo na zapnutie prichytávania objektov k mriežke grafickej plochy.
+	
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[height=6cm]{images/results/toolbar}}
+		\caption{Zoznam nástrojov grafického editora}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[height=6cm]{images/results/toolbar-colorpicker}}
+		\caption{Vyberač farby výplne a obtiahnutia objektu grafickej plochy}
+	\end{subfigure}
+	\caption{Panel nástrojov}
+\end{figure}
 
 
+
+\textbf{Hlavné menu} obsahujúce tlačidlo na prepnutie zobrazenia do režimu celej obrazovky, tlačidlo na vycentrovanie grafickej plochy a rozbaľovací zoznam správ chatu. Okrem týchto tlačidiel tu nájdeme aj 3 rozbaľovacie (dropdown) tlačidlá \textit{Súbor}, \textit{Upraviť} a \textit{Objekt}. Rozbalením tlačidla \textit{Súbor} sa zobrazí ponuka na exportovanie grafickej plochy do formátov PNG a SVG, uloženie revízie a zatvorenie editora. Rozbalením tlačidla \textit{Upraviť} sa sprístupnia možnosti na kopírovanie, vystrihnutie, vloženie, duplikovanie a odstránenie objektu. Pod posledným tlačidlom \textit{Objekt}, sa zobrazia možnosti operácií s aktívnym objektom na zmenu hĺbky objektu v grafickej ploche.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/menu-file}}
+		\caption{Rozbaľovacie menu pre tlačidlo \textit{Súbor}}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/menu-edit}}
+		\caption{Rozbaľovacie menu pre tlačidlo \textit{Upraviť}}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/menu-object}}
+		\caption{Rozbaľovacie menu pre tlačidlo \textit{Objekt} }
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/menu-users}}
+		\caption{Rozbaľovacie menu zoznamu pripojených používateľov  }
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/menu-messenger}}
+		\caption{Prostredie pre odosielanie textových správ}
+	\end{subfigure}
+	\caption{Zobrazenie hlavného menu}
+\end{figure}
+
+
+	
+\textbf{Panel nastavení} tvorený dvoma komponentmi. Komponent vrstiev zobrazujúci zoznam všetkých grafických objektov s možnosťou ich rýchleho uzamknutia, skrytia a odstránenia. Vrstvy môžu byť preusporiadané pomocou ťahania kurzora, čím sa mení ich hĺbka v grafickej ploche editora. Druhý komponent obsahujúci nastavenia aktuálneho kontextu editora dynamicky zobrazuje položky na nastavenie vlastností aktívneho objektu, grafickej plochy alebo nastavenia voľného kreslenia.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.3\linewidth}	
+		\centering{\includegraphics[height=4cm]{images/results/props-layers}}
+		\caption{Panel vrstiev }
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.3\linewidth}	
+		\centering{\includegraphics[height=4cm]{images/results/props-canvas}}
+		\caption{Panel nastavení grafickej plochy}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.3\linewidth}	
+		\centering{\includegraphics[height=4cm]{images/results/props-brush}}
+		\caption{Panel nastavení voľného kreslenia}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[height=5cm]{images/results/props-text}}
+		\caption{Panel nastavení textového objektu}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[height=5cm]{images/results/props-object}}
+		\caption{Panel nastavení objektu}
+	\end{subfigure}
+	\caption{Ukážka panelov s nastaveniami}
+\end{figure}
+	
+
+
+Okrem týchto panelov je potrebné informovať používateľa o niektorých vykonávaných akciách formou dialógových (\textit{popup}) správ, s možnosťou potvrdenia alebo prípadného zrušenia akcie. Obsah dialógových okien je potrebné dynamicky vytvárať a modifikovať funkcionalitu potvrdzovacích tlačidiel. Využijeme ich na upozornenie používateľa pri odstraňovaní objektu z grafickej plochy \refimg{obr:editor-dialog-delete} a zatváraní okna editora, kde bude používateľ vyzvaný na uloženie súboru alebo ukončenie bez ukladania zmien \refimg{obr:editor-dialog-close}. Pomocou dialógového okna je taktiež riešené nahratie obrázku z lokálneho úložiska používateľa \refimg{obr:editor-dialog-upload}.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/dialog-upload}}
+		\caption{Dialógové okno na nahratie súboru}
+		\label{obr:editor-dialog-upload}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.48\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/dialog-delete}}
+		\caption{Dialógové okno na potvrdenie vymazania grafického objektu}
+		\label{obr:editor-dialog-delete}
+	\end{subfigure}
+	\quad
+	\begin{subfigure}[t]{0.7\linewidth}	
+		\centering{\includegraphics[width=1\textwidth]{images/results/dialog-close}}
+		\caption{Dialógové okno zobrazené pri zatváraní editora}
+		\label{obr:editor-dialog-close}
+	\end{subfigure}
+	\caption{Dialógové okná}
+\end{figure}
+\FloatBarrier

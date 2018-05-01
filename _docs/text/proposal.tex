@@ -114,20 +114,7 @@ V systéme MediaWiki má každý multimediálny súbor svoju vlastnú podstránk
 Systém MediaWiki umožňuje modifikovať položky hlavného menu a pridávať odkazy na rôzne stránky, vrátane špeciálnych stránok systému alebo rozšírení. Administrátor vďaka tomu môže jednoduchým spôsobom pridať odkaz na grafický editor do hlavného menu.
 
 \subsection{Návrh ovládacích prvkov editora}
-Väčšina prostredí grafických editorov, či už sú to vektorové, rastrové alebo 3D modelovacie editory využívajú rozdelenie ovládacích prvkov na 4 hlavné komponenty. Zoznam nástrojov zobrazený pri ľavom okraji okna editora, hlavné menu pri vrchnom a nastavenia nástrojov pri pravom okraji okna, s grafickou plochou uprostred týchto ovládacích komponentov. V našom prípade sme sa rozhodli použiť podobné rozloženie, kvôli zavedeným zvykom používateľov a tým pádom vyššej intuitívnosti pri používaní.
-
-Rozloženie komponentov bude taktiež pozostávať zo 4. hlavných častí \refimg{obr:editorWireframeBase}:
-\begin{itemize}
-	\item \textbf{Panel nástrojov} s tlačidlami všetkých nástrojov a tlačidlami pre výber farby výplne a obtiahnutia objektu. V paneli sa taktiež nachádza tlačidlo na zapnutie prichytávania objektov k mriežke grafickej plochy.
-
-	\item \textbf{Hlavný panel} obsahujúci tlačidlo na prepnutie zobrazenia do režimu celej obrazovky, tlačidlo na vycentrovanie grafickej plochy a rozbaľovací zoznam správ chatu. Okrem týchto tlačidiel tu nájdeme aj 3 rozbaľovacie (dropdown) tlačidlá \textit{Súbor}, \textit{Upraviť} a \textit{Objekt}. Rozbalením tlačidla \textit{Súbor} sa zobrazí ponuka na exportovanie grafickej plochy do viacerých formátov, uloženie revízie a zatvorenie editora. Po rozbalením tlačidla \textit{Upraviť} sa sprístupnia možnosti na kopírovanie, vystrihnutie, vloženie a duplikovanie objektu. Pod posledným tlačidlom \textit{Objekt}, sa zobrazia možnosti operácií s aktívnym objektom na zmenu hĺbky objektu v grafickej ploche.
-
-	\item \textbf{Panel nastavení} tvorený dvoma komponentmi. Komponent vrstiev zobrazujúci zoznam všetkých grafických objektov s možnosťou ich rýchleho uzamknutia, skrytia. Vrstvy môžu byť preusporiadané pomocou ťahania, čím sa bude meniť ich hĺbka v grafickej ploche editora. Druhý komponent obsahujúci nastavenia aktuálneho kontextu editora bude dynamicky zobrazovať položky na nastavenie vlastností aktívneho objektu, grafickej plochy alebo nastavenia voľného kreslenia.
-
-	\item \textbf{Grafická plocha}, v ktorej budú vykresľované jednotlivé grafické objekty.
-\end{itemize}
-
-Okrem týchto panelov je potrebné informovať používateľa o niektorých vykonávaných akciách formou vyskakovacích (\textit{popup}) správ, s možnosťou potvrdenia alebo prípadného zrušenia akcie. Obsah vyskakovacích okien je potrebné dynamicky vytvárať a modifikovať funkcionalitu potvrdzovacích tlačidiel.
+Väčšina prostredí grafických editorov, či už sú to vektorové, rastrové alebo 3D modelovacie editory využívajú rozdelenie ovládacích prvkov na 4 hlavné komponenty. Zoznam nástrojov zobrazený pri ľavom okraji okna editora, hlavné menu pri vrchnom a nastavenia nástrojov pri pravom okraji okna, s grafickou plochou uprostred týchto ovládacích komponentov\refimg{obr:editorWireframeBase}. V našom prípade sme sa rozhodli použiť podobné rozloženie, kvôli zavedeným zvykom používateľov a tým pádom vyššej intuitívnosti pri používaní.
 
 \begin{figure}[h]
 	\centerline{\includegraphics[width=1\textwidth]{images/diagrams/editor_wireframe_base}}
