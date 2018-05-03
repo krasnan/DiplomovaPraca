@@ -60,7 +60,7 @@ Trieda \code{User} reprezentuje používateľa pripojeného na synchronizačný 
 
 
 \subsubsection{Message}
-Objekt \code{Message} reprezentuje správu odoslané používateľmi pomocou chatu v editore. Popis vnútornej reprezentácie vlastností objektu môžeme vidieť v tabuľke \ref{tab:server-prop-message}.
+Objekt \code{Message} reprezentuje správy odoslané používateľmi pomocou chatu v editore. Popis vnútornej reprezentácie vlastností objektu môžeme vidieť v tabuľke \ref{tab:server-prop-message}.
 
 \begin{table}
 	\begin{tabular}{ | m{3cm} | m{3cm}| m{6.5cm} | } \hline
@@ -125,7 +125,7 @@ Trieda \code{Room} slúži na udržiavanie stavu miestnosti pripojených použí
 
 
 \subsubsection{RoomManager}
-Trieda menežéra miestností \code{RoomManager} slúži na spravovanie existujúcich miestností, ich dynamické vytváranie a vymazávanie. Obsahuje triednu premennú \code{rooms}. Je to premenná typu asociatívne pole, obsahujúca objekty typu \code{Room}. Poskytuje funkcie na prácu s miestnosťami popísané v tabuľke \ref{tab:server-func-roommanager}.
+Trieda manažéra miestností \code{RoomManager} slúži na spravovanie existujúcich miestností, ich dynamické vytváranie a vymazávanie. Obsahuje triednu premennú \code{rooms}. Je to premenná typu asociatívne pole, obsahujúca objekty typu \code{Room}. Poskytuje funkcie na prácu s miestnosťami popísané v tabuľke \ref{tab:server-func-roommanager}.
 
 \begin{table}
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
@@ -147,21 +147,22 @@ Trieda menežéra miestností \code{RoomManager} slúži na spravovanie existuj�
 
 Pri vytvorení inštancie Socket.IO objektu s názvom \code{io}, vkladáme do jeho konštruktora inštanciu vytvoreného HTTP servera. Po jej vytvorení je server pripravený prijímať správy s udalosťami takzvané \textit{socket}-y. Príchod pripájacej správy s názvom udalosti  \code{\'connection\'} je odchytený event-listenerom  \code{io.on(\'connection\', function(socket)\{...\})}, v ktorom sa volá funkcia spracujúca túto udalosť. Informácia o pripájanom klientovi je do nej poslaná parametrom \code{socket}. Pomocou tohoto parametra následne server odchytáva ďalšie správy, odosielané zo strany klienta. Parameter v sebe taktiež nesie objekt \code{socket.handshake}. V tomto objekte sú uložené informácie o nadviazanom spojení, medzi ktorými je aj premenná \code{query}. V tejto premennej sú uložené informácie o názve editovaného súboru, bezpečnostný token a meno pripájaného používateľa. 
 
-Po úspešnom nadviazaní spojenia vytvoríme nový objekt používateľa typu \code{User}, s menom získaným z premennej \\\code{socket.handshake.query[\'name\']} a nastavíme mu bezpečnostný token funkciou \code{setToken(socket.handshake.query[\'secret\'])}. Pri nastavení tokenu sa aplikuje jeho automatická validácia a nastavenie premennej \code{verified}.
+Po úspešnom nadviazaní spojenia vytvoríme nový objekt používateľa typu \code{User}, s menom získaným z premennej\\
+ \code{socket.handshake.query[\'name\']} a nastavíme mu bezpečnostný token funkciou \code{setToken(socket.handshake.query[\'secret\'])}. Pri nastavení tokenu sa aplikuje jeho automatická validácia a nastavenie premennej \code{verified}.
 
 
 \subsubsection{Inicializácia miestnosti}
-Ak je je používateľský token vyhodnotený ako správny, nasleduje inicializácia miestnosti. Táto operácia sa vykonáva pomocou metódy \\\code{createRoom(socket.handshake.query[\'file\'])} triedy \code{RoomManager}. V prípade že miestnosť s požadovaným názvom neexistuje, vytvorí sa jej nová inštancia. Používateľ sa zaradí do zoznamu používateľov miestnosti a je mu odoslaná notifikácia o tejto udalosti spolu s objektom používateľa.
+Ak je je používateľský token vyhodnotený ako správny, nasleduje inicializácia miestnosti. Táto operácia sa vykonáva pomocou metódy \\\code{createRoom(socket.handshake.query[\'file\'])} triedy \code{RoomManager}. V prípade, že miestnosť s požadovaným názvom neexistuje, vytvorí sa jej nová inštancia. Používateľ sa zaradí do zoznamu používateľov miestnosti a je mu odoslaná notifikácia o tejto udalosti spolu s objektom používateľa.
 
 Súčasne sa vykoná načítanie editovaného súboru pomocou asynchrónneho HTTP dopytu na koncový bod API systému MediaWiki. V prípade že API nájde zadaný súbor, odpoveďou je objekt tohoto súboru, s informáciami o jeho rozmeroch, MIME formáte. 
 
-Ak sa jedná o súbor, ktorý už bol editovaný pomocou nášho rozšírenia, vnútorná reprezentácia editora je uložená vo forme textového reťazca v metadátach súboru. Tento reťazec obsahujúci vlastnosti grafickej plochy a objektov v nej umiestnených dekódujeme do formátu JSON a nastavíme potrebné vlastnosti triednych premenných miestnosti. 
+Ak ide o súbor, ktorý už bol editovaný pomocou nášho rozšírenia, vnútorná reprezentácia editora je uložená vo forme textového reťazca v metadátach súboru. Tento reťazec obsahujúci vlastnosti grafickej plochy a objektov v nej umiestnených dekódujeme do formátu JSON a nastavíme potrebné vlastnosti triednych premenných miestnosti. 
 
 Ak načítavaný súbor ešte nebol upravovaný našim editorom, vytvoríme nový grafický objekt editora typu obrázok a pridáme ho do zoznamu objektov grafickej plochy miestnosti. Pri neexistujúcom súbore sú ponechané pôvodné vlastnosti miestnosti.
 
 Po inicializovaní vlastností miestnosti je odoslaná používateľovi notifikácia s jej inicializovanými dátami, na základe ktorých sa mu nastaví prostredie editora \refimg{obr:sequence-diagram-server-connect}.
 
-Pripojením používateľa do existujúcej miestnosti, proces pripojenia pozostáva iba zo zaradenia používateľa do zoznamu používateľov, odoslania notifikácie o úspešnom pripojení spolu s odoslaním notifikácie všetkým ostatným používateľom. Pripájanému používateľovi sa taktiež odosiela inicializačná notifikácia s aktuálnym stavom grafického editora, vytvorenými objektami a pripojenými používateľmi.
+Pripojením používateľa do existujúcej miestnosti pozostáva proces pripojenia iba zo zaradenia používateľa do zoznamu používateľov a odoslania notifikácie o úspešnom pripojení spolu s odoslaním notifikácie všetkým ostatným používateľom. Pripájanému používateľovi sa taktiež odosiela inicializačná notifikácia s aktuálnym stavom grafického editora, vytvorenými objektami a pripojenými používateľmi.
 
 \begin{figure}[H]
 	\centerline{\includegraphics[width=1\textwidth]{images/diagrams/sequence-diagram-server-connect}}
@@ -171,14 +172,14 @@ Pripojením používateľa do existujúcej miestnosti, proces pripojenia pozost�
 \FloatBarrier
 
 \subsection{Spracovanie udalostí grafického editora}
-S pripojením používateľa do miestnosti získava možnosť odosielať a prijímať synchronizačné správy. Synchronizačný server prijíma nasledujúce názvy udalostí:
+S pripojením do miestnosti získava používateľ možnosť odosielať a prijímať synchronizačné správy. Synchronizačný server prijíma nasledujúce názvy udalostí:
 \begin{itemize}
 	
 	\item \code{\'canvas-modified\'} -- \textit{Zmeny grafickej plochy} spracováva triedna metóda \code{room.modifyCanvas(properties, socket);}, ktorej parametrami sú objekt \code{properties}, obsahujúci vlastnosti zmenenej grafickej plochy editora a \code{socket} objekt odosielateľa. Po zmene vlastností plochy v rámci servera je odoslaná udalosť so zmenami všetkým ostatným používateľom.
 	
 	\item \code{\'object-created\'} -- \textit{Vytvorenie objektu} je spracované metódou \\\code{room.createObject(object, socket);}. Tá vytvorí nový záznam v zozname objektov editora, indexovaný podľa jedinečného identifikátora objektu a odošle udalosť na vytvorenie objektu všetkým ostatným používateľom.
 	
-	\item \code{\'selection-changed\'} -- \textit{Zmena uzamknutia objektu} sa vyhodnotí metódou \code{room.setSelectable(data.id, data.selectable, user, socket);}. Parametrami sú jedinečný identifikátor objektu, stav či má byť objekt uzamknutý alebo odomknutý a používateľ ktorý vykonáva túto zmenu. V prípade že objekt nemôže byť uzamknutý z dôvodu, že už bol uzamknutý iným používateľom, odosielateľ obdrží udalosť o zakázaní označenia daného objektu. Inak sa nastaví hodnota uzamknutia a odošle sa ostatným používateľom.
+	\item \code{\'selection-changed\'} -- \textit{Zmena uzamknutia objektu} sa vyhodnotí metódou \code{room.setSelectable(data.id, data.selectable, user, socket);}. Parametrami sú jedinečný identifikátor objektu, stav či má byť objekt uzamknutý alebo odomknutý a používateľ, ktorý vykonáva túto zmenu. V prípade že objekt nemôže byť uzamknutý z dôvodu, že už bol uzamknutý iným používateľom, odosielateľ obdrží udalosť o zakázaní označenia daného objektu. Inak sa nastaví hodnota uzamknutia a odošle sa ostatným používateľom.
 	
 	\item \code{\'object-modified\'} -- \textit{Modifikácia objektu} je spracovaná pomocou metódy \code{room.modifyObject(object, socket);}, ktorá vyhľadá objekt na základe jedinečného identifikátora v zozname objektov a nastaví jeho nové vlastnosti podľa vstupného parametra \code{object}. V prípade že objekt v zozname neexistuje, vytvorí ho. Funkcia ďalej odošle udalosť na modifikáciu objektu všetkým ostatným používateľom.
 	
@@ -199,7 +200,7 @@ Proces odpojenia používateľa pozostáva z jeho odstránenia zo zoznamu použ�
 Druhou časťou implementácie tejto diplomovej práce je naprogramovanie grafického editora obrázkov. Editor je implementovaný formou \textit{special page} rozšírenia, integrovaného do systému MediaWiki. Na vykresľovanie objektov grafickej plochy a udržiavanie jej stavu využívame knižnicu Fabric. Dátový model aplikácie je preto z veľkej časti závislý od dátového modelu tejto knižnice. Kolaboratívna funkcionalita je docielená použitím klientskej verzie Socket.IO knižnice, pomocou ktorej zabezpečujeme komunikáciu so synchronizačným serverom. Na riadenie klientského rozhrania používame knižnicu AngularJS. Komponenty používateľského prostredia sú naprogramované v šablónovacom jazyku HTML a ich vzhľad je naprogramovaný pomocou štýlovacieho jazyka LESS.
 
 \subsection{MediaWiki rozšírenie}
-Pri tvorbe rozšírení pre MediaWiky je potrebné dodržať základné návrhové konvencie stanovené tvorcami tohoto systému. Prvoradou vlastnosťou je jednoduchá inštalácia a nastavenie rozšírenia. To je docielené pomocou viacerých faktorov. Dôležité je používanie správnej súborovej štruktúry. 
+Pri tvorbe rozšírení pre MediaWiki je potrebné dodržať základné návrhové konvencie stanovené tvorcami tohoto systému. Prvoradou vlastnosťou je jednoduchá inštalácia a nastavenie rozšírenia. To je docielené pomocou viacerých faktorov. Dôležité je používanie správnej súborovej štruktúry. 
 
 Rozšírenie musí byť umiestnené vo vlastnom priečinku medzi ostatnými MediaWiki rozšíreniami. V našom prípade je to priečinok \code{/extensions/ImageEditor}, kde sa nachádzajú zdrojové súbory a priečinky kategorizované podľa ich obsahu. V priečinku \code{i18n} sa nachádzajú php súbory s prekladmi textov použitých v prostredí rozšírenia, nazvané skratkou jazyka, do ktorého sú preložené. Pre slovenčinu je to \code{sk.php}.
 
@@ -208,7 +209,7 @@ Zdrojový súbor \code{ImageEditor.php} zabezpečuje možnosť načítania rozš
 Súbor \code{ImageEditor.hooks.php} obsahuje funkcie, pomocou ktorých vieme odchytiť akcie vykonávané jadrom systému, a ovplyvniť tak jeho základnú funkcionalitu. V tomto súbore sa nachádza trieda \code{ImageEditorHooks} poskytujúca nasledujúce statické metódy:
 
 \begin{itemize}
-	\item \code{onFileUpload} -- funkcia odchytávajúca nahrávanie nového multimediálneho súboru alebo jeho novej revízie, pomocou ktorej uložíme obsah editora do metadát súboru. Metadáta sú uchovávané v databáze formou blob databázového dátového typu. Obsahom je serializované pole jazyka php. Naše rozšírenie pri ukladaní revízie zapíše do tohoto poľa svoju dátovú štruktúru serializovanú do JSON textového formátu, ktorá je odosielaná pri ukladaní súboru pomocou POST premennej HTTP dotazu, pod indexom \code{imageEditorContent}.
+	\item \code{onFileUpload} -- funkcia odchytávajúca nahrávanie nového multimediálneho súboru alebo jeho novej revízie, pomocou ktorej uložíme obsah editora do metadát súboru. Metadáta sú uchovávané v databáze formou databázového dátového typu \code{blob}. Obsahom je serializované pole jazyka php. Naše rozšírenie pri ukladaní revízie zapíše do tohoto poľa svoju dátovú štruktúru serializovanú do JSON textového formátu, ktorá je odosielaná pri ukladaní súboru pomocou POST premennej HTTP dotazu, pod indexom \code{imageEditorContent}.
 	
 	\item \code{onSkinTemplateNavigation} -- metóda odchytáva proces vykreslenia navigačných tlačidiel pri vykreslení šablóny stránok. Na základe overenia práv používateľa a typu vykresľovanej stránky sa pridá tlačidlo na otvorenie súboru v našom editore obrázkov \refimg{obr:base-integration}.
 	
@@ -226,8 +227,7 @@ Súbor \code{ImageEditor.hooks.php} obsahuje funkcie, pomocou ktorých vieme odc
 V súbore \code{templates/ImageEditorTemplate.php} sa nachádza php trieda \\
 \code{ImageEditorTemplate} dedená od triedy \code{QuickTemplate}, obsahujúca jednu metódu s názvom \code{execute()}. Volaním tejto metódy sa vykreslí HTML šablóna nášho rozšírenia.
 
-Hlavná logika načítania rozšírenia sa však odohráva v triede \code{SpecialImageEditor}, umiestnenej v súbore \\
-\code{specials/SpecialImageEditor.php}. V metóde \code{execute()} sa vykoná overenie práv na upravovanie stránok a overí sa či je vybraný súbor, ktorý chceme upravovať. Ak používateľ nemá práva na úpravu, je presmerovaný buď na prihlásenie (neprihlásený používateľ) alebo chybovú stránku.
+Hlavná logika načítania rozšírenia sa však odohráva v triede \code{SpecialImageEditor}, umiestnenej v súbore \code{specials/SpecialImageEditor.php}. V metóde \code{execute()} sa vykoná overenie práv na upravovanie stránok a overí sa, či je vybraný súbor, ktorý chceme upravovať. Ak používateľ nemá práva na úpravu, je presmerovaný buď na prihlásenie (neprihlásený používateľ) alebo chybovú stránku.
 
 Ak používateľ vytvára nový súbor pomocou adresy \\
 \code{https://wiki.matfyz.sk/Special:ImageEditor} zobrazí sa mu formulár s výzvou na zadanie názvu súboru \refimg{obr:base-new}. Po jeho zadaní je presmerovaný do prostredia editora.
@@ -245,7 +245,7 @@ Ak používateľ vytvára nový súbor pomocou adresy \\
 \end{figure}
 
 
-Zdrojové kódy editora naprogramované v jazyku JavaScript sú umiestnené v priečinku \code{resources/scripts}. Pre ich lepšiu prehľadnosť sme ich rozdelili do súborov podľa zamerania obsahujúcich funkcií \reftab{tab:editor-scripts-files}. Kaskádové štýly používateľského prostredia editora sa nachádzajú v priečinku \code{resources/styles} a taktiež sú rozdelené podľa funkcionality \reftab{tab:editor-styles-files}. Použité knižnice sa nachádzajú v priečinku \code{resources/vendor} a zdrojové obrázky spolu s písmami v priečinku \code{resources/assets}.
+Zdrojové kódy editora naprogramované v jazyku JavaScript sú umiestnené v priečinku \code{resources/scripts}. Pre ich lepšiu prehľadnosť sme ich rozdelili do súborov podľa zamerania funkcií, ktoré obsahujú \reftab{tab:editor-scripts-files}. Kaskádové štýly používateľského prostredia editora sa nachádzajú v priečinku \code{resources/styles} a taktiež sú rozdelené podľa funkcionality \reftab{tab:editor-styles-files}. Použité knižnice sa nachádzajú v priečinku \code{resources/vendor} a zdrojové obrázky spolu s písmami v priečinku \code{resources/assets}.
 
 \begin{table}
 	\begin{tabular}{ | m{6cm} | m{6.5cm} | } \hline
@@ -287,7 +287,7 @@ Pri tvorbe rozšírenia pre systém MediaWiki je veľmi dôležitý súbor \\
 
 
 \subsection{Aplikácia grafického editora}
-Aplikácia grafického editora je naprogramovaná v jazyku JavaScript pomocou frameworku AngularJS. Všetky jej funkcie sú naprogramované formou modulu s názvom \code{ImageEditor}. Modul poskytuje direktívy pre šablónu, ktoré zabezpečujú dynamické vykresľovanie niektorých používateľských komponentov, pridávajú im dodatočnú funkcionalitu, upravujú spôsob mapovania dát alebo poskytujú prístup k službám knižnice Socket.IO \reftab{tab:image-editor-directives}.
+Aplikácia grafického editora je naprogramovaná v jazyku JavaScript pomocou frameworku AngularJS. Všetky jej funkcie sú naprogramované v module s názvom \code{ImageEditor}. Modul poskytuje direktívy pre šablónu, ktoré zabezpečujú dynamické vykresľovanie niektorých používateľských komponentov, pridávajú im dodatočnú funkcionalitu, upravujú spôsob mapovania dát alebo poskytujú prístup k službám knižnice Socket.IO \reftab{tab:image-editor-directives}.
 \begin{table}
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
 		\textbf{Názov} & \textbf{Popis} \\ \hline \hline
@@ -303,11 +303,12 @@ Aplikácia grafického editora je naprogramovaná v jazyku JavaScript pomocou fr
 	\label{tab:image-editor-directives}
 \end{table}
 
-Okrem direktív modul obsahuje taktiež controller s názvom \code{ImageEditorController}, riadiaci funkcionalitu a správanie grafického editora. Kvôli dostupnosti funkcií priamo v šablóne je potrebné všetky funkcie a premenné definovať do \code{$ \$ $scope} objektu. 
+Okrem direktív modul obsahuje taktiež controller s názvom \\
+\code{ImageEditorController}, riadiaci funkcionalitu a správanie grafického editora. Kvôli dostupnosti funkcií priamo v šablóne je potrebné všetky funkcie a premenné definovať do \code{$ \$ $scope} objektu. 
 
 \subsubsection{Mapovanie dát}
 
-Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby dokázal dynamicky zobrazovať hodnoty modelu v šablóne aplikácie pomocou dátového mapovania. Aby sme boli schopný mapovať dátový model Fabric canvas objektu, je potrebné naprogramovať metódy na prístup k jeho hodnotám. Musíme tak učiniť z dôvodu, že hodnoty modelu nie vždy zodpovedajú hodnotám, ktoré potrebujeme zobrazovať v používateľskom prostredí. Zdrojový súbor \code{ext.imageEditor.init.databinding.js} obsahuje funkcie určené na túto činnosť. Okrem funkcií popísaných v tabuľke \reftab{tab:editor-func-databinding}, sú v tomto súbore taktiež \code{get} a \code{set} funkcie definované pre každú premennú Fabric objektov \cite{FabricApiDoc}, ku ktorej je potrebné pristupovať z používateľského prostredia.
+Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby dokázal dynamicky zobrazovať hodnoty modelu v šablóne aplikácie pomocou dátového mapovania. Aby sme boli schopní mapovať dátový model Fabric canvas objektu, je potrebné naprogramovať metódy na prístup k jeho hodnotám. Musíme tak učiniť z dôvodu, že hodnoty modelu nie vždy zodpovedajú hodnotám, ktoré potrebujeme zobrazovať v používateľskom prostredí. Zdrojový súbor \code{ext.imageEditor.init.databinding.js} obsahuje funkcie určené na túto činnosť. Okrem funkcií popísaných v Tabuľke \ref{tab:editor-func-databinding}, sú v tomto súbore taktiež \code{set} a \code{get} funkcie definované pre každú premennú Fabric objektov \cite{FabricApiDoc}, ku ktorej je potrebné pristupovať z používateľského prostredia.
 
 \begin{table}
 	\begin{tabular}{ | m{7.5cm} | m{5cm} | } \hline
@@ -325,9 +326,9 @@ Ako sme si vysvetlili v sekcii \ref{sec:angular}, Angular je navrhnutý tak, aby
 \end{table}
 
 \subsubsection{Riadenie udalostí (Event-handler)}
-Naša aplikácia využíva princípy programovania riadeného udalosťami (event-driven). Dokáže dynamicky vyhodnocovať niektoré z udalostí, ktoré sa v nej vykonávajú, bez potreby volania funkcií spracovávajúcich danú akciu do častí kódu, kde je daná akcia vykonávaná. Namiesto toho sa použije funkcia \code{$\$$scope.canvas.trigger(\'event-name\', {...})}, pomocou ktorej sa vyvolá udalosť s názvom podľa prvého parametra a dátami uloženými v druhom parametri tejto funkcie. Následne je možné tieto udalosti jednoducho zachytiť. V našej aplikácií. 
+Naša aplikácia využíva princípy programovania riadeného udalosťami (event-driven). Dokáže dynamicky vyhodnocovať niektoré z udalostí, ktoré sa v nej vykonávajú, bez potreby volania funkcií spracovávajúcich danú akciu do častí kódu, kde je daná akcia vykonávaná. Namiesto toho sa použije funkcia \code{$\$$scope.canvas.trigger(\'event-name\', {...})}, pomocou ktorej sa vyvolá udalosť s názvom podľa prvého parametra a dátami uloženými v druhom parametri tejto funkcie. Následne je možné tieto udalosti jednoducho zachytiť v našej aplikácií. 
 
-Okrem akcií grafickej plochy, spracovávame taktiež udalosti vyvolávané synchronizačnými správami servera, poskytované službami knižnice Socket.IO. Zoznam a popis udalostí, ktoré naša aplikácia dokáže spracovať môžeme vidieť v tabuľkách \reftab{tab:editor-events} a \reftab{tab:server-events}.
+Okrem akcií grafickej plochy spracovávame taktiež udalosti vyvolávané synchronizačnými správami servera, poskytované službami knižnice Socket.IO. Zoznam a popis udalostí, ktoré naša aplikácia dokáže spracovať, môžeme vidieť v tabuľkách \reftab{tab:editor-events} a \reftab{tab:server-events}.
 
 \begin{table}
 	\begin{tabular}{ | m{4cm} | m{8.5cm} | } \hline
@@ -356,11 +357,11 @@ Okrem akcií grafickej plochy, spracovávame taktiež udalosti vyvolávané sync
 		connected & Pripojenie na synchronizačný server. Nastaví sa objekt pripojeného používateľa a skryje sa správa o pripájaní v loaderi. \\\hline
 		init & Inicializačná správa s informáciami, podľa ktorých sa nastavuje editor. Pridajú sa všetky objekty do grafickej plochy, vytvorí sa zoznam pripojených používateľov, načíta sa zoznam správ a nastavia sa vlastnosti grafickej plochy. \\\hline
 		user-created & Pripojenie nového používateľa do miestnosti. Používateľ je pridaný do zoznamu všetkých používateľov. \\\hline
-		user-removed & Odpojenie používateľa do miestnosti. Používateľ je odstránený zo zoznamu všetkých používateľov. \\\hline
+		user-removed & Odpojenie používateľa z miestnosti. Používateľ je odstránený zo zoznamu všetkých používateľov. \\\hline
 		message-created & Prijatá nová správa. Nastaví sa príznak na zobrazenie notifikácie o novej správe a obsah správy sa zaradí do zoznamu správ. \\\hline
 		selection-changed & Zmena uzamknutia objektu. Nastaví sa hodnota \code{selectable} a \code{selectedBy} podľa prijatej správy, čím sa zamedzí možnosti označiť daný objekt. \\\hline
 		object-created & Vytvorenie objektu. Objekt prijatý v správe sa pridá do grafickej plochy. Ak objekt s daným identifikátorom existuje, proces sa ukončí. \\\hline
-		object-modified & Modifikácia objektu. Na základe vlastností objekt prijatého v správe sa nastavia vlastnosti objektu s relevantným identifikátorom v grafickej ploche editora. Ak objekt s daným identifikátorom neexistuje, vytvorí sa. \\\hline
+		object-modified & Modifikácia objektu. Na základe vlastností objektu prijatého v správe sa nastavia vlastnosti objektu s relevantným identifikátorom v grafickej ploche editora. Ak objekt s daným identifikátorom neexistuje, vytvorí sa, čím zabezpečíme nápravu prípadnej straty alebo výrazného oneskorenie správy o vytvorení objektu. \\\hline
 		object-removed & Odstránenie objektu. Na základe prijatého identifikátora sa odstráni objekt z grafickej plochy. \\\hline
  		canvas-modified & Zmena vlastností grafickej plochy. Nastavia sa vlastnosti na základe prijatých informácií. \\\hline
 		   
@@ -379,17 +380,19 @@ Používateľské prostredie editora je nadizajnované tak, aby bola každá fun
 	\label{obr:base-user-interface}
 \end{figure}
 	
-\textbf{Grafická plocha}, v ktorej sú vykresľované jednotlivé grafické objekty. Ak je niektorý z objektov uzamknutý iným používateľom, prístup k tomuto objektu bude zamietnutý. Pri nadídení kurzora počítačovej myši sa zobrazí meno používateľa používajúceho daný objekt.
+\textbf{Grafická plocha}, v ktorej sú vykresľované jednotlivé grafické objekty. Ak je niektorý z objektov uzamknutý iným používateľom, prístup k tomuto objektu bude zamietnutý. Pri nadídení kurzora počítačovej myši sa zobrazí meno používateľa používajúceho daný objekt \refimg{obr:canvas-locked}.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[width=1\textwidth]{images/results/canvas-selected}}
 		\caption{Označenie aktívnych objektov}
+		\label{obr:canvas-selected}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[width=1\textwidth]{images/results/canvas-locked}}
 		\caption{Zobrazenia používateľa, ktorý uzamkol objekt}
+		\label{obr:canvas-locked}
 	\end{subfigure}
 	
 	\caption{Grafická plocha edit}
@@ -405,7 +408,7 @@ Používateľské prostredie editora je nadizajnované tak, aby bola každá fun
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.48\linewidth}	
-		\centering{\includegraphics[height=6cm]{images/results/toolbar-colorpicker}}
+		\centering{\includegraphics[height=5cm]{images/results/toolbar-colorpicker}}
 		\caption{Vyberač farby výplne a obtiahnutia objektu grafickej plochy}
 	\end{subfigure}
 	\caption{Panel nástrojov}
@@ -413,71 +416,82 @@ Používateľské prostredie editora je nadizajnované tak, aby bola každá fun
 
 
 
-\textbf{Hlavné menu} obsahujúce tlačidlo na prepnutie zobrazenia do režimu celej obrazovky, tlačidlo na vycentrovanie grafickej plochy a rozbaľovací zoznam správ chatu. Okrem týchto tlačidiel tu nájdeme aj 3 rozbaľovacie (dropdown) tlačidlá \textit{Súbor}, \textit{Upraviť} a \textit{Objekt}. Rozbalením tlačidla \textit{Súbor} sa zobrazí ponuka na exportovanie grafickej plochy do formátov PNG a SVG, uloženie revízie a zatvorenie editora. Rozbalením tlačidla \textit{Upraviť} sa sprístupnia možnosti na kopírovanie, vystrihnutie, vloženie, duplikovanie a odstránenie objektu. Pod posledným tlačidlom \textit{Objekt}, sa zobrazia možnosti operácií s aktívnym objektom na zmenu hĺbky objektu v grafickej ploche.
+\textbf{Hlavné menu} obsahujúce tlačidlo na prepnutie zobrazenia do režimu celej obrazovky, tlačidlo na vycentrovanie grafickej plochy a rozbaľovací zoznam správ chatu \refimg{obr:menu-messenger}. Okrem týchto tlačidiel tu nájdeme aj 3 rozbaľovacie (dropdown) tlačidlá \textit{Súbor} , \textit{Upraviť} a \textit{Objekt}. Rozbalením tlačidla \textit{Súbor} \refimg{obr:menu-file} sa zobrazí ponuka na exportovanie grafickej plochy do formátov PNG a SVG, uloženie revízie a zatvorenie editora. Rozbalením tlačidla \textit{Upraviť} \refimg{obr:menu-edit} sa sprístupnia možnosti na kopírovanie, vystrihnutie, vloženie, duplikovanie a odstránenie objektu. Pod posledným tlačidlom \textit{Objekt} \refimg{obr:menu-object}, sa zobrazia možnosti operácií s aktívnym objektom na zmenu hĺbky objektu v grafickej ploche.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[width=1\textwidth]{images/results/menu-file}}
 		\caption{Rozbaľovacie menu pre tlačidlo \textit{Súbor}}
+		\label{obr:menu-file}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[width=1\textwidth]{images/results/menu-edit}}
 		\caption{Rozbaľovacie menu pre tlačidlo \textit{Upraviť}}
+		\label{obr:menu-edit}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[width=1\textwidth]{images/results/menu-object}}
 		\caption{Rozbaľovacie menu pre tlačidlo \textit{Objekt} }
+		\label{obr:menu-object}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[width=1\textwidth]{images/results/menu-users}}
 		\caption{Rozbaľovacie menu zoznamu pripojených používateľov  }
+		\label{obr:menu-users}
 	\end{subfigure}
 	\quad
-	\begin{subfigure}[t]{0.48\linewidth}	
+	\begin{subfigure}[t]{0.6\linewidth}	
 		\centering{\includegraphics[width=1\textwidth]{images/results/menu-messenger}}
 		\caption{Prostredie pre odosielanie textových správ}
+		\label{obr:menu-messenger}
 	\end{subfigure}
 	\caption{Zobrazenie hlavného menu}
 \end{figure}
 
-
+\newpage
 	
-\textbf{Panel nastavení} tvorený dvoma komponentmi. Komponent vrstiev zobrazujúci zoznam všetkých grafických objektov s možnosťou ich rýchleho uzamknutia, skrytia a odstránenia. Vrstvy môžu byť preusporiadané pomocou ťahania kurzora, čím sa mení ich hĺbka v grafickej ploche editora. Druhý komponent obsahujúci nastavenia aktuálneho kontextu editora dynamicky zobrazuje položky na nastavenie vlastností aktívneho objektu, grafickej plochy alebo nastavenia voľného kreslenia.
+\textbf{Panel nastavení} tvorený dvoma komponentmi. Komponent vrstiev zobrazujúci zoznam všetkých grafických objektov s možnosťou ich rýchleho uzamknutia, skrytia a odstránenia. Vrstvy môžu byť preusporiadané pomocou ťahania kurzora, čím sa mení ich hĺbka v grafickej ploche editora. Druhý komponent obsahujúci nastavenia aktuálneho kontextu editora dynamicky zobrazuje položky na nastavenie vlastností aktívneho objektu, grafickej plochy, alebo nastavenia voľného kreslenia \refimg{obr:props}.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.3\linewidth}	
 		\centering{\includegraphics[height=4cm]{images/results/props-layers}}
 		\caption{Panel vrstiev }
+		\label{obr:props-layers}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.3\linewidth}	
 		\centering{\includegraphics[height=4cm]{images/results/props-canvas}}
 		\caption{Panel nastavení grafickej plochy}
+		\label{obr:props-canvas}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.3\linewidth}	
 		\centering{\includegraphics[height=4cm]{images/results/props-brush}}
 		\caption{Panel nastavení voľného kreslenia}
+		\label{obr:props-brush}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[height=5cm]{images/results/props-text}}
 		\caption{Panel nastavení textového objektu}
+		\label{obr:props-text}
 	\end{subfigure}
 	\quad
 	\begin{subfigure}[t]{0.48\linewidth}	
 		\centering{\includegraphics[height=5cm]{images/results/props-object}}
 		\caption{Panel nastavení objektu}
+		\label{obr:props-object}
 	\end{subfigure}
 	\caption{Ukážka panelov s nastaveniami}
+	\label{obr:props}
 \end{figure}
 	
 
 
-Okrem týchto panelov je potrebné informovať používateľa o niektorých vykonávaných akciách formou dialógových (\textit{popup}) správ, s možnosťou potvrdenia alebo prípadného zrušenia akcie. Obsah dialógových okien je potrebné dynamicky vytvárať a modifikovať funkcionalitu potvrdzovacích tlačidiel. Využijeme ich na upozornenie používateľa pri odstraňovaní objektu z grafickej plochy \refimg{obr:editor-dialog-delete} a zatváraní okna editora, kde bude používateľ vyzvaný na uloženie súboru alebo ukončenie bez ukladania zmien \refimg{obr:editor-dialog-close}. Pomocou dialógového okna je taktiež riešené nahratie obrázku z lokálneho úložiska používateľa \refimg{obr:editor-dialog-upload}.
+Okrem týchto panelov je potrebné informovať používateľa o niektorých vykonávaných akciách formou dialógových (\textit{popup}) správ s možnosťou potvrdenia alebo prípadného zrušenia akcie. Obsah dialógových okien je potrebné dynamicky vytvárať a modifikovať funkcionalitu potvrdzovacích tlačidiel. Využijeme ich na upozornenie používateľa pri odstraňovaní objektu z grafickej plochy \refimg{obr:editor-dialog-delete} a zatváraní okna editora, kde bude používateľ vyzvaný na uloženie súboru alebo ukončenie bez ukladania zmien \refimg{obr:editor-dialog-close}. Pomocou dialógového okna je taktiež riešené nahratie obrázku z lokálneho úložiska používateľa \refimg{obr:editor-dialog-upload}.
 
 \begin{figure}[H]
 	\centering

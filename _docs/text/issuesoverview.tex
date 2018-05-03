@@ -207,9 +207,12 @@ Ako je možné vidieť z ukážky programového kódu vyššie, metóda \code{on
 \end{itemize}
 Existuje viacero kategórií udalostí vyvolávaných nasledovnými akciami:
 \begin{itemize}
-	\item akcie počítačovej myši - \code{mouse:up}, \code{mouse:down}, \code{mouse:move}, \code{mouse:dblclick}, \code{mouse:wheel}, \code{mouse:over}, \code{mouse:out},
-	\item akcie zmeny označenia objektu - \code{before:selection:cleared}, \code{selection:cleared}, \code{selection:created}, \code{selection:updated},
-	\item akcie objektu - \code{object:added}, \code{object:removed}, \code{object:modified}, \code{object:moving}, \code{object:scaling}, \code{object:rotating}, \code{object:skewing},
+	\item akcie počítačovej myši - \code{mouse:up}, \code{mouse:down}, \code{mouse:move}, \\
+	\code{mouse:dblclick}, \code{mouse:wheel}, \code{mouse:over}, \code{mouse:out},
+	\item akcie zmeny označenia objektu - \code{before:selection:cleared}, \\
+	\code{selection:cleared}, \code{selection:created}, \code{selection:updated},
+	\item akcie objektu - \code{object:added}, \code{object:removed}, \code{object:modified}, \\
+	\code{object:moving}, \code{object:scaling}, \code{object:rotating}, \code{object:skewing},
 	\item akcie grafickej plochy - \code{after:render}.
 \end{itemize}
 Udalosti sú vyvolávané automaticky v rámci programového kódu knižnice Fabric. V prípade, že potrebujeme manuálne vyvolať niektorú z udalostí, docielime to pomocou metódy \code{canvas.trigger(...)} \reflst{lst:fabric-trigger}

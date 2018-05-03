@@ -175,38 +175,43 @@ Konzultant: & \mfconsultant
 % koniec prehlasenia
 
 \chapter*{Poďakovanie}\label{chap:thank_you}
-Ďakujem doc. RNDr. Zuzane Kubincovej PhD. za čas a trpezlivosť, ktorú mi venovala pri konzultáciách, za cenné rady a profesionálne vedenie pri vypracovaní diplomovej práce. V neposlednom rade sa chem poďakovať mojim rodičom, starým rodičom a sestre za ich podporu. 
+Ďakujem doc. RNDr. Zuzane Kubincovej PhD. za čas a trpezlivosť, ktorú mi venovala pri konzultáciách, za cenné rady a profesionálne vedenie pri vypracovaní diplomovej práce. Moja veľká vďaka patrí taktiež Mgr. Jánovi Kľukovi, PhD. za ochotu a pomoc pri riešení problémov spojených s touto prácou. V neposlednom rade sa chem poďakovať mojim rodičom, starým rodičom a sestre za ich podporu. 
 \vfill\eject 
 % koniec podakovania
 
-\chapter*{Abstrakt}\label{chap:abstract_sk}
-\MakeUppercase{Krasňan}, Martin: \textit{\mftitle} [\mfthesistype]. - Univerzita Komenského v Bratislave. Fakulta matematiky, fyziky a informatiky; \mfpracovisko. - Školiteľ: \mfadvisor. Bratislava: \mfplacedate. ?? strán.
+\def\spaceafterpar{1em}
+\setlength{\parskip}{\spaceafterpar}
+\setlength\parindent{0pt}
+
+\section*{Abstrakt}\label{chap:abstract_sk}
+\MakeUppercase{Krasňan}, Martin: \textit{\mftitle} [\mfthesistype]. - Univerzita Komenského v Bratislave. Fakulta matematiky, fyziky a informatiky; \mfpracovisko. - Školiteľ: \mfadvisor. Bratislava: \mfplacedate. 85 strán.
 %TODO: pocet stran
-Text abstraktu...
+
+Pri súčasnom rozvoji používania internetu a webových aplikácií je vítanou možnosťou kolaboratívne vytváranie infromácií, ktoré sú na internete vyhľadávané a udržiavané. Jedným z najpoužívanejších nástrojov umožňujúcich tento proces je systém MediaWiki.
+Cieľom diplomovej práce bolo navrhnúť a implementovať grafický editor pre systém MediaWiki, umožňujúci kolaboratívne kreslenie a úpravu obrázkov. Vytvorený editor bolo potrebné integrovať do stránky wiki.matfyz.sk. Nami implementované riešenie pozostáva z dvoch častí. Prvú časť tvorí implementácia grafického editora vektorových obrázkov. Integrácia do systému MediaWiki bola realizovaná formou rozšírenia. V druhej časti sme vytvorili komunikačný protokol a synchronizačný server, slúžiaci na výmenu informácií o obsahu grafickej plochy editorov spolupracujúcich používateľov. 
 
 ~\\
-Kľúčové slová: klucove, slova, sk, ...
+\textbf{Kľúčové slová:} kolaboratívny grafický editor, webová aplikácia, rozšírenie MediaWiki
 \vfill\eject 
 
-\chapter*{Abstract}\label{chap:abstract_en}
-\MakeUppercase{Krasňan}, Martin: \textit{\enmftitle} [\enmfthesistype]. - Comenius University in Bratislava. Faculty of Mathematics, Physics and Informatics; \enmfpracovisko. - Supervisor: \mfadvisor. \mfplacedate. ?? pages.
+\section*{Abstract}\label{chap:abstract_en}
+\MakeUppercase{Krasňan}, Martin: \textit{\enmftitle} [\enmfthesistype]. - Comenius University in Bratislava. Faculty of Mathematics, Physics and Informatics; \enmfpracovisko. - Supervisor: \mfadvisor. \mfplacedate. 85 pages.
 %TODO: pocet stran
 Text of abstract...
 
 ~\\
-Keywords: keywords, en, ...
+\textbf{Keywords:} collaborative graphics editor, web application, MediaWiki extension
 \vfill\eject 
 % koniec abstraktov
 
 
-
+\setlength{\parskip}{0em}
 % treba este prejst dokument ci je kod spravne formatovany
 \tableofcontents
 
 %zrusenie indentu pre paragraph a nastavenie medzery nad novym riadkom
-\def\spaceafterpar{1em}
 \setlength{\parskip}{\spaceafterpar}
-\setlength\parindent{0pt}
+
 
 \mainmatter
 
@@ -230,5 +235,15 @@ Keywords: keywords, en, ...
 \nocite{*}
 \bibliographystyle{alpha}
 \bibliography{references}
+
+\chapter*{Príloha A - obsah elektronického média}
+\addcontentsline{toc}{chapter}{Príloha A - obsah elektronického média}
+\begin{itemize}
+	\item súbor s textom diplomovej práce vo formáte pdf,
+	\item priečinok \textbf{obrázky}, v ktorom sú všetky obrázky použité v texte diplomovej práce,
+	\item priečinok \textbf{zdrojové súbory rozšírenie}, obsahuje implementáciu rozšírenia pre systém MediaWiki,
+		\item priečinok \textbf{zdrojové súbory server}, obsahuje implementáciu synchronizačného servera
+\end{itemize}
+
 
 \end{document}

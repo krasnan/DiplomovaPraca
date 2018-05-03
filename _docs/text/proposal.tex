@@ -1,46 +1,48 @@
 \chapter{Návrh modelu}\label{chap:proposal}
 
-V tejto kapitole si opíšeme cieľ diplomovej práce, zameriame sa na návrh modelu všetkých častí aplikácie a definujeme si požiadavky na ich funkcionalitu. 
+V tejto kapitole podrobne rozoberieme cieľ diplomovej práce, zameriame sa na návrh modelu všetkých častí aplikácie a definujeme si požiadavky na ich funkcionalitu. 
 
-Riešenie diplomovej práce bude pozostávať z dvoch hlavných častí. Prvou časťou bude navrhnutie synchronizačného servera, ktorý bude zabezpečovať výmenu informácií medzi klientmi. V druhej časti navrhneme samotný grafický editor obrázkov, vysvetlíme si spôsob integrácie editora do systému MediaWiki a popíšeme si jeho požadované vlastnosti.
+Riešenie diplomovej práce bude pozostávať z dvoch hlavných častí. Prvou časťou bude návrh synchronizačného servera, ktorý bude zabezpečovať výmenu informácií medzi klientmi. V druhej časti navrhneme samotný grafický editor obrázkov, vysvetlíme si spôsob integrácie editora do systému MediaWiki a popíšeme si jeho požadované vlastnosti.
 
 \section{Cieľ práce}
+Hlavným cieľom diplomovej práce bolo navrhnúť a implementovať kolaboratívny grafický editor pre MediaWiki a integrovať ho s portálom matfyz.sk. Na dosiahnutie tohto cieľa sme si stanovili nasledujúce podciele:
+
 \begin{itemize}
 	\item Navrhnúť prostredie grafického editora.
 	\item Implementovať grafický editor do prostredia MediaWiki pomocou rozšírenia.
 	\item Navrhnúť a implementovať spôsob ukladania verzií výstupných súborov grafického editora.
-	\item Navrhnúť a implementovat komunikačný protokol na synchronizáciu grafického editora pre viacero nezávislých používateľov.
+	\item Navrhnúť a implementovať komunikačný protokol na synchronizáciu grafického editora pre viacero nezávislých používateľov.
 	\item Integrovať rozšírenie s webovou stránkou fakulty http://wiki.matfyz.sk.
 \end{itemize}
 
 \section{Synchronizačný server}\label{sec:poziadavky_na_server}
-Synchronizačný server bude pozostávať z aplikácie naprogramovanej v jazyku JavaScript. Spúšťaný bude v runtime prostredí NodeJS. Primárnou úlohou bude zaradiť pripojeného používateľa do miestnosti zodpovedajúcej editovanému súboru, vďaka čomu zabezpečíme synchronizáciu údajov medzi všetkými používateľmi pracujúcimi s týmto súborom. Využijeme pri tom knižnicu Socket.IO, konkrétne jej serverovú verziu, ktorá bude slúžiť ako hlavný komunikačný protokol postavený na báze WebSocket protokolu. Aplikácia synchronizačného servera bude pozostávať z niekoľkých entít (objektov), ktoré si postupne popíšeme v ďalších častiach tejto diplomovej práce.
+Synchronizačný server bude aplikácia naprogramovaná v jazyku JavaScript. Spúšťaný bude v runtime prostredí NodeJS. Jeho primárnou úlohou bude zaradiť pripojeného používateľa do miestnosti zodpovedajúcej editovanému súboru, vďaka čomu zabezpečíme synchronizáciu údajov medzi všetkými používateľmi pracujúcimi s týmto súborom. Využijeme pri tom knižnicu Socket.IO, konkrétne jej serverovú verziu, ktorá bude slúžiť ako hlavný komunikačný protokol postavený na báze WebSocket protokolu. Aplikácia synchronizačného servera bude pozostávať z niekoľkých entít (objektov), ktoré si postupne popíšeme v ďalších častiach tejto diplomovej práce.
 
 \subsection{Popis entít synchronizačného servera}
 \subsubsection{Entita používateľ}
 
-Základnou entitou bude objekt \textit{Používateľ}, ktorý definuje vlastnosti pripojeného používateľa. Medzi informácie uchovávané v tomto objekte budú patriť \textit{meno}, jeho zodpovedajúca \textit{farba} kurzora, pod ktorou bude rýchlo rozpoznateľný inými používateľmi a \textit{jedinečný identifikátor} získaný po pripojení na server.
+Základnou entitou bude objekt \textit{Používateľ}(\code{User}), ktorý definuje vlastnosti pripojeného používateľa. Medzi informácie uchovávané v tomto objekte budú patriť \textit{meno}, jeho zodpovedajúca \textit{farba} kurzora, pod ktorou bude rýchlo rozpoznateľný inými používateľmi a \textit{jedinečný identifikátor} získaný po pripojení na server.
 
 \subsubsection{Entita správa}
-Editor poskytne možnosť textovej komunikácie medzi používateľmi. Kvôli tomu je potrebné navrhnúť objekt reprezentujúci takúto správu. Medzi jeho vlastnosti bude patriť informácia, kto správu odoslal, pre koho je určená, čas kedy bola odoslaná a taktiež textový obsah správy. Pre potreby lepšej informovanosti o stave pripojených používateľov je možné odosielať takzvanú systémovú správu, určenú pre všetkých používateľov.
+Editor poskytne možnosť textovej komunikácie medzi používateľmi. Kvôli tomu je potrebné navrhnúť objekt reprezentujúci takúto správu. Medzi jeho vlastnosti bude patriť informácia, kto správu odoslal, pre koho je určená, čas, kedy bola odoslaná a taktiež textový obsah správy. Pre potreby lepšej informovanosti o stave pripojených používateľov je možné odosielať takzvanú systémovú správu, určenú pre všetkých používateľov.
 
 \subsubsection{Entita objekt}
 Informácie o objektoch grafickej plochy budú synchronizované pomocou JavaScriptového objektu typu \textit{Object}. Je to objekt dynamickej štruktúry s niekoľkými základnými vlastnosťami. Tými sú \textit{jedinečný identifikátor objektu}, informácia o \textit{stave uzamknutia} a v prípade uzamknutého objektu taktiež informácia o \textit{používateľovi, ktorý daný objekt uzamkol}. Ďalšie informácie o objekte sú závislé od jeho dátového typu generovaného na klientskej strane grafického editora.
 
 \subsubsection{Entita miestnosť}
-Každý používateľ bude po pripojení na synchronizačný server automaticky zaradený do miestnosti zodpovedajúcej editovanému súboru. Táto miestnosť bude reprezentovaná objektom Room s vlastnosťami popisujúcimi jej aktuálny stav. Bude sa tu nachádzať zoznam pripojených používateľov, zoznam odoslaných správ, zoznam grafických objektov editora, informáciu o formáte editovaného súboru a vlastnostiach grafickej plochy.
+Každý používateľ bude po pripojení na synchronizačný server automaticky zaradený do miestnosti zodpovedajúcej editovanému súboru. Táto miestnosť bude reprezentovaná objektom \textit{Room} s vlastnosťami popisujúcimi jej aktuálny stav. Bude sa tu nachádzať zoznam pripojených používateľov, zoznam odoslaných správ, zoznam grafických objektov editora, informáciu o formáte editovaného súboru a vlastnostiach grafickej plochy.
 
 \subsubsection{Entita správca miestností}
-Aby sa predišlo zbytočnému udržiavaniu stavov miestností, v ktorých sa nenachádzajú žiadni používatelia, musíme navrhnúť entitu, ktorá bude riadiť dynamické vytváranie a odstraňovanie miestností. Pre tento účel vytvoríme objekt RoomManager, ktorý bude obsahovať zoznam všetkých miestností a funkcie na vytvorenie miestnosti pri pripojení prvého používateľa a jej vymazanie v prípade, že sa z nej odpojil posledný používateľ.
+Aby sa predišlo zbytočnému udržiavaniu stavov miestností, v ktorých sa nenachádzajú žiadni používatelia, musíme navrhnúť entitu, ktorá bude riadiť dynamické vytváranie a odstraňovanie miestností. Pre tento účel vytvoríme objekt \textit{RoomManager}, ktorý bude obsahovať zoznam všetkých miestností a funkcie na vytvorenie miestnosti pri pripojení prvého používateľa a jej vymazanie v prípade, že sa z nej odpojil posledný používateľ.
 
 \subsection{Funkčné požiadavky synchronizačného servera}
 
 \begin{itemize}
-	\item \textbf{Pripojenie používateľa} -- vytvorí sa entita typu \code{User} a nastavia sa mu vlastnosti na základe zaslaného dopytu. 
+	\item \textbf{Pripojenie používateľa} -- vytvorí sa entita typu \code{User} a nastavia sa jej vlastnosti na základe zaslaného dopytu. 
 	
 	\item \textbf{Overenie pripojeného používateľa} -- po pripojení nového používateľa sa overuje správnosť bezpečnostného tokenu. Ak bezpečnostný token nie je správny, používateľ nebude mať umožnené pripojenie do zvolenej miestnosti.
 	
-	\item \textbf{Vytvorenie miestnosti} -- v prípade, ak sa pripojený používateľ má zaradiť do miestnosti, ktorá aktuálne neexistuje, takáto miestnosť je vytvorená a následne je do nej používateľ zaradený. V prípade, že daná miestnosť už vytvorená je, používateľ sa do nej zaradí automaticky a táto informácia sa odošle všetkým ostatným používateľom nachádzajúcim sa v miestnosti. S pripojením prvého používateľa je potrebné načítať informácie o editovanom obrazovom súbore. Docielime to HTTP dopytom na rozhranie API (\textbf{A}plication \textbf{P}rograming \textit{Interface}). Návratové hodnoty dopytu v prípade existujúceho súboru rozdelíme do príslušných vlastností aktuálnej miestnosti a následne ich odošleme formou odpovede pripájanému používateľovi.
+	\item \textbf{Vytvorenie miestnosti} -- v prípade, ak sa pripojený používateľ má zaradiť do miestnosti, ktorá aktuálne neexistuje, takáto miestnosť sa vytvorí a následne je do nej používateľ zaradený. V prípade, že daná miestnosť už vytvorená je, používateľ sa do nej zaradí automaticky a táto informácia sa odošle všetkým ostatným používateľom nachádzajúcim sa v miestnosti. S pripojením prvého používateľa je potrebné načítať informácie o editovanom obrazovom súbore. Docielime to HTTP dopytom na rozhranie API (\textbf{A}plication \textbf{P}rograming \textbf{I}nterface). Návratové hodnoty dopytu v prípade existujúceho súboru rozdelíme do príslušných vlastností aktuálnej miestnosti a následne ich odošleme formou odpovede pripájanému používateľovi.
 	
 	\item \textbf{Synchronizácia editora} -- po pripojení a zaradení používateľa do miestnosti zodpovedajúcej editovanému súboru, bude server schopný prijímať synchronizačné správy o zmenách vykonaných používateľom v prostredí editora. 
 	
@@ -50,9 +52,9 @@ Aby sa predišlo zbytočnému udržiavaniu stavov miestností, v ktorých sa nen
 	
 	Ak je \textit{objekt v grafickom editore odstránený}, táto akcia bude taktiež odoslaná na synchronizačný server, spolu s jedinečným identifikátorom objektu. Ten ho spracuje, odstráni zodpovedajúci objekt zo zoznamu a následne odošle ostatným používateľom informáciu o jeho vymazaní.
 	
-	Aby sa predišlo konfliktom pri zmenách vlastností objektov, je potrebné navrhnúť proces ich automatického uzamykania. To zabezpečíme tak, že pri zvolení aktívneho objektu v grafickom editore bude odoslaná požiadavka na jeho uzamknutie daným používateľom na server. Táto akcia je znova synchronizovaná so zvyšnými editormi používateľov. V prípade že objekt už uzamknutý bol, odošle sa odpoveď o zamietnutí uzamknutia objektu.
+	Aby sa predišlo konfliktom pri zmenách vlastností objektov, je potrebné navrhnúť proces ich automatického uzamykania. To zabezpečíme tak, že pri zvolení aktívneho objektu v grafickom editore bude na server odoslaná požiadavka na jeho uzamknutie daným používateľom na server. Táto akcia je znova synchronizovaná so zvyšnými editormi používateľov. V prípade že objekt už uzamknutý bol, odošle sa odpoveď o zamietnutí uzamknutia objektu.
 	
-	\item \textbf{Odpojenie používateľa} -- pri tejto akcií je potrebné vykonať niekoľko úkonov. Najskôr musia byť odomknuté všetky objekty, ktoré boli uzamknuté odpájaným používateľom a následne sa odstráni z miestnosti. V prípade, že miestnosť zostane prázdna, vymaže sa. Inak je odoslaná informácia o odpojení používateľa všetkým zvyšným pripojeným klientom.
+	\item \textbf{Odpojenie používateľa} -- pri tejto akcii je potrebné vykonať niekoľko úkonov. Najskôr musia byť odomknuté všetky objekty, ktoré boli uzamknuté odpájaným používateľom a následne sa odstráni z miestnosti. V prípade, že miestnosť zostane prázdna, vymaže sa. Inak je odoslaná informácia o odpojení používateľa všetkým zvyšným pripojeným klientom.
 	
 	\item \textbf{Odstránenie miestnosti} -- ako sme spomenuli vyššie, miestnosť je automaticky odstránená pri odchode posledného používateľa. Tento proces zabezpečí entita \code{RoomManager}.
 	
@@ -62,10 +64,11 @@ Aby sa predišlo zbytočnému udržiavaniu stavov miestností, v ktorých sa nen
 Grafický editor implementujeme formou MediaWiki rozšírenia, naprogramovaného primárne v jazyku JavaSrcipt, s použitím frameworku AngularJS (kap.: \ref{sec:angular}). Na komunikáciu so synchronizačným serverom použijeme JavaScriptovú knižnicu Socket.IO (kap.: \ref{sec:socketio}), konkrétne jej klientskú verziu. Na vykresľovanie a udržiavanie stavu grafickej plochy použijeme knižnicu Fabric (kap.: \ref{sec:fabric}). 
 
 \subsection{Funkčné požiadavky grafického editora}
+Navrhovaný grafický editor by mal umožňovať nasledovné operácie:
 \begin{itemize}
 	\item \textbf{Otvorenie grafického editora} a v prípade upravovania existujúceho súboru jeho automatické načítanie.
 	
-	\item \textbf{Výber nástroja} -- grafický editor poskytne viacero pracovných nástrojov, na vytváranie rôznych typov grafických objektov. Tie môžu byť zvolené kliknutím na tlačidlo reprezentujúce daný nástroj. 
+	\item \textbf{Výber nástroja} -- grafický editor poskytne viacero pracovných nástrojov na vytváranie rôznych typov grafických objektov. Tie môžu byť zvolené kliknutím na tlačidlo reprezentujúce daný nástroj. 
 	
 	\item \textbf{Vytvorenie objektu} -- po zvolení nástroja môžeme pridať do grafickej plochy nasledujúce objekty:
 	\begin{itemize}
@@ -75,7 +78,7 @@ Grafický editor implementujeme formou MediaWiki rozšírenia, naprogramovaného
 		\item \textbf{Voľne kreslená cesta} vytvorená kliknutím a ťahaním kurzora, s možnosťou nastavenia šírky a typu cesty, farby a veľkosti rozmazania.
 	\end{itemize}
 	
-	\item \textbf{Výber aktívneho objektu / skupiny objektov} - používateľ vyberie aktívny objekt a následne sa zobrazí panel s možnosťou zmeny jeho vlastností.
+	\item \textbf{Výber aktívneho objektu / skupiny objektov} -- používateľ vyberie aktívny objekt a následne sa zobrazí panel s možnosťou zmeny jeho vlastností.
 	
 	\item \textbf{Modifikácia vlastností aktívneho objektu} v závislosti od jeho typu. Základné vlastnosti ako výška, šírka, pozícia, uhol rotácie a skosenie možu byť nastavované pomocou transformácie obálky objektu. Tieto a ďalšie vlastnosti bude možné zmeniť aj pomocou zadávania hodnôt do zodpovedajúcich textových polí, prípadne tlačidlami a inými ovládacími prvkami.
 	
@@ -89,13 +92,13 @@ Grafický editor implementujeme formou MediaWiki rozšírenia, naprogramovaného
 	
 	\item \textbf{Kopírovanie, vystrihnutie, vloženie a duplikovanie} objektu.
 	
-	\item \textbf{Priblíženie grafickej plochy} -- používateľ môže proporcionálne zväčšiť alebo zmenšiť grafickú plochu zmenou hodnoty skálovania(zoom).
+	\item \textbf{Priblíženie grafickej plochy} -- používateľ môže proporcionálne zväčšiť alebo zmenšiť grafickú plochu zmenou hodnoty škálovania (zoom).
 	
-	\item \textbf{Zmena vlastností grafickej plochy} -- okrem skálovania môže používateľ nastaviť aj jej rozmery, od čoho sa odvíja veľkosť výsledného súboru a tým aj jeho kvalita a taktiež farbu pozadia. 
+	\item \textbf{Zmena vlastností grafickej plochy} -- okrem škálovania môže používateľ nastaviť aj jej rozmery, od čoho sa odvíja veľkosť výsledného súboru a tým aj jeho kvalita a taktiež farbu pozadia. 
 	
 	\item \textbf{Zobrazenie zoznamu používateľov}
 	
-	\item \textbf{Režim celej obrazovky}, kedy sa skryjú ovládacie prvky systému MediaWiki a grafický editora sa zväčší na maximálnu dostupnú veľkosť okna internetového prehliadača používateľa.
+	\item \textbf{Režim celej obrazovky}, kedy sa skryjú ovládacie prvky systému MediaWiki a grafický editor sa zväčší na maximálnu dostupnú veľkosť okna internetového prehliadača používateľa.
 	
 	\item \textbf{Vycentrovanie grafickej plochy} na vertikálny a horizontálny stred okna grafického editora.
 	
@@ -109,12 +112,12 @@ Grafický editor implementujeme formou MediaWiki rozšírenia, naprogramovaného
 \subsection{Integrácia do sytému MediaWiki}
 Ako sme si opísali v časti \ref{sec:mediaWiki_extensions}, pre systém MediaWiki existuje viacero typov rozšírení. Pre naše riešenie sme si zvolili rozšírenie typu \textit{special page extension}. Učinili sme tak z dôvodu, že ide o najlepšiu voľbu z hľadiska vytvárania vlastného používateľského rozhrania a jeho špecifickej funkcionality. 
 
-V systéme MediaWiki má každý multimediálny súbor svoju vlastnú podstránku. Aby sme používateľom umožnili otvoriť multimediálne súbory pomocou nášho editora, je potrebné integrovať tlačidlo na otvorenie súboru v editore. To umiestnime medzi tlačidlá hornej navigačnej lišty, kde sa nachádzajú odkazy na úpravu alebo vytvorenie stránky, zobrazenie histórie zmien, zmazanie, presunutie a zamknutie súboru. Používatelia môžu taktiež vytvoriť nový súbor, za pomoci odkazu na špeciálnu stránku editora. Keďže používateľ vytvára nový súbor, musí byť vyzvaný na zadanie jeho názvu. 
+V systéme MediaWiki má každý multimediálny súbor svoju vlastnú podstránku. Aby sme používateľom umožnili otvoriť multimediálne súbory pomocou nášho editora, je potrebné integrovať tlačidlo na otvorenie súboru v editore. To umiestnime medzi tlačidlá hornej navigačnej lišty, kde sa nachádzajú odkazy na úpravu alebo vytvorenie stránky, zobrazenie histórie zmien, zmazanie, presunutie a zamknutie súboru. Zobrazovanie tohoto tlačidla bude podmienené tým, či je používateľ prihlásený do systému a súčasne má práva na úpravu alebo vloženie multimediálnych súborov. Používatelia môžu taktiež vytvoriť nový súbor, za pomoci odkazu na špeciálnu stránku editora. Keďže používateľ vytvára nový súbor, musí byť vyzvaný na zadanie jeho názvu. 
 
 Systém MediaWiki umožňuje modifikovať položky hlavného menu a pridávať odkazy na rôzne stránky, vrátane špeciálnych stránok systému alebo rozšírení. Administrátor vďaka tomu môže jednoduchým spôsobom pridať odkaz na grafický editor do hlavného menu.
 
 \subsection{Návrh ovládacích prvkov editora}
-Väčšina prostredí grafických editorov, či už sú to vektorové, rastrové alebo 3D modelovacie editory využívajú rozdelenie ovládacích prvkov na 4 hlavné komponenty. Zoznam nástrojov zobrazený pri ľavom okraji okna editora, hlavné menu pri vrchnom a nastavenia nástrojov pri pravom okraji okna, s grafickou plochou uprostred týchto ovládacích komponentov\refimg{obr:editorWireframeBase}. V našom prípade sme sa rozhodli použiť podobné rozloženie, kvôli zavedeným zvykom používateľov a tým pádom vyššej intuitívnosti pri používaní.
+Väčšina prostredí grafických editorov, či už sú to vektorové, rastrové alebo 3D modelovacie editory využívajú rozdelenie ovládacích prvkov na 4 hlavné komponenty. Zoznam nástrojov zobrazený pri ľavom okraji okna editora, hlavné menu pri vrchnom a nastavenia nástrojov pri pravom okraji okna, s grafickou plochou uprostred týchto ovládacích komponentov \refimg{obr:editorWireframeBase}. V našom prípade sme sa rozhodli použiť podobné rozloženie, kvôli zavedeným zvykom používateľov a tým pádom vyššej intuitívnosti pri používaní.
 
 \begin{figure}[h]
 	\centerline{\includegraphics[width=1\textwidth]{images/diagrams/editor_wireframe_base}}
