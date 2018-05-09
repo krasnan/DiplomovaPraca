@@ -70,7 +70,7 @@
 \begin{document}
 
 \frontmatter
-\setcounter{page}{3}
+
 \setcounter{secnumdepth}{2}
 
 \thispagestyle{empty}
@@ -149,7 +149,7 @@ Konzultant: & \mfconsultant
 %\vfill
 %\eject
 % koniec zadania
-
+\setcounter{page}{2}
 \thispagestyle{empty}
 
 
@@ -187,7 +187,7 @@ Konzultant: & \mfconsultant
 \MakeUppercase{Krasňan}, Martin: \textit{\mftitle} [\mfthesistype]. - Univerzita Komenského v Bratislave. Fakulta matematiky, fyziky a informatiky; \mfpracovisko. - Školiteľ: \mfadvisor. Bratislava: \mfplacedate. 85 strán.
 %TODO: pocet stran
 
-Pri súčasnom rozvoji používania internetu a webových aplikácií je vítanou možnosťou kolaboratívne vytváranie infromácií, ktoré sú na internete vyhľadávané a udržiavané. Jedným z používaných nástrojov umožňujúcich tento proces je systém MediaWiki.
+Pri súčasnom rozvoji používania internetu a webových aplikácií je vítanou možnosťou kolaboratívne vytváranie informácií, ktoré sú na internete vyhľadávané a udržiavané. Jedným z používaných nástrojov umožňujúcich tento proces je systém MediaWiki.
 Cieľom diplomovej práce bolo navrhnúť a implementovať grafický editor pre systém MediaWiki, umožňujúci kolaboratívne kreslenie a úpravu obrázkov. Vytvorený editor bolo potrebné integrovať do stránky wiki.matfyz.sk. Nami implementované riešenie pozostáva z dvoch častí. Prvú časť tvorí implementácia grafického editora vektorových obrázkov. Integrácia do systému MediaWiki bola realizovaná formou rozšírenia. V druhej časti sme vytvorili komunikačný protokol a synchronizačný server, slúžiaci na výmenu informácií o obsahu grafickej plochy editorov spolupracujúcich používateľov. 
 
 ~\\
@@ -197,7 +197,8 @@ Cieľom diplomovej práce bolo navrhnúť a implementovať grafický editor pre 
 \section*{Abstract}\label{chap:abstract_en}
 \MakeUppercase{Krasňan}, Martin: \textit{\enmftitle} [\enmfthesistype]. - Comenius University in Bratislava. Faculty of Mathematics, Physics and Informatics; \enmfpracovisko. - Supervisor: \mfadvisor. \mfplacedate. 85 pages.
 %TODO: pocet stran
-Text of abstract...
+
+At a current rate of the Internet and web application expansion, it is a welcome opportunity to collaboratively cerate and share information that is searched and maintained on the Internet. One of the tools used to enable this process is MediaWiki. The aim of the diploma thesis was to design and implement a graphic editor for MediaWiki, enabling collaborative drawing and editing of images. The created editor needed to be integrated into wiki.matfyz.sk. The solution implemented by us consists of two parts. The first part consists of implementing a graphic editor of vector images. Integration into MediaWiki has been implemented as an extension. In the second part, we have created a communication protocol and a synchronization server to exchange information about the content of the collaborative user's graphics area.
 
 ~\\
 \textbf{Keywords:} collaborative graphics editor, web application, MediaWiki extension
@@ -214,6 +215,7 @@ Text of abstract...
 
 
 \mainmatter
+
 
 \input intro.tex
 \input issuesoverview.tex
